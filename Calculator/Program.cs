@@ -1,14 +1,28 @@
-﻿namespace Calculator;
+﻿namespace PSB_Calculator;
 
 internal class Program {
 
     internal static void Main(string[] args) {
         while (true) {
+            Calculator calculator;
+            Console.WriteLine("Хотите ли отслеживать выполняемые методы? (y/n)");
+            switch(Console.ReadLine()) {
+                case "y":
+                    Console.WriteLine("Методы будут отслеживаться.");
+                    calculator = new(new Logger());
+                    break;
+                case "n":
+                    Console.WriteLine("Методы не будут отслеживаться.");
+                    calculator = new(null);
+                    break;
+                default:
+                    Console.WriteLine("Такого режима нет. Повторите ввод.");
+                    continue;
+            }
             Console.WriteLine("Введите цифру, чтобы выбрать режим работы калькулятора.");
             Console.WriteLine("1 - режим работы с двумя числами.");
             Console.WriteLine("2 - режим работы c выражением.");
             Console.WriteLine("q - завершить работу программы.");
-            Calculator calculator = new Calculator();
             switch(Console.ReadLine()) {
                 case "1":
                     calculator.WorkWithTwoNumbers();

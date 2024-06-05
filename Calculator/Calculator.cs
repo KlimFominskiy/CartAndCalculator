@@ -1,55 +1,56 @@
 using System.Data;
 
-namespace Calculator;
+namespace PSB_Calculator;
 
 public class Calculator {
-    public double? result = null;
+    public double result;
+    public Logger? logger;
+
+    public Calculator(Logger? logger) {
+        this.logger = logger;
+    }
 
     public void WorkWithTwoNumbers() {
         Console.WriteLine("Выбран режим работы с двумя числами.");
+        
+        float firstNumber;
+        float secondNumber;
         while (true) {
-            Console.WriteLine("Введите первое число.");
-            if (!float.TryParse(Console.ReadLine(), out float firstNumber)) {
+            Console.WriteLine("Введите число...");
+            if (!float.TryParse(Console.ReadLine(), out firstNumber)) {
                 Console.WriteLine("Неправильный формат числа.");
                 continue;
             }
-            Console.WriteLine("Введите второе число.");
-            if (!float.TryParse(Console.ReadLine(), out float secondNumber)) {
+            Console.WriteLine("Введите ещё число...");
+            if (!float.TryParse(Console.ReadLine(), out secondNumber)) {
                 Console.WriteLine("Неправильный формат числа.");
                 continue;
             }
-            Console.WriteLine("Введите знак математической операции - +, -, /, *.");
+        
+            Console.WriteLine("Введите знак операции (+, -, /, *).");
             while (true) {
                 switch (Console.ReadLine()) {
                 case "+":
-                    result = firstNumber + secondNumber;
+                    result = Add(firstNumber, secondNumber);
                     break;
                 case "-":
-                    result = firstNumber - secondNumber;
-                    break;
-                case "/":
-                    result = firstNumber + secondNumber;
+                    result = Subtract(firstNumber, secondNumber);
                     break;
                 case "*":
-                    result = firstNumber * secondNumber;
+                    result = Multiply(firstNumber, secondNumber);
+                    break;
+                case "/":
+                    result = Divide(firstNumber, secondNumber);;
                     break;
                 default:
-                    Console.WriteLine("Такой операции нет. Повторите ввод операции.");
-                    break;
+                    Console.WriteLine("Нет такой операции, введите допустимый знак операции...");
+                    continue;
                 }
-
-                if (result is not null) {
-                    break;
-                }
+                break;
             }
-
-            Console.WriteLine($"Результат = {double.Round((double)result, 4)}.");
             
-            Console.WriteLine("Продолжить вычисления в этом режиме?");
-            Console.WriteLine("y - продолжить.");
-            Console.WriteLine("Любой другой символ - выйти.");
-            if (Console.ReadLine() != "y") {
-                return;
+            if (!IsExit(result)) {
+                break;
             }
         }
     } 
@@ -57,16 +58,55 @@ public class Calculator {
     public void WorkWithEquation() {
         Console.WriteLine("Выбран режим работы c выражением.");
         while (true) {
-            Console.WriteLine("Введите выражение");
-            double? result = Convert.ToDouble(new DataTable().Compute(Console.ReadLine(), null));
-            Console.WriteLine($"Результат = {result}.");
-            
-            Console.WriteLine("Продолжить вычисления в этом режиме?");
-            Console.WriteLine("y - продолжить.");
-            Console.WriteLine("Любой другой символ - выйти.");
-            if (Console.ReadLine() != "y") {
-                return;
+            Console.WriteLine("Введите выражение...");
+            double result = Convert.ToDouble(new DataTable().Compute(Console.ReadLine(), null));
+
+            if (!IsExit(result)) {
+                break;
             }
+        }
+    }
+
+    private bool IsExit(double result) {
+        Console.WriteLine($"Результат = {double.Round((double)result, 4)}.");
+        Console.WriteLine("Продолжить вычисления в этом режиме?");
+        Console.WriteLine("y - продолжить.");
+        Console.WriteLine("Любой другой символ - выйти.");
+        switch(Console.ReadLine()) {
+            case "y":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private double Add(float numberOne, float numberTwo) {
+        Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
+
+        return numberOne + numberTwo;
+    }
+
+    private double Subtract(float numberOne, float numberTwo) {
+        Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
+        
+        return numberOne - numberTwo;
+    }
+
+    private double Multiply(float numberOne, float numberTwo) {
+        Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
+        
+        return numberOne * numberTwo;
+    }
+
+    private double Divide(float numberOne, float numberTwo) {
+        Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
+        
+        return numberOne / numberTwo;
+    }
+
+    private void Log(string? methodName, string className) {
+        if (logger is not null) {
+            logger.Write($"Выполняется метод {methodName} класса {className}.");
         }
     }
 }
