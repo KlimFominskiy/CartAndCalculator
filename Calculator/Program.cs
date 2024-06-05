@@ -1,8 +1,10 @@
-﻿namespace PSB_Calculator;
+﻿namespace Calculator;
 
-internal class Program {
+internal class Program
+{
 
-    internal static void Main(string[] args) {
+    internal static void Main(string[] args)
+    {
         while (true) {
             Calculator calculator;
             Console.WriteLine("Хотите ли отслеживать выполняемые методы? (y/n)");
@@ -22,6 +24,8 @@ internal class Program {
             Console.WriteLine("Введите цифру, чтобы выбрать режим работы калькулятора.");
             Console.WriteLine("1 - режим работы с двумя числами.");
             Console.WriteLine("2 - режим работы c выражением.");
+            Console.WriteLine("3 - режим генерации целого числа.");
+            Console.WriteLine("4 - режим поиска значения в массиве.");
             Console.WriteLine("q - завершить работу программы.");
             switch(Console.ReadLine()) {
                 case "1":
@@ -29,6 +33,12 @@ internal class Program {
                     break;
                 case "2":
                     calculator.WorkWithEquation();
+                    break;
+                case "3":
+                    IntExtender intExtender = new();;
+                    intExtender.ChooseNumberToGenerate();
+                    break;
+                case "4":
                     break;
                 case "q":
                     return;

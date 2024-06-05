@@ -1,8 +1,9 @@
-namespace PSB_Calculator;
+namespace Calculator;
 
 public class Logger {
 
-    public void Write(string message) {
+    public void Write(string message)
+    {
         Console.WriteLine(message);
     }
 }
