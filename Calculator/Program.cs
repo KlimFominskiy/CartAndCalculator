@@ -2,7 +2,6 @@
 
 internal class Program
 {
-
     internal static void Main(string[] args)
     {
         while (true) {
@@ -35,8 +34,7 @@ internal class Program
                     calculator.WorkWithEquation();
                     break;
                 case "3":
-                    IntExtender intExtender = new();;
-                    intExtender.ChooseNumberToGenerate();
+                    calculator.WorhWithIntGeneratorExtension();
                     break;
                 case "4":
                     break;
