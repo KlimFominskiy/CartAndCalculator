@@ -108,6 +108,67 @@ public class Calculator
         }
     }
 
+    public void WorhWithMatrix()
+    {
+        Console.WriteLine("Выбран режим работы с матрицей.");
+        while(true) {
+            int rowsNumber;
+            int columnsNumber;
+
+            Console.WriteLine("Введите количество строк в матрице");
+            while (!int.TryParse(Console.ReadLine(), out rowsNumber)) {
+                Console.WriteLine("Неправильный формат числа. Повторите ввод.");
+                continue;
+            }
+            Console.WriteLine("Введите количество столбцов в матрице");
+            while (!int.TryParse(Console.ReadLine(), out columnsNumber)) {
+                Console.WriteLine("Неправильный формат числа. Повторите ввод.");
+                continue;
+            }
+
+            double[,] matrix = new double[rowsNumber, columnsNumber];
+
+            for (int i = 0; i < rowsNumber; i++) {
+                Console.WriteLine($"Введите элементы строки {i + 1}. Например - 5.38  22  7.23.");
+                double[] currentRowNumbers = Array.ConvertAll(Console.ReadLine().Trim().Split(" "), Convert.ToDouble);
+                for (int j = 0; j < columnsNumber; j++) {
+                    matrix[i, j] = currentRowNumbers[j];
+                }
+            }
+
+            while(true) {
+                Console.WriteLine("Выберите режим работы с матрицей.");
+                Console.WriteLine("1 - поиск минимального положительного числа.");
+                Console.WriteLine("2 - поиск максимального отрицательного числа.");
+                double? result;
+                switch(Console.ReadLine()) {
+                    case "1":
+                        result = FindTheSmallestPositiveNumberInMatrix(matrix);
+                        break;
+                    case "2":
+                        result = FindTheLargestNegativeNumberInMatrix(matrix);
+                        break;
+                    default:
+                        Console.WriteLine("Такой операции нет. Повторите ввод.");
+                        continue;
+                }
+
+                if (result is null) {
+                    Console.WriteLine("В матрице нет подъодящиъ элементов.");
+                } else {
+                    Console.WriteLine($"Результат = {result}");
+                }
+
+                break;    
+            }
+
+            if (!IsExit()) {
+                break;
+            }
+        }
+        
+    }
+
     private bool IsExit()
     {
         Console.WriteLine("Продолжить вычисления в этом режиме?");
@@ -154,5 +215,37 @@ public class Calculator
         if (logger is not null) {
             logger.Write($"Выполняется метод {methodName} класса {className}.");
         }
+    }
+
+    private double? FindTheSmallestPositiveNumberInMatrix(double [,] matrix)
+    {
+        double? theSmallestPositiveNumber = null;
+        foreach(double matrixElement in matrix) {
+            if (matrixElement > 0) {
+                if (theSmallestPositiveNumber is null) {
+                    theSmallestPositiveNumber = matrixElement;
+                } else if (matrixElement < theSmallestPositiveNumber) {
+                    theSmallestPositiveNumber = matrixElement;
+                }
+            }
+        }
+
+       return theSmallestPositiveNumber;
+    }
+
+    private double? FindTheLargestNegativeNumberInMatrix(double [,] matrix) 
+    {
+        double? theLargestNegativeNumber = null;
+        foreach(double matrixElement in matrix) {
+            if (matrixElement < 0) {
+                if (theLargestNegativeNumber is null) {
+                    theLargestNegativeNumber = matrixElement;
+                } else if (matrixElement > theLargestNegativeNumber) {
+                    theLargestNegativeNumber = matrixElement;
+                }
+            }
+        }
+
+       return theLargestNegativeNumber;
     }
 }

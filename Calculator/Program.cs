@@ -6,6 +6,7 @@ internal class Program
     {
         while (true) {
             Calculator calculator;
+            Console.WriteLine("Главное меню калькулятора.");
             Console.WriteLine("Хотите ли отслеживать выполняемые методы? (y/n)");
             switch(Console.ReadLine()) {
                 case "y":
@@ -37,6 +38,7 @@ internal class Program
                     calculator.WorhWithIntGeneratorExtension();
                     break;
                 case "4":
+                    calculator.WorhWithMatrix();
                     break;
                 case "q":
                     return;
