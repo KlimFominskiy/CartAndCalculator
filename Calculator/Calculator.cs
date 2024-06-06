@@ -130,9 +130,14 @@ public class Calculator
 
             for (int i = 0; i < rowsNumber; i++) {
                 Console.WriteLine($"Введите элементы строки {i + 1}. Например - 5.38  22  7.23.");
-                double[] currentRowNumbers = Array.ConvertAll(Console.ReadLine().Trim().Split(" "), Convert.ToDouble);
-                for (int j = 0; j < columnsNumber; j++) {
-                    matrix[i, j] = currentRowNumbers[j];
+                string? elements = Console.ReadLine();
+                if (!string.IsNullOrEmpty(elements)) {
+                    double[] currentRowNumbers = Array.ConvertAll(elements.Trim().Split(" "), Convert.ToDouble);
+                    for (int j = 0; j < columnsNumber; j++) {
+                        matrix[i, j] = currentRowNumbers[j];
+                    }
+                } else {
+                    i -= 1;
                 }
             }
 
