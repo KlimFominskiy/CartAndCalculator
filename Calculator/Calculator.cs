@@ -19,7 +19,6 @@ public class Calculator
     /// <summary>
     /// Методы работы с матрицей.
     /// </summary>
-    
     private MatrixMethods matrixMethods;
 
     public Calculator(Logger? logger)
@@ -85,9 +84,19 @@ public class Calculator
         while (true)
         {
             Console.WriteLine("Введите выражение...");
-            double result = Convert.ToDouble(new DataTable().Compute(Console.ReadLine(), null));
-            Console.WriteLine($"Результат = {double.Round((double)result, 4)}.");
+            double result;
+            try
+            {
+                result = Convert.ToDouble(new DataTable().Compute(Console.ReadLine(), null));
+            }
+            catch (Exception exceptin)
+            {
+                Console.WriteLine($"Не удалось считать выражение. {exceptin.Message}");
+                continue;
+            }
 
+            Console.WriteLine($"Результат = {double.Round((double)result, 4)}.");
+            
             if (!IsExit())
             {
                 break;
