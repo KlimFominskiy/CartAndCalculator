@@ -281,13 +281,13 @@ public class Calculator
         int rowsNumber;
         int columnsNumber;
 
-        Console.WriteLine("Введите количество строк в матрице");
+        Console.WriteLine("Введите количество строк в матрице.");
         while (!int.TryParse(Console.ReadLine(), out rowsNumber))
         {
             Console.WriteLine("Неправильный формат числа. Повторите ввод.");
             continue;
         }
-        Console.WriteLine("Введите количество столбцов в матрице");
+        Console.WriteLine("Введите количество столбцов в матрице.");
         while (!int.TryParse(Console.ReadLine(), out columnsNumber))
         {
             Console.WriteLine("Неправильный формат числа. Повторите ввод.");
@@ -321,14 +321,14 @@ public class Calculator
     /// <summary>
     /// Метод считывает число из консоли.
     /// </summary>
-    /// <returns>Считанное число из консоли.</returns>
+    /// <returns>Считанное из консоли число.</returns>
     private float ReadNumberFromConsole()
     {
         float numberFromConsole;
         
         while(!float.TryParse(Console.ReadLine(), out numberFromConsole))
         {
-            Console.WriteLine("Неправильный формат числа.");
+            Console.WriteLine("Неправильный формат. Повторите ввод.");
         }
 
         return numberFromConsole;
