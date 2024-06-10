@@ -1,38 +1,53 @@
+using Calculator.Methods;
 using System.Data;
 
 namespace Calculator;
 
+/// <summary>
+/// Класс для выполнения базовых математических операций, расчёта выражения, генерации чисел и поиска значения в матрице.
+/// </summary>
 public class Calculator
 {
+    /// <summary>
+    /// Результат вычислений.
+    /// </summary>
     public double result;
+    /// <summary>
+    /// Логгер для записи вызываемых методов и их классов.
+    /// </summary>
     public Logger? logger;
+    /// <summary>
+    /// Методы работы с матрицей.
+    /// </summary>
+    
+    private MatrixMethods matrixMethods;
 
     public Calculator(Logger? logger)
     {
         this.logger = logger;
+        matrixMethods = new MatrixMethods();
     }
 
-    public void WorkWithTwoNumbers()
+    /// <summary>
+    /// Метод вызывает меню ввода чисел и знака операции.
+    /// После ввода знака операции вызывается соответствующий метод для выполнения расчёта.
+    /// </summary>
+    public void CalculateTwoNumbers()
     {
         Console.WriteLine("Выбран режим работы с двумя числами.");
 
-        float firstNumber;
-        float secondNumber;
-        while (true) {
+        while (true)
+        {
             Console.WriteLine("Введите первое число...");
-            if (!float.TryParse(Console.ReadLine(), out firstNumber)) {
-                Console.WriteLine("Неправильный формат числа.");
-                continue;
-            }
+            float firstNumber = ReadNumberFromConsole();
             Console.WriteLine("Введите второе число...");
-            if (!float.TryParse(Console.ReadLine(), out secondNumber)) {
-                Console.WriteLine("Неправильный формат числа.");
-                continue;
-            }
+            float secondNumber = ReadNumberFromConsole();
 
-            Console.WriteLine("Введите знак операции (+, -, /, *).");
-            while (true) {
-                switch (Console.ReadLine()) {
+            while (true)
+            {
+                Console.WriteLine("Введите знак операции (+, -, /, *).");
+                switch (Console.ReadLine())
+                {
                     case "+":
                         result = Add(firstNumber, secondNumber);
                         break;
@@ -46,7 +61,7 @@ public class Calculator
                         result = Divide(firstNumber, secondNumber);
                         break;
                     default:
-                        Console.WriteLine("Нет такой операции, введите допустимый знак операции...");
+                        Console.WriteLine("Нет такой операции.");
                         continue;
                 }
 
@@ -54,37 +69,48 @@ public class Calculator
             }
             Console.WriteLine($"Результат = {double.Round(result, 4)}.");
 
-            if (!IsExit()) {
+            if (!IsExit())
+            {
                 break;
             }
         }
     }
 
-    public void WorkWithEquation()
+    /// <summary>
+    /// Вызывает меню ввода выражения. После ввода выражения происходит его расчёт.
+    /// </summary>
+    public void CalculateEquation()
     {
         Console.WriteLine("Выбран режим работы c выражением.");
-        while (true) {
+        while (true)
+        {
             Console.WriteLine("Введите выражение...");
             double result = Convert.ToDouble(new DataTable().Compute(Console.ReadLine(), null));
             Console.WriteLine($"Результат = {double.Round((double)result, 4)}.");
 
-            if (!IsExit()) {
+            if (!IsExit())
+            {
                 break;
             }
         }
     }
 
-    public void WorhWithIntGeneratorExtension()
+    /// <summary>
+    /// Метод вызывает меню для выбора режима генерации числа и вызывает соответствующий метод. 
+    /// </summary>
+    public void GenerateRandomInt()
     {
         Console.WriteLine("Выбран режим генерации целого числа.");
-        while (true) {
+        while (true)
+        {
             Console.WriteLine("Какое число сгенерировать?");
             Console.WriteLine("1 - чётное.");
             Console.WriteLine("2 - нечётное.");
             Console.WriteLine("3 - положительное.");
             Console.WriteLine("4 - отрицательное.");
             int randomInt = 0;
-            switch (Console.ReadLine()) {
+            switch (Console.ReadLine())
+            {
                 case "1":
                     Console.WriteLine(randomInt.GenerateRandomEvenInt());
                     break;
@@ -102,84 +128,73 @@ public class Calculator
                     continue;
             }
 
-            if (!IsExit()) {
+            if (!IsExit())
+            {
                 break;
             }
         }
     }
 
-    public void WorhWithMatrix()
+    /// <summary>
+    /// Метод вызывает меню ввода матрицы через консоль и вызывает меню выбора режима работы с матрицей.
+    /// </summary>
+    public void FindNumberInMatrix()
     {
         Console.WriteLine("Выбран режим работы с матрицей.");
-        while(true) {
-            int rowsNumber;
-            int columnsNumber;
+        while (true)
+        {
+            double[,] matrix = ReadMatrixFromConsole();
 
-            Console.WriteLine("Введите количество строк в матрице");
-            while (!int.TryParse(Console.ReadLine(), out rowsNumber)) {
-                Console.WriteLine("Неправильный формат числа. Повторите ввод.");
-                continue;
-            }
-            Console.WriteLine("Введите количество столбцов в матрице");
-            while (!int.TryParse(Console.ReadLine(), out columnsNumber)) {
-                Console.WriteLine("Неправильный формат числа. Повторите ввод.");
-                continue;
-            }
-
-            double[,] matrix = new double[rowsNumber, columnsNumber];
-
-            for (int i = 0; i < rowsNumber; i++) {
-                Console.WriteLine($"Введите элементы строки {i + 1}. Например - 5.38  22  7.23.");
-                string? elements = Console.ReadLine();
-                if (!string.IsNullOrEmpty(elements)) {
-                    double[] currentRowNumbers = Array.ConvertAll(elements.Trim().Split(" "), Convert.ToDouble);
-                    for (int j = 0; j < columnsNumber; j++) {
-                        matrix[i, j] = currentRowNumbers[j];
-                    }
-                } else {
-                    i -= 1;
-                }
-            }
-
-            while(true) {
+            while (true)
+            {
                 Console.WriteLine("Выберите режим работы с матрицей.");
                 Console.WriteLine("1 - поиск минимального положительного числа.");
                 Console.WriteLine("2 - поиск максимального отрицательного числа.");
                 double? result;
-                switch(Console.ReadLine()) {
+                switch (Console.ReadLine())
+                {
                     case "1":
-                        result = FindTheSmallestPositiveNumberInMatrix(matrix);
+                        result = matrixMethods.FindTheSmallestPositiveNumberInMatrix(matrix);
                         break;
                     case "2":
-                        result = FindTheLargestNegativeNumberInMatrix(matrix);
+                        result = matrixMethods.FindTheLargestNegativeNumberInMatrix(matrix);
                         break;
                     default:
                         Console.WriteLine("Такой операции нет. Повторите ввод.");
                         continue;
                 }
 
-                if (result is null) {
-                    Console.WriteLine("В матрице нет подъодящиъ элементов.");
-                } else {
+                if (result is null)
+                {
+                    Console.WriteLine("В матрице нет подходящих элементов.");
+                }
+                else
+                {
                     Console.WriteLine($"Результат = {result}");
                 }
 
-                break;    
+                break;
             }
 
-            if (!IsExit()) {
+            if (!IsExit())
+            {
                 break;
             }
         }
-        
+
     }
 
+    /// <summary>
+    /// Метод вызывает меню выбора продолжения/прерывания работы в текущем режиме.
+    /// </summary>
+    /// <returns>true - продолжить в этом режиме. Иначе - false</returns>
     private bool IsExit()
     {
         Console.WriteLine("Продолжить вычисления в этом режиме?");
         Console.WriteLine("y - продолжить.");
         Console.WriteLine("Любой другой символ - выйти в предыдущее меню.");
-        switch (Console.ReadLine()) {
+        switch (Console.ReadLine())
+        {
             case "y":
                 return true;
             default:
@@ -187,6 +202,13 @@ public class Calculator
         }
     }
 
+    /// <summary>
+    /// Метод отправляет логгеру выполняемые метод и класс метода,
+    /// а также выполняет суммирование двух чисел.
+    /// </summary>
+    /// <param name="numberOne">Первое число.</param>
+    /// <param name="numberTwo">Второе число.</param>
+    /// <returns>Результат сложения.</returns>
     private double Add(float numberOne, float numberTwo)
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
@@ -194,6 +216,13 @@ public class Calculator
         return numberOne + numberTwo;
     }
 
+    /// <summary>
+    /// Метод отправляет логгеру выполняемые метод и класс метода,
+    /// а также выполняет вычитание двух чисел.
+    /// </summary>
+    /// <param name="numberOne">Первое число.</param>
+    /// <param name="numberTwo">Второе число.</param>
+    /// <returns>Результат вычитания.</returns>
     private double Subtract(float numberOne, float numberTwo)
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
@@ -201,6 +230,13 @@ public class Calculator
         return numberOne - numberTwo;
     }
 
+    /// <summary>
+    /// Метод отправляет логгеру выполняемые метод и класс метода,
+    /// а также выполняет умножение двух чисел.
+    /// </summary>
+    /// <param name="numberOne">Первое число.</param>
+    /// <param name="numberTwo">Второе число.</param>
+    /// <returns>Результат умножения.</returns>
     private double Multiply(float numberOne, float numberTwo)
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
@@ -208,6 +244,13 @@ public class Calculator
         return numberOne * numberTwo;
     }
 
+    /// <summary>
+    /// Метод вызывает метод записи сообщения с помощью логгера,
+    /// а также выполняет деление двух чисел.
+    /// </summary>
+    /// <param name="numberOne">Первое число.</param>
+    /// <param name="numberTwo">Второе число.</param>
+    /// <returns>Результат деления.</returns>
     private double Divide(float numberOne, float numberTwo)
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
@@ -215,42 +258,79 @@ public class Calculator
         return numberOne / numberTwo;
     }
 
+    /// <summary>
+    /// Метод записи сообщения с помощью логгера.
+    /// </summary>
+    /// <param name="methodName"></param>
+    /// <param name="className"></param>
     private void Log(string? methodName, string className)
     {
-        if (logger is not null) {
+        if (logger is not null)
+        {
             logger.Write($"Выполняется метод {methodName} класса {className}.");
         }
     }
 
-    private double? FindTheSmallestPositiveNumberInMatrix(double [,] matrix)
+    /// <summary>
+    /// Метод вызывает меню ввода количества строк и столбцов матрицы через консоль, а затем
+    /// вызывает меню ввода матрицы.
+    /// </summary>
+    /// <returns>Введённая пользователем матрица.</returns>
+    private double[,] ReadMatrixFromConsole()
     {
-        double? theSmallestPositiveNumber = null;
-        foreach(double matrixElement in matrix) {
-            if (matrixElement > 0) {
-                if (theSmallestPositiveNumber is null) {
-                    theSmallestPositiveNumber = matrixElement;
-                } else if (matrixElement < theSmallestPositiveNumber) {
-                    theSmallestPositiveNumber = matrixElement;
+        int rowsNumber;
+        int columnsNumber;
+
+        Console.WriteLine("Введите количество строк в матрице");
+        while (!int.TryParse(Console.ReadLine(), out rowsNumber))
+        {
+            Console.WriteLine("Неправильный формат числа. Повторите ввод.");
+            continue;
+        }
+        Console.WriteLine("Введите количество столбцов в матрице");
+        while (!int.TryParse(Console.ReadLine(), out columnsNumber))
+        {
+            Console.WriteLine("Неправильный формат числа. Повторите ввод.");
+            continue;
+        }
+
+        double[,] matrix = new double[rowsNumber, columnsNumber];
+
+        for (int i = 0; i < rowsNumber; i++)
+        {
+            Console.WriteLine($"Введите элементы строки {i + 1}. Например - 5.38  22  7.23.");
+            string? elements = Console.ReadLine();
+            if (!string.IsNullOrEmpty(elements))
+            {
+                double[] currentRowNumbers = Array.ConvertAll(elements.Trim().Split(" "), Convert.ToDouble);
+                for (int j = 0; j < columnsNumber; j++)
+                {
+                    matrix[i, j] = currentRowNumbers[j];
                 }
+            }
+            else
+            {
+                Console.WriteLine("Неправильный формат. Повторите ввод.");
+                i -= 1;
             }
         }
 
-       return theSmallestPositiveNumber;
+        return matrix;
     }
 
-    private double? FindTheLargestNegativeNumberInMatrix(double [,] matrix) 
+    /// <summary>
+    /// Метод считывает число из консоли.
+    /// </summary>
+    /// <returns>Считанное число из консоли.</returns>
+    private float ReadNumberFromConsole()
     {
-        double? theLargestNegativeNumber = null;
-        foreach(double matrixElement in matrix) {
-            if (matrixElement < 0) {
-                if (theLargestNegativeNumber is null) {
-                    theLargestNegativeNumber = matrixElement;
-                } else if (matrixElement > theLargestNegativeNumber) {
-                    theLargestNegativeNumber = matrixElement;
-                }
-            }
+        float numberFromConsole;
+        
+        while(!float.TryParse(Console.ReadLine(), out numberFromConsole))
+        {
+            Console.WriteLine("Неправильный формат числа.");
         }
 
-       return theLargestNegativeNumber;
+        return numberFromConsole;
     }
 }

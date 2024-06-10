@@ -4,11 +4,13 @@ internal class Program
 {
     internal static void Main(string[] args)
     {
-        while (true) {
+        while (true)
+        {
             Calculator calculator;
             Console.WriteLine("Главное меню калькулятора.");
-            Console.WriteLine("Хотите ли отслеживать выполняемые методы? (y/n)");
-            switch(Console.ReadLine()) {
+            Console.WriteLine("Хотите ли отслеживать выполняемые операции калькулятора? (y/n)");
+            switch(Console.ReadLine())
+            {
                 case "y":
                     Console.WriteLine("Методы будут отслеживаться.");
                     calculator = new(new Logger());
@@ -27,18 +29,19 @@ internal class Program
             Console.WriteLine("3 - режим генерации целого числа.");
             Console.WriteLine("4 - режим поиска значения в массиве.");
             Console.WriteLine("q - завершить работу программы.");
-            switch(Console.ReadLine()) {
+            switch(Console.ReadLine())
+            {
                 case "1":
-                    calculator.WorkWithTwoNumbers();
+                    calculator.CalculateTwoNumbers();
                     break;
                 case "2":
-                    calculator.WorkWithEquation();
+                    calculator.CalculateEquation();
                     break;
                 case "3":
-                    calculator.WorhWithIntGeneratorExtension();
+                    calculator.GenerateRandomInt();
                     break;
                 case "4":
-                    calculator.WorhWithMatrix();
+                    calculator.FindNumberInMatrix();
                     break;
                 case "q":
                     return;
