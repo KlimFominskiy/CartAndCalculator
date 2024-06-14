@@ -1,14 +1,16 @@
+using System.Reflection;
+
 namespace Cart;
 
 /// <summary>
 /// Базовый класса товара.
 /// </summary>
-public abstract class Product
+public abstract class Product : IComparable<Product>
 {
     /// <summary>
     /// Id.
     /// </summary>
-    public uint Id { get; set; }
+    public ulong Id { get; set; } // Is guid better?
     /// <summary>
     /// Название.
     /// </summary>
@@ -20,9 +22,22 @@ public abstract class Product
     /// <summary>
     /// Цена.
     /// </summary>
-    public abstract double Price { get; set; }
+    public double Price { get; set; }
     /// <summary>
     /// Дата доставки.
     /// </summary>
-    public abstract double TimeOfArrival { get; set; }
+    public DateTime TimeOfArrival { get; set; }
+    protected Product(ulong id, string name, double weight, double price, DateTime timeOfArrival)
+    {
+        Id = id;
+        Name = name;
+        Weight = weight;
+        Price = price;
+        TimeOfArrival = timeOfArrival;
+    }
+
+    public int CompareTo(Product? other)
+    {
+        return Name.CompareTo(other?.Name);
+    }
 }
