@@ -190,7 +190,6 @@ public class Calculator
                 break;
             }
         }
-
     }
 
     /// <summary>
