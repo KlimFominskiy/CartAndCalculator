@@ -22,12 +22,12 @@ public abstract class Product : IComparable<Product>
     /// <summary>
     /// Цена.
     /// </summary>
-    public double Price { get; set; }
+    public decimal Price { get; set; }
     /// <summary>
     /// Дата доставки.
     /// </summary>
     public DateTime TimeOfArrival { get; set; }
-    protected Product(ulong id, string name, double weight, double price, DateTime timeOfArrival)
+    protected Product(ulong id, string name, double weight, decimal price, DateTime timeOfArrival)
     {
         Id = id;
         Name = name;
