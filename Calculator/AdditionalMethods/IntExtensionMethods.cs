@@ -1,4 +1,4 @@
-﻿namespace Calculator.Methods;
+﻿namespace Calculator.AdditionalMethods;
 
 /// <summary>
 /// Методы расширения типа int.

@@ -23,14 +23,14 @@ public class Store
         {
             Corvalol corvarol = new(
                 id: productId += 1,
-                name: nameof(corvarol) + "_" + productId.ToString(),
+                name: "Корвалол-" + productId.ToString(),
                 weight: random.NextDouble() * (30 - 15) + 15,
                 price: new decimal(random.NextDouble() * (1000 - 500) + 500),
                 timeOfArrival: DateTime.Now.AddDays(random.Next(0, 10))
                 );
             WashingMachine washingMachine = new(
                 id: productId += 1,
-                name: nameof(washingMachine) + "_" + productId.ToString(),
+                name: "Стиральная машина-" + productId.ToString(),
                 weight: random.NextDouble() * (30 - 15) + 15,
                 price: new decimal(random.NextDouble() * (1000 - 500) + 500),
                 timeOfArrival: DateTime.Now.AddDays(random.Next(0, 10)),
@@ -38,7 +38,7 @@ public class Store
                 );
             Chips chips = new(
                 id: productId += 1,
-                name: nameof(chips) + "_" + productId.ToString(),
+                name: "Чипсы-" + productId.ToString(),
                 weight: random.NextDouble() * (30 - 15) + 15,
                 price: new decimal(random.NextDouble() * (1000 - 500) + 500),
                 timeOfArrival: DateTime.Now.AddDays(random.Next(0, 10))

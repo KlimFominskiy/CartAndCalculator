@@ -3,14 +3,15 @@
 namespace Cart;
 public class Cart
 {
-    public List<Product> Products;
+    //public List<Product> Products;
+    public Dictionary<Product, ulong> Products;
 
     public Cart()
     {
         Products = new();
     }
 
-    public Cart(List<Product> products)
+    public Cart(Dictionary<Product, ulong> products)
     {
         Products = products;
     }
@@ -18,12 +19,12 @@ public class Cart
     public double GetTotalWeight()
     {
         double totalWeight = 0;
-        
-        foreach (Product product in Products)
-        {
-            totalWeight += product.Weight;
-        }
 
+        foreach (KeyValuePair<Product, ulong> product in Products)
+        {
+            totalWeight += product.Key.Weight;
+        }
+        
         return totalWeight;
     }
 
@@ -31,9 +32,9 @@ public class Cart
     {
         decimal totalPrice = 0;
 
-        foreach (Product product in Products)
+        foreach (KeyValuePair<Product, ulong> product in Products)
         {
-            totalPrice += product.Price;
+            totalPrice += product.Key.Price;
         }
 
         return totalPrice;
@@ -45,7 +46,7 @@ public class Cart
         //TKey вложенного словаря - наименоване свойства. TValue вложенное словаря - значение свойства.
         Dictionary<ulong, Dictionary<object, string?>> cartInfo = new(); 
         uint productNumber = 0;
-        foreach (Product product in Products)
+        foreach (KeyValuePair<Product, ulong> product in Products)
         {
             productNumber += 1;
             Dictionary<object, string?> propertiesInfo = new(); //TKey - наименоване свойства, значение свойства.

@@ -1,4 +1,4 @@
-using Calculator.Methods;
+using Calculator.AdditionalMethods;
 using System.Data;
 
 namespace Calculator;
@@ -271,7 +271,7 @@ public class Calculator
     /// </summary>
     /// <param name="methodName"></param>
     /// <param name="className"></param>
-    private void Log(string? methodName, string className)
+    protected void Log(string? methodName, string className)
     {
         if (logger is not null)
         {
