@@ -5,16 +5,11 @@ using System.Text.Json;
 
 namespace Cart;
 
-public class Store
+public static class Store
 {
-    public List<Product> Products { get; set; }
+    public static List<Product> Products { get; set; } = new();
 
-    public Store()
-    {
-        Products = new();
-    }
-
-    public List<Product> GenerateProducts()
+    public static List<Product> GenerateProducts()
     {
         ulong productId = 0;
         Random random = new();
