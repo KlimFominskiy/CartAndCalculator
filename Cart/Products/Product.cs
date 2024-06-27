@@ -1,10 +1,15 @@
+using Cart.Products;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace Cart;
 
 /// <summary>
 /// Базовый класса товара.
 /// </summary>
+[JsonDerivedType(typeof(WashingMachine))]
+[JsonDerivedType(typeof(Corvalol))]
+[JsonDerivedType(typeof(Chips))]
 public abstract class Product : IComparable<Product>
 {
     /// <summary>

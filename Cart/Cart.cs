@@ -2,6 +2,9 @@
 
 namespace Cart;
 
+/// <summary>
+/// Корзина с товарами.
+/// </summary>
 public class Cart
 {
     //public List<Product> Products;
@@ -17,6 +20,10 @@ public class Cart
         Products = products;
     }
 
+    /// <summary>
+    /// Рассчитать и получить общий вес покупок в корзине.
+    /// </summary>
+    /// <returns>Общий вес покупок в корзине.</returns>
     public double GetTotalWeight()
     {
         double totalWeight = 0;
@@ -29,6 +36,10 @@ public class Cart
         return totalWeight;
     }
 
+    /// <summary>
+    /// Рассчитать и получить сумму покупок в корзине.
+    /// </summary>
+    /// <returns>Сумма покупок в корзине.</returns>
     public decimal GetTotalPrice()
     {
         decimal totalPrice = 0;
@@ -41,6 +52,10 @@ public class Cart
         return totalPrice;
     }
 
+    /// <summary>
+    /// Получить информацию о товарах в корзине.
+    /// </summary>
+    /// <returns>Информацию о товарах в корзине.</returns>
     public Dictionary<ulong, Dictionary<object, string?>> GetInfo()
     {
         //TKey - номер товара в корзине, TValue - словарь качеств товара.

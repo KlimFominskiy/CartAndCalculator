@@ -48,4 +48,13 @@ public static class CartGenerator
 
         return cart;
     }
+
+    public static Cart GenerateOrderBySum(double maxSum)
+    {
+        Cart cart = new();
+
+
+
+        return cart;
+    }
 }

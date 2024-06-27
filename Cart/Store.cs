@@ -1,6 +1,7 @@
 ﻿using Cart.Products;
 using System;
 using System.Reflection;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
 
 namespace Cart;
@@ -14,7 +15,7 @@ public static class Store
         ulong productId = 0;
         Random random = new();
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 5; i++)
         {
             Corvalol corvarol = new(
                 id: productId += 1,
@@ -50,9 +51,16 @@ public static class Store
             switch(Console.ReadLine())
             {
                 case "y":
-                    string JSONString = JsonSerializer.Serialize(Products);
-                    string fileName = "Products list.json";
-                    File.WriteAllText(fileName, JSONString);
+                    JsonSerializerOptions options = new JsonSerializerOptions
+                    {
+                        WriteIndented = true,
+                        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+
+                    };
+                    string JSONString = JsonSerializer.Serialize(Products, options);
+                    string fileName = "Products.json";
+                    string filePath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+                    File.AppendAllText(filePath + "\\" + fileName, JSONString);
                     break;
                 case "n":
                     break;
