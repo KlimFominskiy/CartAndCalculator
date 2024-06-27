@@ -3,6 +3,7 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Cart;
 
@@ -20,24 +21,24 @@ public static class Store
             Corvalol corvarol = new(
                 id: productId += 1,
                 name: "Корвалол-" + productId.ToString(),
-                weight: random.NextDouble() * (30 - 15) + 15,
-                price: new decimal(random.NextDouble() * (1000 - 500) + 500),
-                timeOfArrival: DateTime.Now.AddDays(random.Next(0, 10))
+                weight: GetWeight(productId),
+                price: GetPrice(productId),
+                timeOfArrival: GetTimeOfArrival(productId)
                 );
             WashingMachine washingMachine = new(
                 id: productId += 1,
                 name: "Стиральная машина-" + productId.ToString(),
-                weight: random.NextDouble() * (30 - 15) + 15,
-                price: new decimal(random.NextDouble() * (1000 - 500) + 500),
-                timeOfArrival: DateTime.Now.AddDays(random.Next(0, 10)),
+                weight: GetWeight(productId),
+                price: GetPrice(productId),
+                timeOfArrival: GetTimeOfArrival(productId)
                 isDryerIncluded: random.Next(0, 2) == 0 ? false : true
                 );
             Chips chips = new(
                 id: productId += 1,
                 name: "Чипсы-" + productId.ToString(),
-                weight: random.NextDouble() * (30 - 15) + 15,
-                price: new decimal(random.NextDouble() * (1000 - 500) + 500),
-                timeOfArrival: DateTime.Now.AddDays(random.Next(0, 10))
+                weight: GetWeight(productId),
+                price: GetPrice(productId),
+                timeOfArrival: GetTimeOfArrival(productId)
                 );
 
             Products.Add(corvarol);
@@ -55,7 +56,6 @@ public static class Store
                     {
                         WriteIndented = true,
                         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-
                     };
                     string JSONString = JsonSerializer.Serialize(Products, options);
                     string fileName = "Products.json";
@@ -93,5 +93,23 @@ public static class Store
         }
 
         return Products;
+    }
+
+    private static double GetWeight(ulong ProductId)
+    {
+        Random random = new();
+        return random.NextDouble() * (30 - 15) + 15;
+    }
+
+    private static decimal GetPrice(ulong ProductId)
+    {
+        Random random = new();
+        return new decimal(random.NextDouble() * (1000 - 500) + 500);
+    }
+
+    private static DateTime GetTimeOfArrival(ulong ProductId)
+    {
+        Random random = new();
+        return DateTime.Now.AddDays(random.Next(0, 10));
     }
 }

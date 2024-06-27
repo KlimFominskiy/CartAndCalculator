@@ -1,4 +1,6 @@
-﻿namespace Cart;
+﻿using System.Text.Json.Serialization;
+
+namespace Cart;
 
 /// <summary>
 /// Стиральная машинка

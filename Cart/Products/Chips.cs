@@ -1,4 +1,6 @@
-﻿namespace Cart.Products;
+﻿using System.Text.Json.Serialization;
+
+namespace Cart.Products;
 
 public class Chips : Product
 {

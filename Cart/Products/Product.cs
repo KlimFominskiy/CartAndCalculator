@@ -7,9 +7,9 @@ namespace Cart;
 /// <summary>
 /// Базовый класса товара.
 /// </summary>
-[JsonDerivedType(typeof(WashingMachine))]
-[JsonDerivedType(typeof(Corvalol))]
-[JsonDerivedType(typeof(Chips))]
+[JsonDerivedType(typeof(WashingMachine), typeDiscriminator: "washingMachine")]
+[JsonDerivedType(typeof(Corvalol), typeDiscriminator: "corvalol")]
+[JsonDerivedType(typeof(Chips), typeDiscriminator: "chips")]
 public abstract class Product : IComparable<Product>
 {
     /// <summary>
@@ -32,6 +32,8 @@ public abstract class Product : IComparable<Product>
     /// Дата доставки.
     /// </summary>
     public DateTime TimeOfArrival { get; set; }
+
+    [JsonConstructor]
     protected Product(ulong id, string name, double weight, decimal price, DateTime timeOfArrival)
     {
         Id = id;
