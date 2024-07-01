@@ -1,77 +1,198 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Cart;
 
 public class OrdersGenerator
 {
-    public List<Product> Products { get; set; } = new();
-    //static ulong productId = 0;
-
     /// <summary>
-    /// Создаёт случайные наборы заказов из существующих товаров.
+    /// Список товаров магазина.
     /// </summary>
-    public void GenerateRandomOrders()
+    public List<Product> StoreProductsList { get; set; }
+    /// <summary>
+    /// Путь к директории проекта.
+    /// </summary>
+    private string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+    private string fileNameProducts = "Products.json";
+    private string fileNameOrders = "Orders.json";
+    private string jsonProductsList;
+    private string productsList;
+    private string jsonOrdersList;
+    private List<Dictionary<ulong, ulong>> ordersList;
+    private Random random = new();
+    private Cart cart = new();
+    private JsonSerializerOptions options = new JsonSerializerOptions
     {
-        Cart cart = new();
-        Random random = new();
+        WriteIndented = true,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+    };
 
-        string fileNameProducts = "Products.json";
-        string fileNameOrders = "Orders.json";
-        string filePath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-        string fileContentProducts = File.ReadAllText(filePath + "\\" + fileNameProducts);
-        Products = JsonSerializer.Deserialize<List<Product>>(fileContentProducts);
-        JsonSerializerOptions options = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        };
-        for (int i = 0; i < 5; i++)
-        {
-            foreach (Product product in Products)
-            {
-                if (random.Next(0, 2) > 0)
-                {
-                    cart.Products.Add(product, 1);
-                }
-            }
-            File.AppendAllText(filePath + "\\" + fileNameOrders, JsonSerializer.Serialize<List<Product>>(cart.Products.Keys.ToList(), options));
-            cart.Products.Clear();
-        }
+    public OrdersGenerator()
+    {
+        jsonProductsList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameProducts);
+        StoreProductsList = JsonSerializer.Deserialize<List<Product>>(jsonProductsList);
+        jsonOrdersList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders);
+        ordersList = JsonSerializer.Deserialize<List<Dictionary<ulong, ulong>>>(jsonOrdersList);
+
     }
 
     /// <summary>
-    /// Сформировать (выбрать) случайный заказ.
+    /// Создать 5 случайных заказов (наборов товаров) из списка товаров магазина.
+    /// </summary>
+    public void GenerateRandomOrders()
+    {
+
+        List<Dictionary<ulong, ulong>> ordersList = new();
+        for (int i = 0; i < 5; i++)
+        {
+            Dictionary<ulong, ulong> order = new();
+            foreach (Product product in StoreProductsList)
+            {
+                if (random.Next(0, 2) > 0)
+                {
+                    order.Add(product.Id, Convert.ToUInt64(random.Next(1, 4)));
+                }
+            }
+            ordersList.Add(order);
+        }
+        File.AppendAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders, JsonSerializer.Serialize<List<Dictionary<ulong, ulong>>>(ordersList, options));
+    }
+
+    /// <summary>
+    /// Сформировать (выбрать) случайный заказ из сгенерированных заказов.
     /// </summary>
     /// <returns></returns>
     public Cart GenerateRandomOrder()
     {
-        Random random = new();
-        Cart cart = new();
-
-        string fileNameProducts = "Products.json";
-        string fileNameOrders = "Orders.json";
-        string filePath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-        string fileContentProducts = File.ReadAllText(filePath + "\\" + fileNameProducts);
-        List<List<Product>> orders = JsonSerializer.Deserialize<List<List<Product>>>(fileContentProducts);
-        int order = random.Next(0, orders.Count + 1);
-        foreach (Product product in orders[order])
+        int orderNumber = random.Next(0, ordersList.Count - 1);
+        foreach (KeyValuePair<ulong, ulong> orderItem in ordersList[orderNumber])
         {
-            cart.Products.Add(product, Convert.ToUInt64(random.Next(0, 5)));
+            Product? product = StoreProductsList.Where(productItem => productItem.Id == orderItem.Key).FirstOrDefault();
+            if (product != null)
+            {
+                cart.Products.Add(product, orderItem.Value);
+            }
+            else
+            {
+                Console.WriteLine($"Продукт с id = {orderItem.Key} не найден в списке продуктов магазина.");
+                break;
+            }
         }
 
         return cart;
     }
 
-    public Cart GenerateOrderBySum(double maxSum)
+    /// <summary>
+    /// Сформировать (выбрать) случайный заказ, сумма которого меньше указанной.
+    /// </summary>
+    /// <param name="maxSum">Максимальная сумма заказа.</param>
+    /// <returns>Заказ.</returns>
+    public Cart GenerateOrderBySum(decimal maxSum)
     {
         Random random = new();
         Cart cart = new();
 
-        foreach(Product product in Products)
+        List<int> validOrdersList = new();
+
+        for (int i = 0; i < ordersList.Count; i++)
         {
-            if (random.Next(0, 2) > 0)
+            decimal totalSum = 0;
+            foreach (KeyValuePair<ulong, ulong> orderItem in ordersList[i])
             {
-                cart.Products.Add(product, 1);
+                decimal orderItemPrice = StoreProductsList.Where(productItem => productItem.Id == orderItem.Key).FirstOrDefault().Price;
+                totalSum += orderItemPrice;
+            }
+            if(totalSum < maxSum)
+            {
+                validOrdersList.Add(i);
+            }
+        }
+
+        int orderNumber = random.Next(0, validOrdersList.Count);
+        foreach(KeyValuePair<ulong, ulong> orderItem in ordersList[validOrdersList[orderNumber]])
+        {
+            Product? product = StoreProductsList.Where(productItem => productItem.Id == orderItem.Key).FirstOrDefault();
+            if (product != null)
+            {
+                cart.Products.Add(product, orderItem.Value);
+            }
+            else
+            {
+                Console.WriteLine($"Продукт с id = {orderItem.Key} не найден в списке продуктов магазина.");
+                break;
+            }
+        }
+
+        return cart;
+    }
+
+    /// <summary>
+    /// Сформировать (выбрать) заказ, сумма которого находится в указанных границах.
+    /// </summary>
+    /// <param name="minSum">Минимальная сумма заказа.</param>
+    /// <param name="maxSum">Максимальная сумма заказа.</param>
+    /// <returns>Заказ.</returns>
+    public Cart GenerateOrderBySum(decimal minSum, decimal maxSum)
+    {
+        Random random = new();
+        Cart cart = new();
+
+        List<int> validOrdersList = new();
+
+        for (int i = 0; i < ordersList.Count; i++)
+        {
+            decimal totalSum = 0;
+            foreach (KeyValuePair<ulong, ulong> orderItem in ordersList[i])
+            {
+                decimal orderItemPrice = StoreProductsList.Where(productItem => productItem.Id == orderItem.Key).FirstOrDefault().Price;
+                totalSum += orderItemPrice + orderItem.Value;
+            }
+            if (totalSum > minSum && totalSum < maxSum)
+            {
+                validOrdersList.Add(i);
+            }
+        }
+
+        int orderNumber = random.Next(0, validOrdersList.Count);
+        foreach (KeyValuePair<ulong, ulong> orderItem in ordersList[validOrdersList[orderNumber]])
+        {
+            Product? product = StoreProductsList.Where(productItem => productItem.Id == orderItem.Key).FirstOrDefault();
+            if (product != null)
+            {
+                cart.Products.Add(product, orderItem.Value);
+            }
+            else
+            {
+                Console.WriteLine($"Продукт с id = {orderItem.Key} не найден в списке продуктов магазина.");
+                break;
+            }
+        }
+
+        return cart;
+    }
+
+    /// <summary>
+    /// Сформировать (выбрать) заказ, общее количество товаров в котором не превышает заданного значения.
+    /// </summary>
+    /// <param name="maxCount">Максимальное общее количество товаров в заказе.</param>
+    /// <returns>Заказ.</returns>
+    public Cart GenerateOrderByCount(ulong maxCount)
+    {
+        Random random = new();
+        Cart cart = new();
+
+        List<int> validOrdersList = new();
+
+        for (int i = 0; i < ordersList.Count; i++)
+        {
+            decimal totalCount = 0;
+            foreach (KeyValuePair<ulong, ulong> orderItem in ordersList[i])
+            {
+                totalCount += orderItem.Value;
+            }
+            if (totalCount < maxCount)
+            {
+                validOrdersList.Add(i);
             }
         }
 

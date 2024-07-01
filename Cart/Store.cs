@@ -9,10 +9,10 @@ namespace Cart;
 
 public static class Store
 {
-    public static List<Product> Products { get; set; } = new();
-
     public static List<Product> GenerateProducts()
     {
+        List<Product> Products = new();
+
         ulong productId = 0;
         Random random = new();
 
@@ -30,7 +30,7 @@ public static class Store
                 name: "Стиральная машина-" + productId.ToString(),
                 weight: GetWeight(productId),
                 price: GetPrice(productId),
-                timeOfArrival: GetTimeOfArrival(productId)
+                timeOfArrival: GetTimeOfArrival(productId),
                 isDryerIncluded: random.Next(0, 2) == 0 ? false : true
                 );
             Chips chips = new(
@@ -60,7 +60,7 @@ public static class Store
                     string JSONString = JsonSerializer.Serialize(Products, options);
                     string fileName = "Products.json";
                     string filePath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-                    File.AppendAllText(filePath + "\\" + fileName, JSONString);
+                    File.AppendAllText(filePath + Path.DirectorySeparatorChar + fileName, JSONString);
                     break;
                 case "n":
                     break;

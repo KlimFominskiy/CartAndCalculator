@@ -1,35 +1,35 @@
-using Cart.Products;
+п»їusing Cart.Products;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace Cart;
 
 /// <summary>
-/// Базовый класса товара.
+/// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РїСЂРѕРґСѓРєС‚Р°.
 /// </summary>
 [JsonDerivedType(typeof(WashingMachine), typeDiscriminator: "washingMachine")]
 [JsonDerivedType(typeof(Corvalol), typeDiscriminator: "corvalol")]
 [JsonDerivedType(typeof(Chips), typeDiscriminator: "chips")]
-public abstract class Product : IComparable<Product>
+public record class Product : IComparable<Product>
 {
     /// <summary>
     /// Id.
     /// </summary>
     public ulong Id { get; set; } // Is guid better?
     /// <summary>
-    /// Название.
+    /// ГЌГ Г§ГўГ Г­ГЁГҐ.
     /// </summary>
     public string Name { get; set; }
     /// <summary>
-    /// Вес.
+    /// Р’РµСЃ.
     /// </summary>
     public double Weight { get; set; }
     /// <summary>
-    /// Цена.
+    /// РЎС‚РѕРёРјРѕСЃС‚СЊ.
     /// </summary>
     public decimal Price { get; set; }
     /// <summary>
-    /// Дата доставки.
+    /// Р”Р°С‚Р° РґРѕСЃС‚Р°РІРєРё.
     /// </summary>
     public DateTime TimeOfArrival { get; set; }
 
@@ -45,6 +45,6 @@ public abstract class Product : IComparable<Product>
 
     public int CompareTo(Product? other)
     {
-        return Name.CompareTo(other?.Name);
+        return Id.CompareTo(other?.Id);
     }
 }

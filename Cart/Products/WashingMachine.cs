@@ -3,9 +3,9 @@
 namespace Cart;
 
 /// <summary>
-/// Стиральная машинка
+/// Стиральная машина.
 /// </summary>
-public class WashingMachine : Product
+public record WashingMachine : Product
 {
     public bool IsDryerIncluded { get; set; }
 

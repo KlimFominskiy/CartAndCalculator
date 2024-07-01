@@ -3,22 +3,11 @@
 namespace Cart;
 
 /// <summary>
-/// Корзина с товарами.
+/// Корзина Интернет-магазина.
 /// </summary>
 public class Cart
 {
-    //public List<Product> Products;
-    public Dictionary<Product, ulong> Products;
-
-    public Cart()
-    {
-        Products = new();
-    }
-
-    public Cart(Dictionary<Product, ulong> products)
-    {
-        Products = products;
-    }
+    public Dictionary<Product, ulong> Products = new();
 
     /// <summary>
     /// Рассчитать и получить общий вес покупок в корзине.
