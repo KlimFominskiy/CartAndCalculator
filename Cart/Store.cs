@@ -98,13 +98,14 @@ public static class Store
     private static double GetWeight(ulong ProductId)
     {
         Random random = new();
-        return random.NextDouble() * (30 - 15) + 15;
+        return Double.Round(random.NextDouble() * (30 - 15) + 15, 2);
     }
 
     private static decimal GetPrice(ulong ProductId)
     {
         Random random = new();
-        return new decimal(random.NextDouble() * (1000 - 500) + 500);
+        
+        return Decimal.Round((decimal)(random.NextDouble() * (1000 - 500) + 500), 2);
     }
 
     private static DateTime GetTimeOfArrival(ulong ProductId)

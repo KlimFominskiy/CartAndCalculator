@@ -42,6 +42,22 @@ public class Cart
     }
 
     /// <summary>
+    /// Рассчитать и получить общее количество товаров в корзине.
+    /// </summary>
+    /// <returns>Сумма покупок в корзине.</returns>
+    public decimal GetTotalProductsNumber()
+    {
+        ulong totalProductsNumber = 0;
+
+        foreach (KeyValuePair<Product, ulong> product in Products)
+        {
+            totalProductsNumber += product.Value;
+        }
+
+        return totalProductsNumber;
+    }
+
+    /// <summary>
     /// Получить информацию о товарах в корзине.
     /// </summary>
     /// <returns>Информацию о товарах в корзине.</returns>
