@@ -1,93 +1,83 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Cart;
 
-public class OrdersGenerator
+/// <summary>
+/// Класс генератора тестовых заказов.
+/// </summary>
+public static class OrdersGenerator
 {
-    /// <summary>
-    /// Список товаров магазина.
-    /// </summary>
-    public List<Product> StoreProductsList { get; set; }
     /// <summary>
     /// Путь к директории проекта.
     /// </summary>
-    private string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-    /// <summary>
-    /// Файл со списком продуктов в магазине.
-    /// </summary>
-    private string fileNameProducts = "Products.json";
+    private static string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+    
     /// <summary>
     /// Файл со списком сгенерированных заказов.
     /// </summary>
-    private string fileNameOrders = "Orders.json";
+    private static string fileNameOrders = "Orders.json";
+    
     /// <summary>
-    /// Список продуктов в магазине в формате строки JSON.
+    /// Список сгенерированных заказов.
     /// </summary>
-    private string jsonProductsList;
+    public static List<Cart> Orders = new();
+
     /// <summary>
-    /// Список заказов. TKey - id продукта, TValue - количество продукта.
+    /// Настройка параметров сериализации JSON.
     /// </summary>
-    private List<Dictionary<ulong, ulong>> ordersDictionariesList;
-    private Random random = new();
-    private Cart cart = new();
-    private JsonSerializerOptions options = new JsonSerializerOptions
+    private static JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
     {
         WriteIndented = true,
         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
-    public OrdersGenerator()
-    {
-        jsonProductsList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameProducts);
-        StoreProductsList = JsonSerializer.Deserialize<List<Product>>(jsonProductsList);
-    }
+    /// <summary>
+    /// Генератор случайного числа.
+    /// </summary>
+    private static Random random = new Random();
 
     /// <summary>
-    /// Создать и записать 5 случайных заказов (наборов товаров) из списка товаров магазина.
+    /// Сгенерированный (выбранный) заказ.
     /// </summary>
-    public void GenerateRandomOrders()
+    private static Cart cart = new();
+
+    /// <summary>
+    /// Создать и записать в файл 5 случайных заказов (наборов товаров) из списка товаров магазина.
+    /// </summary>
+    public static void GenerateRandomOrders()
     {
-        ordersDictionariesList = new();
         for (int i = 0; i < 5; i++)
         {
-            Dictionary<ulong, ulong> order = new();
-            foreach (Product product in StoreProductsList)
+            Cart order = new();
+            foreach (Product product in Store.Products)
             {
                 if (random.Next(0, 2) > 0)
                 {
-                    order.Add(product.Id, Convert.ToUInt64(random.Next(1, 4)));
+                    order.Products.Add(product, Convert.ToUInt32(random.Next(1, 4)));
                 }
             }
-            ordersDictionariesList.Add(order);
+            Orders.Add(order);
         }
-        File.AppendAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders, JsonSerializer.Serialize<List<Dictionary<ulong, ulong>>>(ordersDictionariesList, options));
+        string jsonKeys = null;
+        foreach(Cart order in Orders)
+        {
+            jsonKeys = string.Join(jsonKeys, JsonSerializer.Serialize(order.Products.Keys, jsonSerializerOptions));
+        }
+
+        File.AppendAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders, jsonKeys);
     }
 
     /// <summary>
-    /// Сформировать (выбрать) случайный заказ из сгенерированных заказов.
+    /// Сформировать (выбрать) случайный заказ.
     /// </summary>
     /// <returns>Заказ.</returns>
-    public Cart GenerateRandomOrder()
+    public static Cart GenerateRandomOrder()
     {
-        string jsonOrdersList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders);
-        ordersDictionariesList = JsonSerializer.Deserialize<List<Dictionary<ulong, ulong>>>(jsonOrdersList);
-        int orderNumber = random.Next(0, ordersDictionariesList.Count - 1);
-        foreach (KeyValuePair<ulong, ulong> orderItem in ordersDictionariesList[orderNumber])
-        {
-            Product? product = StoreProductsList.Where(productItem => productItem.Id == orderItem.Key).FirstOrDefault();
-            if (product != null)
-            {
-                cart.Products.Add(product, orderItem.Value);
-            }
-            else
-            {
-                Console.WriteLine($"Продукт с id = {orderItem.Key} не найден в списке продуктов магазина.");
-                break;
-            }
-        }
+        int orderNumber = random.Next(0, Orders.Count - 1);
 
-        return cart;
+        return Orders[random.Next(0, Orders.Count - 1)];
     }
 
     /// <summary>
@@ -95,42 +85,11 @@ public class OrdersGenerator
     /// </summary>
     /// <param name="maxSum">Максимальная сумма заказа.</param>
     /// <returns>Заказ, удовлетворяющий параметрам.</returns>
-    public Cart GenerateOrderBySum(decimal maxSum)
+    public static Cart GenerateOrderBySum(decimal maxSum)
     {
-        string jsonOrdersList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders);
-        ordersDictionariesList = JsonSerializer.Deserialize<List<Dictionary<ulong, ulong>>>(jsonOrdersList);
-
-        List<int> validOrdersList = new();
-
-        for (int i = 0; i < ordersDictionariesList.Count; i++)
-        {
-            decimal totalSum = 0;
-            foreach (KeyValuePair<ulong, ulong> orderItem in ordersDictionariesList[i])
-            {
-                decimal orderItemPrice = StoreProductsList.Where(productItem => productItem.Id == orderItem.Key).FirstOrDefault().Price;
-                totalSum += orderItemPrice;
-            }
-            if(totalSum < maxSum)
-            {
-                validOrdersList.Add(i);
-            }
-        }
-
-        int orderNumber = random.Next(0, validOrdersList.Count);
-        foreach(KeyValuePair<ulong, ulong> orderItem in ordersDictionariesList[validOrdersList[orderNumber]])
-        {
-            Product? product = StoreProductsList.Where(productItem => productItem.Id == orderItem.Key).FirstOrDefault();
-            if (product != null)
-            {
-                cart.Products.Add(product, orderItem.Value);
-            }
-            else
-            {
-                Console.WriteLine($"Продукт с id = {orderItem.Key} не найден в списке продуктов магазина.");
-            }
-        }
-
-        return cart;
+        List<Cart> validOrdersList = Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) < maxSum).ToList();
+        
+        return Orders[random.Next(0, validOrdersList.Count)];
     }
 
     /// <summary>
@@ -139,43 +98,13 @@ public class OrdersGenerator
     /// <param name="minSum">Минимальная сумма заказа.</param>
     /// <param name="maxSum">Максимальная сумма заказа.</param>
     /// <returns>Заказ, удовлетворяющий параметрам.</returns>
-    public Cart GenerateOrderBySum(decimal minSum, decimal maxSum)
+    public static Cart GenerateOrderBySum(decimal minSum, decimal maxSum)
     {
-        string jsonOrdersList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders);
-        ordersDictionariesList = JsonSerializer.Deserialize<List<Dictionary<ulong, ulong>>>(jsonOrdersList);
+        List<Cart> validOrders = Orders.Where
+            (order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) < maxSum
+        && order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) > minSum).ToList();
 
-        List<int> validOrdersList = new();
-
-        for (int i = 0; i < ordersDictionariesList.Count; i++)
-        {
-            decimal totalSum = 0;
-            foreach (KeyValuePair<ulong, ulong> orderItem in ordersDictionariesList[i])
-            {
-                decimal orderItemPrice = StoreProductsList.Where(productItem => productItem.Id == orderItem.Key).FirstOrDefault().Price;
-                totalSum += orderItemPrice + orderItem.Value;
-            }
-            if (totalSum > minSum && totalSum < maxSum)
-            {
-                validOrdersList.Add(i);
-            }
-        }
-
-        int orderNumber = random.Next(0, validOrdersList.Count);
-        foreach (KeyValuePair<ulong, ulong> orderItem in ordersDictionariesList[validOrdersList[orderNumber]])
-        {
-            Product? product = StoreProductsList.Where(productItem => productItem.Id == orderItem.Key).FirstOrDefault();
-            if (product != null)
-            {
-                cart.Products.Add(product, orderItem.Value);
-            }
-            else
-            {
-                Console.WriteLine($"Продукт с id = {orderItem.Key} не найден в списке продуктов магазина.");
-                break;
-            }
-        }
-
-        return cart;
+        return Orders[random.Next(0, validOrders.Count)];
     }
 
     /// <summary>
@@ -183,58 +112,51 @@ public class OrdersGenerator
     /// </summary>
     /// <param name="maxCount">Максимальное общее количество товаров в заказе.</param>
     /// <returns>Заказ, удовлетворяющий параметрам.</returns>
-    public Cart GenerateOrderByCount(ulong maxCount)
+    public static Cart GenerateOrderByCount(uint maxCount)
     {
-        string jsonOrdersList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders);
-        ordersDictionariesList = JsonSerializer.Deserialize<List<Dictionary<ulong, ulong>>>(jsonOrdersList);
+        List<Cart> validOrders = Orders.Where(order => order.Products.Sum(orderItem => orderItem.Value) < maxCount).ToList();
 
-        Random random = new();
-        Cart cart = new();
-
-        List<int> validOrdersList = new();
-
-        for (int i = 0; i < ordersDictionariesList.Count; i++)
-        {
-            decimal totalCount = 0;
-            foreach (KeyValuePair<ulong, ulong> orderItem in ordersDictionariesList[i])
-            {
-                totalCount += orderItem.Value;
-            }
-            if (totalCount < maxCount)
-            {
-                validOrdersList.Add(i);
-            }
-        }
-
-        return cart;
+        return Orders[random.Next(0, validOrders.Count)];
     }
 
-    public List<Dictionary<Product, ulong>> GetOrdersInfo()
+    /// <summary>
+    /// Вывести в консоль информацию о наборе заказов.
+    /// </summary>
+    /// <returns>Информация о заказах.</returns>
+    public static void GetOrdersInfo()
+    {
+        uint index = 0;
+        foreach(Cart order in Orders)
+        {
+            Console.WriteLine($"Заказ №{index += 1}");
+            Console.WriteLine($"Название\t\tЦена\t\tКоличествоо\tСтоимость");
+            foreach(KeyValuePair<Product, uint> products in order.Products)
+            {
+                Console.WriteLine($"{products.Key.Name}\t\t{products.Key.Price}\t{products.Value}\t{products.Key.Price * products.Value}");
+            }
+            Console.WriteLine($"Сумма заказа = {order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value)}.");
+            Console.WriteLine($"Общее количество товаров в заказе = {order.Products.Sum(orderItem => orderItem.Value)}.");
+            Console.WriteLine($"Общий вес заказа = ${order.Products.Sum(orderItem => orderItem.Key.Weight)}.");
+            Console.WriteLine();
+        }
+    }
+
+    /// <summary>
+    /// Прочитать заказы из файла.
+    /// </summary>
+    public static void ReadOrdersFromFile()
     {
         string jsonOrdersList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders);
-        ordersDictionariesList = JsonSerializer.Deserialize<List<Dictionary<ulong, ulong>>>(jsonOrdersList);
-        List<Dictionary<Product, ulong>> ordersDictionary = new();
-
-        List<decimal> ordersSumList = new();
-        List<ulong> ordersProductNumberList = new();
-        uint index = 0;
-        foreach(Dictionary<ulong, ulong> order in ordersDictionariesList)
+        List<Dictionary<uint, uint>> ordersFromFile = JsonSerializer.Deserialize<List<Dictionary<uint, uint>>>(jsonOrdersList);
+        foreach(Dictionary<uint,uint> order in ordersFromFile)
         {
             Cart cart = new();
-            //Console.WriteLine($"Заказ №{++index}");
-            //Console.WriteLine($"Название\t\tЦена\t\tКоличествоо\tСтоимость");
-            foreach (KeyValuePair<ulong, ulong> orderItem in order)
+            foreach(KeyValuePair<uint, uint> orderItem in order)
             {
-                Product? product = StoreProductsList.Where(productItem => productItem.Id == orderItem.Key).FirstOrDefault();
-                cart.Products.Add(product, orderItem.Value);
-                //Console.WriteLine($"{product.Name}\t\t{product.Price}\t{orderItem.Value}\t{product.Price * orderItem.Value}");
+                cart.Products.Add(Store.Products.FirstOrDefault(product => product.Id == orderItem.Key), orderItem.Value);
+                Console.WriteLine($"Продукт с id = {orderItem.Key} не найден в списке продуктов магазина.");
             }
-            ordersDictionary.Add(cart.Products);
-            //Console.WriteLine($"Сумма заказа = {cart.GetTotalPrice()}.");
-            //Console.WriteLine($"Общее количество товаров в заказе = {cart.GetTotalProductsNumber()}.");
-            //Console.WriteLine();
         }
-
-        return ordersDictionary;
+        Orders.Add(cart);
     }
 }

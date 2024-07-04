@@ -7,13 +7,22 @@ using System.Text.Json.Serialization;
 
 namespace Cart;
 
+/// <summary>
+/// Класс магазина. Может генерировать продукты или считывать список продуктов из файла. Хранит список продуктов. 
+/// </summary>
 public static class Store
 {
-    public static List<Product> GenerateProducts()
-    {
-        List<Product> Products = new();
+    /// <summary>
+    /// Список продуктов в магазине.
+    /// </summary>
+    public static List<Product> Products = new();
 
-        ulong productId = 0;
+    /// <summary>
+    /// Сгенерировать продукты, доступные в магазине.
+    /// </summary>
+    public static void GenerateProducts()
+    {
+        uint productId = 0;
         Random random = new();
 
         for (int i = 0; i < 5; i++)
@@ -91,26 +100,35 @@ public static class Store
             }
             break;
         }
-
-        return Products;
     }
 
-    private static double GetWeight(ulong ProductId)
+    /// <summary>
+    /// Считать из файла список товаров магазина.
+    /// </summary>
+    public static void ReadProductsFromFile()
+    {
+        string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        string fileNameProducts = "Products.json";
+        string jsonProductsList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameProducts);
+        Products = JsonSerializer.Deserialize<List<Product>>(jsonProductsList);
+    }
+
+    private static double GetWeight(uint ProductId)
     {
         Random random = new();
         return Double.Round(random.NextDouble() * (30 - 15) + 15, 2);
     }
 
-    private static decimal GetPrice(ulong ProductId)
+    private static decimal GetPrice(uint ProductId)
     {
         Random random = new();
         
         return Decimal.Round((decimal)(random.NextDouble() * (1000 - 500) + 500), 2);
     }
 
-    private static DateTime GetTimeOfArrival(ulong ProductId)
+    private static DateTime GetTimeOfArrival(uint ProductId)
     {
         Random random = new();
-        return DateTime.Now.AddDays(random.Next(0, 10));
+        return DateTime.Now.AddDays(random.Next(1, 10));
     }
 }

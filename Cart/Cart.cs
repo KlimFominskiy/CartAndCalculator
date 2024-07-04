@@ -3,74 +3,34 @@
 namespace Cart;
 
 /// <summary>
-/// Корзина Интернет-магазина.
+/// Корзина (заказ) Интернет-магазина.
 /// </summary>
 public class Cart
 {
-    public Dictionary<Product, ulong> Products = new();
+    /// <summary>
+    /// Товары, добавленные в карточку. TKey - товар. TValue - количество товара.
+    /// </summary>
+    public Dictionary<Product, uint> Products = new();
 
     /// <summary>
-    /// Рассчитать и получить общий вес покупок в корзине.
+    /// Дата отправления заказа.
     /// </summary>
-    /// <returns>Общий вес покупок в корзине.</returns>
-    public double GetTotalWeight()
-    {
-        double totalWeight = 0;
-
-        foreach (KeyValuePair<Product, ulong> product in Products)
-        {
-            totalWeight += product.Key.Weight;
-        }
-        
-        return totalWeight;
-    }
-
-    /// <summary>
-    /// Рассчитать и получить сумму покупок в корзине.
-    /// </summary>
-    /// <returns>Сумма покупок в корзине.</returns>
-    public decimal GetTotalPrice()
-    {
-        decimal totalPrice = 0;
-
-        foreach (KeyValuePair<Product, ulong> product in Products)
-        {
-            totalPrice += product.Key.Price;
-        }
-
-        return totalPrice;
-    }
-
-    /// <summary>
-    /// Рассчитать и получить общее количество товаров в корзине.
-    /// </summary>
-    /// <returns>Сумма покупок в корзине.</returns>
-    public decimal GetTotalProductsNumber()
-    {
-        ulong totalProductsNumber = 0;
-
-        foreach (KeyValuePair<Product, ulong> product in Products)
-        {
-            totalProductsNumber += product.Value;
-        }
-
-        return totalProductsNumber;
-    }
+    public DateTime? TimeOfDeparture = null;
 
     /// <summary>
     /// Получить информацию о товарах в корзине.
     /// </summary>
     /// <returns>Информацию о товарах в корзине.</returns>
-    public Dictionary<ulong, Dictionary<object, string?>> GetInfo()
+    public Dictionary<uint, Dictionary<object, string?>> GetInfo()
     {
-        //TKey - номер товара в корзине, TValue - словарь качеств товара.
-        //TKey вложенного словаря - наименоване свойства. TValue вложенное словаря - значение свойства.
-        Dictionary<ulong, Dictionary<object, string?>> cartInfo = new(); 
+        //TKey - номер товара в корзине, TValue - словарь свойств товара (полей класса товара).
+        //TKey вложенного словаря - наименование свойства. TValue вложенное словаря - значение свойства.
+        Dictionary<uint, Dictionary<object, string?>> cartInfo = new(); 
         uint productNumber = 0;
-        foreach (KeyValuePair<Product, ulong> product in Products)
+        foreach (KeyValuePair<Product, uint> product in Products)
         {
             productNumber += 1;
-            Dictionary<object, string?> propertiesInfo = new(); //TKey - наименоване свойства, значение свойства.
+            Dictionary<object, string?> propertiesInfo = new(); //TKey - наименование свойства, значение свойства.
             foreach (PropertyInfo propertyInfo in product.GetType().GetProperties())
             {
                 propertiesInfo.Add(propertyInfo.Name, propertyInfo.GetValue(product)?.ToString());
