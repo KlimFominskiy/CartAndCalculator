@@ -1,9 +1,6 @@
 ﻿using Cart.Products;
-using System;
+using Newtonsoft.Json;
 using System.Reflection;
-using System.Runtime.InteropServices.JavaScript;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Cart;
 
@@ -16,6 +13,16 @@ public static class Store
     /// Список продуктов в магазине.
     /// </summary>
     public static List<Product> Products = new();
+
+    /// <summary>
+    /// Настройка сеариализации.
+    /// </summary>
+    private static JsonSerializerSettings jsonSerializerSettings = new()
+    {
+        Formatting = Formatting.Indented,
+        TypeNameHandling = TypeNameHandling.Auto,
+        NullValueHandling = NullValueHandling.Include
+    };
 
     /// <summary>
     /// Сгенерировать продукты, доступные в магазине.
@@ -31,23 +38,20 @@ public static class Store
                 id: productId += 1,
                 name: "Корвалол-" + productId.ToString(),
                 weight: GetWeight(productId),
-                price: GetPrice(productId),
-                timeOfArrival: GetTimeOfArrival(productId)
+                price: GetPrice(productId)
                 );
             WashingMachine washingMachine = new(
                 id: productId += 1,
                 name: "Стиральная машина-" + productId.ToString(),
                 weight: GetWeight(productId),
                 price: GetPrice(productId),
-                timeOfArrival: GetTimeOfArrival(productId),
                 isDryerIncluded: random.Next(0, 2) == 0 ? false : true
                 );
             Chips chips = new(
                 id: productId += 1,
                 name: "Чипсы-" + productId.ToString(),
                 weight: GetWeight(productId),
-                price: GetPrice(productId),
-                timeOfArrival: GetTimeOfArrival(productId)
+                price: GetPrice(productId)
                 );
 
             Products.Add(corvarol);
@@ -61,15 +65,10 @@ public static class Store
             switch(Console.ReadLine())
             {
                 case "y":
-                    JsonSerializerOptions options = new JsonSerializerOptions
-                    {
-                        WriteIndented = true,
-                        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                    };
-                    string JSONString = JsonSerializer.Serialize(Products, options);
+                    string jsonString = JsonConvert.SerializeObject(Products, jsonSerializerSettings);
                     string fileName = "Products.json";
                     string filePath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-                    File.AppendAllText(filePath + Path.DirectorySeparatorChar + fileName, JSONString);
+                    File.AppendAllText(filePath + Path.DirectorySeparatorChar + fileName, jsonString);
                     break;
                 case "n":
                     break;
@@ -110,7 +109,7 @@ public static class Store
         string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         string fileNameProducts = "Products.json";
         string jsonProductsList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameProducts);
-        Products = JsonSerializer.Deserialize<List<Product>>(jsonProductsList);
+        Products = JsonConvert.DeserializeObject<List<Product>>(jsonProductsList, jsonSerializerSettings);
     }
 
     private static double GetWeight(uint ProductId)
@@ -124,11 +123,5 @@ public static class Store
         Random random = new();
         
         return Decimal.Round((decimal)(random.NextDouble() * (1000 - 500) + 500), 2);
-    }
-
-    private static DateTime GetTimeOfArrival(uint ProductId)
-    {
-        Random random = new();
-        return DateTime.Now.AddDays(random.Next(1, 10));
     }
 }

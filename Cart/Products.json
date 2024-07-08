@@ -1,127 +1,112 @@
 [
   {
-    "$type": "corvalol",
+    "$type": "Cart.Products.Corvalol, Cart",
     "Id": 1,
     "Name": "Корвалол-1",
-    "Weight": 22.96,
-    "Price": 605.24,
-    "TimeOfArrival": "2024-07-13T15:45:39.4362084+03:00"
+    "Weight": 28.28,
+    "Price": 710.82
   },
   {
-    "$type": "washingMachine",
-    "IsDryerIncluded": true,
+    "$type": "Cart.WashingMachine, Cart",
+    "IsDryerIncluded": false,
     "Id": 2,
     "Name": "Стиральная машина-2",
-    "Weight": 19.71,
-    "Price": 769.51,
-    "TimeOfArrival": "2024-07-10T15:45:39.4385473+03:00"
+    "Weight": 22.63,
+    "Price": 897.18
   },
   {
-    "$type": "chips",
+    "$type": "Cart.Products.Chips, Cart",
     "Id": 3,
     "Name": "Чипсы-3",
-    "Weight": 21.76,
-    "Price": 899.80,
-    "TimeOfArrival": "2024-07-05T15:45:39.438673+03:00"
+    "Weight": 19.02,
+    "Price": 615.47
   },
   {
-    "$type": "corvalol",
+    "$type": "Cart.Products.Corvalol, Cart",
     "Id": 4,
     "Name": "Корвалол-4",
-    "Weight": 29.34,
-    "Price": 804.30,
-    "TimeOfArrival": "2024-07-11T15:45:39.4388475+03:00"
+    "Weight": 17.38,
+    "Price": 740.46
   },
   {
-    "$type": "washingMachine",
+    "$type": "Cart.WashingMachine, Cart",
     "IsDryerIncluded": true,
     "Id": 5,
     "Name": "Стиральная машина-5",
-    "Weight": 25.16,
-    "Price": 781.00,
-    "TimeOfArrival": "2024-07-12T15:45:39.4388504+03:00"
+    "Weight": 16.24,
+    "Price": 819.42
   },
   {
-    "$type": "chips",
+    "$type": "Cart.Products.Chips, Cart",
     "Id": 6,
     "Name": "Чипсы-6",
-    "Weight": 19.89,
-    "Price": 847.35,
-    "TimeOfArrival": "2024-07-08T15:45:39.4388517+03:00"
+    "Weight": 22.52,
+    "Price": 654.81
   },
   {
-    "$type": "corvalol",
+    "$type": "Cart.Products.Corvalol, Cart",
     "Id": 7,
     "Name": "Корвалол-7",
-    "Weight": 21.63,
-    "Price": 674.68,
-    "TimeOfArrival": "2024-07-12T15:45:39.4388635+03:00"
+    "Weight": 16.35,
+    "Price": 656.71
   },
   {
-    "$type": "washingMachine",
-    "IsDryerIncluded": false,
+    "$type": "Cart.WashingMachine, Cart",
+    "IsDryerIncluded": true,
     "Id": 8,
     "Name": "Стиральная машина-8",
-    "Weight": 24.18,
-    "Price": 786.72,
-    "TimeOfArrival": "2024-07-08T15:45:39.438865+03:00"
+    "Weight": 24.77,
+    "Price": 704.69
   },
   {
-    "$type": "chips",
+    "$type": "Cart.Products.Chips, Cart",
     "Id": 9,
     "Name": "Чипсы-9",
-    "Weight": 26.31,
-    "Price": 583.94,
-    "TimeOfArrival": "2024-07-06T15:45:39.4388663+03:00"
+    "Weight": 17.27,
+    "Price": 909.59
   },
   {
-    "$type": "corvalol",
+    "$type": "Cart.Products.Corvalol, Cart",
     "Id": 10,
     "Name": "Корвалол-10",
-    "Weight": 19.87,
-    "Price": 627.17,
-    "TimeOfArrival": "2024-07-08T15:45:39.4388678+03:00"
+    "Weight": 18.56,
+    "Price": 616.50
   },
   {
-    "$type": "washingMachine",
-    "IsDryerIncluded": false,
+    "$type": "Cart.WashingMachine, Cart",
+    "IsDryerIncluded": true,
     "Id": 11,
     "Name": "Стиральная машина-11",
-    "Weight": 28.86,
-    "Price": 769.35,
-    "TimeOfArrival": "2024-07-07T15:45:39.4388691+03:00"
+    "Weight": 15.25,
+    "Price": 660.52
   },
   {
-    "$type": "chips",
+    "$type": "Cart.Products.Chips, Cart",
     "Id": 12,
     "Name": "Чипсы-12",
-    "Weight": 29.42,
-    "Price": 625.17,
-    "TimeOfArrival": "2024-07-07T15:45:39.4388704+03:00"
+    "Weight": 18.66,
+    "Price": 663.55
   },
   {
-    "$type": "corvalol",
+    "$type": "Cart.Products.Corvalol, Cart",
     "Id": 13,
     "Name": "Корвалол-13",
-    "Weight": 23.22,
-    "Price": 990.22,
-    "TimeOfArrival": "2024-07-09T15:45:39.4388717+03:00"
+    "Weight": 23.5,
+    "Price": 985.91
   },
   {
-    "$type": "washingMachine",
+    "$type": "Cart.WashingMachine, Cart",
     "IsDryerIncluded": false,
     "Id": 14,
     "Name": "Стиральная машина-14",
-    "Weight": 20.54,
-    "Price": 745.85,
-    "TimeOfArrival": "2024-07-10T15:45:39.4388727+03:00"
+    "Weight": 18.74,
+    "Price": 710.64
   },
   {
-    "$type": "chips",
+    "$type": "Cart.Products.Chips, Cart",
     "Id": 15,
     "Name": "Чипсы-15",
-    "Weight": 21.36,
-    "Price": 857.00,
-    "TimeOfArrival": "2024-07-05T15:45:39.438874+03:00"
+    "Weight": 28.88,
+    "Price": 632.24
   }
 ]

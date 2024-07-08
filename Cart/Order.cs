@@ -5,12 +5,12 @@ namespace Cart;
 /// <summary>
 /// Корзина (заказ) Интернет-магазина.
 /// </summary>
-public class Cart
+public class Order
 {
     /// <summary>
-    /// Товары, добавленные в карточку. TKey - товар. TValue - количество товара.
+    /// Товары, добавленные в заказ. TKey - товар. TValue - количество товара.
     /// </summary>
-    public Dictionary<Product, uint> Products = new();
+    public List<KeyValuePair<Product, uint>> Products = new();
 
     /// <summary>
     /// Дата отправления заказа.
@@ -30,7 +30,8 @@ public class Cart
         foreach (KeyValuePair<Product, uint> product in Products)
         {
             productNumber += 1;
-            Dictionary<object, string?> propertiesInfo = new(); //TKey - наименование свойства, значение свойства.
+            //TKey - наименование свойства, значение свойства.
+            Dictionary<object, string?> propertiesInfo = new();
             foreach (PropertyInfo propertyInfo in product.GetType().GetProperties())
             {
                 propertiesInfo.Add(propertyInfo.Name, propertyInfo.GetValue(product)?.ToString());

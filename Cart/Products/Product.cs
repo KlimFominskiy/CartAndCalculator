@@ -1,16 +1,12 @@
-﻿using Cart.Products;
-using System.Reflection;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Cart;
 
 /// <summary>
 /// Базовый класс продукта.
 /// </summary>
-[JsonDerivedType(typeof(WashingMachine), typeDiscriminator: "washingMachine")]
-[JsonDerivedType(typeof(Corvalol), typeDiscriminator: "corvalol")]
-[JsonDerivedType(typeof(Chips), typeDiscriminator: "chips")]
-public record class Product : IComparable<Product>
+
+public record Product : IComparable<Product>
 {
     /// <summary>
     /// Id.
@@ -32,19 +28,13 @@ public record class Product : IComparable<Product>
     /// </summary>
     public decimal Price { get; set; }
 
-    /// <summary>
-    /// Дата доставки.
-    /// </summary>
-    public DateTime TimeOfArrival { get; set; }
-
     [JsonConstructor]
-    protected Product(uint id, string name, double weight, decimal price, DateTime timeOfArrival)
+    protected Product(uint id, string name, double weight, decimal price)
     {
         Id = id;
         Name = name;
         Weight = weight;
         Price = price;
-        TimeOfArrival = timeOfArrival;
     }
 
     public int CompareTo(Product? other)
