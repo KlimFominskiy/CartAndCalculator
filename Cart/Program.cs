@@ -7,10 +7,20 @@ internal class Program
     internal static void Main(string[] args)
     {
         Console.OutputEncoding = Encoding.UTF8;
+
         //Store.GenerateProducts();
         Store.ReadProductsFromFile();
         //OrdersGenerator.GenerateRandomOrders();
         OrdersGenerator.ReadOrdersFromFile();
+
+        // Задание 1.
+        // Вывод ассортимента. Параметры типа товара - цена, вес.
+        // Значения параметров - самый низкий, самый высокий, любой (случайный).
+        Store.PrintProductsTypesInfo();
+        Order orderFromConsole = new Order();
+        orderFromConsole.ReadOrderFromConsole();
+
+        return;
 
         CartCalculator cartCalculator = new(new Calculator.Logger());
         Order orderA = new();
@@ -23,6 +33,7 @@ internal class Program
         Order orderC = cartCalculator.Add(orderA, orderB);
         orderC = cartCalculator.Multiply(orderC, 2);
 
+        // Работа с LINQ (задание 5).
         List<Order> validOrders = new();
         // Заказы, дешевле заданной суммы (10000.00).
         validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) < 10000.00M).ToList();

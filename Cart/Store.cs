@@ -25,6 +25,11 @@ public static class Store
     };
 
     /// <summary>
+    /// Типы товаров магазина.
+    /// </summary>
+    public static List<Type> ProductsTypes = new();
+
+    /// <summary>
     /// Сгенерировать продукты, доступные в магазине.
     /// </summary>
     public static void GenerateProducts()
@@ -77,19 +82,11 @@ public static class Store
                     continue;
             }
 
-            Console.WriteLine("Вывести список на экран? Введите y или n.");
+            Console.WriteLine("Вывести список товаров на экран? Введите y или n.");
             switch (Console.ReadLine())
             {
                 case "y":
-                    foreach (Product product in Products)
-                    {
-                        PropertyInfo[] propertyInfo = product.GetType().GetProperties();
-                        foreach (PropertyInfo property in propertyInfo)
-                        {
-                            Console.WriteLine($"{property.Name}, {property.GetValue(product)?.ToString()}");
-                        }
-                        Console.WriteLine();
-                    }
+                    PrintProductsInfo();
                     break;
                 case "n":
                     break;
@@ -123,5 +120,35 @@ public static class Store
         Random random = new();
         
         return Decimal.Round((decimal)(random.NextDouble() * (1000 - 500) + 500), 2);
+    }
+
+    /// <summary>
+    /// Вывод товаров магазина.
+    /// </summary>
+    public static void PrintProductsInfo()
+    {
+        foreach (Product product in Products)
+        {
+            PropertyInfo[] propertyInfo = product.GetType().GetProperties();
+            foreach (PropertyInfo property in propertyInfo)
+            {
+                Console.WriteLine($"{property.Name}, {property.GetValue(product)?.ToString()}");
+            }
+            Console.WriteLine();
+        }
+    }
+
+    /// <summary>
+    /// Вывод типов товаров магазина.
+    /// </summary>
+    public static void PrintProductsTypesInfo()
+    {
+        Console.WriteLine("Типы товаров в магазине.");
+        ProductsTypes = typeof(Product).Assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(Product))).ToList();
+        uint index = 0;
+        foreach (Type productType in ProductsTypes)
+        {
+            Console.WriteLine($"{index += 1}) {productType}");
+        }
     }
 }

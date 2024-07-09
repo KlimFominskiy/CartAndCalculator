@@ -124,7 +124,7 @@ public static class OrdersGenerator
     /// Вывести в консоль информацию о наборе заказов.
     /// </summary>
     /// <returns>Информация о заказах.</returns>
-    public static void GetOrdersInfo()
+    public static void PrintOrdersInfo()
     {
         uint index = 0;
         foreach(Order order in Orders)
