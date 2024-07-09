@@ -148,7 +148,6 @@ public static class OrdersGenerator
     public static void ReadOrdersFromFile()
     {
         string jsonOrdersList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders);
-        List<Order> orders = new();
-        orders = JsonConvert.DeserializeObject<List<Order>>(jsonOrdersList, jsonSerializerSettings);
+        Orders = JsonConvert.DeserializeObject<List<Order>>(jsonOrdersList, jsonSerializerSettings);
     }
 }

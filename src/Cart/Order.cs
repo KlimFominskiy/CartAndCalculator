@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Newtonsoft.Json;
+using System.Reflection;
 
 namespace Cart;
 
@@ -18,29 +19,27 @@ public class Order
     public DateTime? TimeOfDeparture = null;
 
     /// <summary>
-    /// Получить информацию о товарах в корзине.
+    /// Настройка сеариализации.
     /// </summary>
-    /// <returns>Информацию о товарах в корзине.</returns>
-    public Dictionary<uint, Dictionary<object, string?>> GetOrderInfo()
+    private static JsonSerializerSettings jsonSerializerSettings = new()
     {
-        //TKey - номер товара в корзине, TValue - словарь свойств товара (полей класса товара).
-        //TKey вложенного словаря - наименование свойства. TValue вложенное словаря - значение свойства.
-        Dictionary<uint, Dictionary<object, string?>> cartInfo = new(); 
-        uint productNumber = 0;
+        Formatting = Formatting.Indented,
+        TypeNameHandling = TypeNameHandling.Auto,
+        NullValueHandling = NullValueHandling.Include
+    };
+
+    /// <summary>
+    /// Вывести в консоль информацию о товарах в корзине.
+    /// </summary>
+    public void PrintOrderInfo()
+    {
         foreach (KeyValuePair<Product, uint> product in Products)
         {
-            productNumber += 1;
-            //TKey - наименование свойства, значение свойства.
-            Dictionary<object, string?> propertiesInfo = new();
             foreach (PropertyInfo propertyInfo in product.GetType().GetProperties())
             {
-                propertiesInfo.Add(propertyInfo.Name, propertyInfo.GetValue(product)?.ToString());
+                Console.WriteLine($"{propertyInfo.Name} - {propertyInfo.GetValue(product)?.ToString()}");
             }
-
-            cartInfo.Add(productNumber, propertiesInfo);
         }
-         
-        return cartInfo;
     }
 
     /// <summary>
@@ -90,5 +89,34 @@ public class Order
                 Products.Add(new KeyValuePair<Product, uint> (validProduct, Convert.ToUInt32(productNumber)));
             }
         }
+    }
+
+    /// <summary>
+    /// Записать заказ в файл Order.json.
+    /// </summary>
+    public void WriteOrderToFile()
+    {
+        string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        string fileName = "Order.json";
+        string jsonOrder = JsonConvert.SerializeObject(this, jsonSerializerSettings);
+        File.AppendAllText(projectPath + Path.DirectorySeparatorChar + fileName, jsonOrder);
+    }
+
+    /// <summary>
+    /// Считать заказ из файла.
+    /// </summary>
+    /// <param name="fileName">Путь к файлу.</param>
+    public Order ReadOrderFromFile()
+    {
+        Console.WriteLine("Введите полный путь к файлу. Нажмите enter для использования файла по умолчанию.");
+        string fileName = Console.ReadLine();
+        if (string.IsNullOrEmpty(fileName))
+        {
+            string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+            fileName = (projectPath + Path.DirectorySeparatorChar + "Order.json");
+        }
+        string jsonOrder = File.ReadAllText(fileName);
+
+        return JsonConvert.DeserializeObject<Order>(jsonOrder, jsonSerializerSettings);
     }
 }
