@@ -109,12 +109,22 @@ public static class Store
         Products = JsonConvert.DeserializeObject<List<Product>>(jsonProductsList, jsonSerializerSettings);
     }
 
+    /// <summary>
+    /// Получить вес товара по его id.
+    /// </summary>
+    /// <param name="ProductId">Id товара.</param>
+    /// <returns>Вес товара.</returns>
     private static double GetWeight(uint ProductId)
     {
         Random random = new();
         return Double.Round(random.NextDouble() * (30 - 15) + 15, 2);
     }
 
+    /// <summary>
+    /// Получить цену товара по его id.
+    /// </summary>
+    /// <param name="ProductId">Id товара.</param>
+    /// <returns>Цена товара.</returns>
     private static decimal GetPrice(uint ProductId)
     {
         Random random = new();
