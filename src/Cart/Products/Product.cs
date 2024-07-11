@@ -36,6 +36,14 @@ public class Product
     [JsonConstructor]
     protected Product(uint id, string? name, double? weight, decimal? price)
     {
+        if (weight <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(weight), message:"Вес должен быть положительным.");
+        }
+        if (price <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(price), message: "Цена должна быть положительной.");
+        }
         Id = id;
         Name = name;
         Weight = weight;

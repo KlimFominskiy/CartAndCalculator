@@ -123,8 +123,27 @@ public class Order
         return JsonSerializer.Deserialize<Order>(jsonOrder, jsonSerializerOptions);
     }
 
-    public void UpdateProduct(Product newProduct)
+    /// <summary>
+    /// Изменить товар в заказе.
+    /// </summary>
+    /// <param name="product"></param>
+    /// <param name="number"></param>
+    public void UpdateProduct(uint productId, Product product, uint number)
     {
-        Product oldProduct = Products.FirstOrDefault(product => product.Key.Id == newProduct.Id).Key;
+        int productIndexInOrder = this.Products.FindIndex(orderItem => orderItem.Key.Id == productId);
+        int newProductIndexInOrder = this.Products.FindIndex(orderItem => orderItem.Key.Id == product.Id);
+        KeyValuePair<Product, uint> newProduct;
+        // Если продукта с таким id нет в заказе.
+        if (newProductIndexInOrder == -1)
+        {
+            newProduct = new(product, number);
+        }
+        else
+        {
+            newProduct = new(product, number + this.Products[newProductIndexInOrder].Value);
+            this.Products.RemoveAt(newProductIndexInOrder);
+        }
+
+        this.Products.Add(newProduct);
     }
 }

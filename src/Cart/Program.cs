@@ -1,4 +1,6 @@
 ﻿using Cart.Products;
+using System.Collections.Frozen;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
 using System.Text;
@@ -20,7 +22,7 @@ internal class Program
         OrdersGenerator.ReadOrdersFromFile();
         Order randomOrder = OrdersGenerator.GenerateOrderBySum(20000M);
         randomOrder = OrdersGenerator.GenerateOrderBySum(10000M, 20000M);
-        randomOrder = OrdersGenerator.GenerateOrderByCount(10);
+        randomOrder = OrdersGenerator.GenerateOrderByCount(40);
 
         // Задание 1. Ввод заказа из консоли с учётом пожеланий пользователя.
         Store.PrintProductsTypesInfo();
@@ -78,5 +80,7 @@ internal class Program
         // Заказы, отправленные до указанной даты.
         DateTime maxDepartureDateTime = DateTime.Now.AddDays(1);
         validOrders = OrdersGenerator.Orders.Where(order => order.TimeOfDeparture <= maxDepartureDateTime).ToList();
+
+        orderFromFile.UpdateProduct(11, Store.Products.First(), 25);
     }
 }
