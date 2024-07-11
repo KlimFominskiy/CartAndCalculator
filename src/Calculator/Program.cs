@@ -1,9 +1,13 @@
-﻿namespace Calculator;
+﻿using System.Text;
+
+namespace Calculator;
 
 internal class Program
 {
     internal static void Main(string[] args)
     {
+        Console.OutputEncoding = Encoding.UTF8;
+
         while (true)
         {
             Calculator calculator;

@@ -1,7 +1,4 @@
 ﻿using Cart.Products;
-using System.Collections.Frozen;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Reflection;
 using System.Text;
 
@@ -12,6 +9,13 @@ internal class Program
     internal static void Main(string[] args)
     {
         Console.OutputEncoding = Encoding.UTF8;
+
+        Order myOrderA = new();
+        Order myOrderB = new();
+        myOrderB.TimeOfDeparture = DateTime.Now;
+        Console.WriteLine(myOrderA.TimeOfDeparture);
+
+        return;
 
         // Задание 2. Считывание товаров из файла.
         //Store.GenerateProducts();

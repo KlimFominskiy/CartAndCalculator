@@ -146,4 +146,10 @@ public class Order
 
         this.Products.Add(newProduct);
     }
+
+    public void CopyTo(Order other)
+    {
+        other.Products.AddRange(this.Products);
+        other.TimeOfDeparture = this.TimeOfDeparture;
+    }
 }

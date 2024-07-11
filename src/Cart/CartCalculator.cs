@@ -47,18 +47,21 @@ public class CartCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        KeyValuePair<Product, uint> orderItem = order.Products.FirstOrDefault(orderItem => orderItem.Key == product);
-        if (!orderItem.Equals(default(KeyValuePair<Product, uint>)))
+        Order newOrder = new();
+        order.CopyTo(newOrder);
+        KeyValuePair<Product, uint> orderItem = newOrder.Products.FirstOrDefault(orderItem => orderItem.Key == product);
+        Dictionary<Product, uint> products = newOrder.Products.ToDictionary();
+        if (products.ContainsKey(product))
         {
-            int orderItemIndex = order.Products.IndexOf(orderItem);
-            order.Products[orderItemIndex] = new KeyValuePair<Product, uint> (product, order.Products[orderItemIndex].Value + 1);
+            products[product] += 1;
+            newOrder.Products = products.ToList();
         }
         else
         {
-            order.Products.Add(new KeyValuePair<Product, uint>(product, 1));
+            newOrder.Products.Add(new KeyValuePair<Product, uint>(product, 1));
         }
 
-        return order;
+        return newOrder;
     }
 
     /// <summary>
@@ -82,12 +85,13 @@ public class CartCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order orderC = orderA;
+        Order orderC = new();
+        orderA.CopyTo(orderC);
         foreach (KeyValuePair<Product, uint> productB in orderB.Products)
         {
             for (uint i = 0; i < productB.Value; i++)
             {
-                Add(orderC, productB.Key);
+                orderC = Add(orderC, productB.Key);
             }
         }
 
@@ -104,19 +108,17 @@ public class CartCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        KeyValuePair<Product, uint> orderItem = order.Products.FirstOrDefault(orderItem => orderItem.Key == product);
-        if (!orderItem.Equals(default(KeyValuePair<Product, uint>)))
+        Order newOrder = new();
+        order.CopyTo(newOrder);
+        Dictionary<Product, uint> products = newOrder.Products.ToDictionary();
+        if (products.ContainsKey(product))
         {
-            int orderItemIndex = order.Products.IndexOf(orderItem);
-            if (order.Products[orderItemIndex].Value == 1)
+            if ((products[product] -= 1) == 0)
             {
-                order.Products.RemoveAt(orderItemIndex);
-            }
-            else
-            {
-                order.Products[orderItemIndex] = new KeyValuePair<Product, uint>(product, order.Products[orderItemIndex].Value - 1);
+                products.Remove(product);
             }
         }
+        newOrder.Products = products.ToList();
 
         return order;
     }
@@ -128,11 +130,12 @@ public class CartCalculator : Calculator.Calculator
     /// <param name="orderB">Вторая корзина.</param>
     /// <returns>Новая исходная корзина без удалённых товаров.</returns>
     /// <exception cref="Exception">Исключение, если во второй корзине есть товары, которых нет в первой (исходной) корзине.</exception>
-    public Order Substract(Order orderA, Order orderB)
+    public Order Subtract(Order orderA, Order orderB)
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
         
-        Order orderC = orderA;
+        Order orderC = new();
+        orderA.CopyTo(orderC);
         foreach (KeyValuePair<Product, uint> product in orderC.Products)
         {
             KeyValuePair<Product, uint> orderItem = orderC.Products.FirstOrDefault(orderItem => orderItem.Key == product.Key);
@@ -155,14 +158,13 @@ public class CartCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order newOrder = order;
-        foreach (KeyValuePair<Product, uint> keyValuePair in newOrder.Products)
+        Order newOrder = new();
+        order.CopyTo(newOrder);
+        foreach (KeyValuePair<Product, uint> orderItem in newOrder.Products)
         {
-            KeyValuePair<Product, uint> orderItem = newOrder.Products.FirstOrDefault(orderItem => orderItem.Key == product);
-            if (keyValuePair.Key.GetType() == product.GetType())
+            if (orderItem.Key.GetType() == product.GetType())
             {
-                int orderItemIndex = newOrder.Products.IndexOf(orderItem);
-                order.Products.RemoveAt(orderItemIndex);
+                newOrder.Products.Remove(orderItem);
             }
         }
 
@@ -180,10 +182,10 @@ public class CartCalculator : Calculator.Calculator
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
         Order newOrder = new();
-        foreach (KeyValuePair<Product, uint> orderItem in order.Products)
+        order.CopyTo(newOrder);
+        foreach (KeyValuePair<Product, uint> orderItem in newOrder.Products)
         {
-            int orderItemIndex = order.Products.IndexOf(orderItem);
-            KeyValuePair<Product, uint> newOrderItem = new KeyValuePair<Product, uint>(orderItem.Key, orderItem.Value / number);
+            KeyValuePair<Product, uint> newOrderItem = new(orderItem.Key, orderItem.Value / number);
             newOrder.Products.Add(newOrderItem);
         }
 
