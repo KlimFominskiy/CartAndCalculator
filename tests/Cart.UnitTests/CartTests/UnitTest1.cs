@@ -1,3 +1,5 @@
+using Cart;
+
 namespace CartTests;
 
 public class Tests

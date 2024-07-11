@@ -1,44 +1,44 @@
-﻿using Newtonsoft.Json;
+﻿using Cart.Products;
+using System.Text.Json.Serialization;
 
 namespace Cart;
 
 /// <summary>
 /// Базовый класс продукта.
 /// </summary>
-
-public record Product : IComparable<Product>
+[Serializable]
+[JsonDerivedType(typeof(Product), typeDiscriminator: "Product")]
+[JsonDerivedType(typeof(Chips), typeDiscriminator: "Чипсы")]
+[JsonDerivedType(typeof(Corvalol), typeDiscriminator: "Корвалол")]
+[JsonDerivedType(typeof(WashingMachine), typeDiscriminator: "Стиральная машина")]
+public class Product
 {
     /// <summary>
-    /// Id.
+    /// Идентификационный номер.
     /// </summary>
     public uint Id { get; set; }
 
     /// <summary>
     /// Наименование.
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Вес.
     /// </summary>
-    public double Weight { get; set; }
+    public double? Weight { get; set; }
 
     /// <summary>
     /// Стоимость.
     /// </summary>
-    public decimal Price { get; set; }
+    public decimal? Price { get; set; }
 
     [JsonConstructor]
-    protected Product(uint id, string name, double weight, decimal price)
+    protected Product(uint id, string? name, double? weight, decimal? price)
     {
         Id = id;
         Name = name;
         Weight = weight;
         Price = price;
-    }
-
-    public int CompareTo(Product? other)
-    {
-        return Id.CompareTo(other?.Id);
     }
 }

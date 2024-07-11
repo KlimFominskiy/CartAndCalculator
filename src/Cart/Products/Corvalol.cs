@@ -1,10 +1,11 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace Cart.Products;
 
-namespace Cart.Products;
-
-public record Corvalol : Product
+/// <summary>
+/// Корвалол.
+/// </summary>
+public class Corvalol : Product
 {
-    public Corvalol(uint id, string name, double weight, decimal price) : base(id, name, weight, price)
+    public Corvalol(uint id, string? name, double? weight, decimal? price) : base(id, name, weight, price)
     {
     }
 }

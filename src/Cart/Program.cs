@@ -1,5 +1,5 @@
 ﻿using Cart.Products;
-using Newtonsoft.Json;
+using System.Collections.Immutable;
 using System.Reflection;
 using System.Text;
 
@@ -18,21 +18,30 @@ internal class Program
         // Задание 4. Генератор тестовых заказов.
         //OrdersGenerator.GenerateRandomOrders();
         OrdersGenerator.ReadOrdersFromFile();
+        Order randomOrder = OrdersGenerator.GenerateOrderBySum(20000M);
+        randomOrder = OrdersGenerator.GenerateOrderBySum(10000M, 20000M);
+        randomOrder = OrdersGenerator.GenerateOrderByCount(10);
 
         // Задание 1. Ввод заказа из консоли с учётом пожеланий пользователя.
-        //Store.PrintProductsTypesInfo();
+        Store.PrintProductsTypesInfo();
         Order orderFromConsole = new Order();
-        //orderFromConsole.ReadOrderFromConsole();
+        orderFromConsole.ReadOrderFromConsole();
+        // Отсортировать по алфавиту без LINQ.
+        orderFromConsole.Products.Sort((a, b) => a.Key.Name.CompareTo(b.Key.Name));
+        // Вывести информацию о заказе (состав, итоговая стоимость, итоговый вес).
+        orderFromConsole.PrintOrderInfo();
         //orderFromConsole.WriteOrderToFile();
 
         //Задание 7. Ввод заказа из файла.
         Order orderFromFile= new();
         orderFromFile = orderFromFile.ReadOrderFromFile();
         Dictionary<Product, uint> orderFromFileDictionary = orderFromFile.Products.ToDictionary();
-        //orderFromFile.PrintOrderInfo();
-        foreach(KeyValuePair<Product, uint> orderItem in orderFromFileDictionary)
+        Console.WriteLine("Общая информация о заказе.");
+        orderFromFile.PrintOrderInfo();
+        Console.WriteLine();
+        Console.WriteLine("Подробная информация о товарах в заказе.");
+        foreach (KeyValuePair<Product, uint> orderItem in orderFromFileDictionary)
         {
-            Console.WriteLine("Состав заказа\n");
             PropertyInfo[] propertyInfo = orderItem.Key.GetType().GetProperties();
             foreach (PropertyInfo property in propertyInfo)
             {

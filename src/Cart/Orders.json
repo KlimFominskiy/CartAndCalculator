@@ -3,491 +3,374 @@
     "Products": [
       {
         "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
+          "$type": "Корвалол",
           "Id": 1,
           "Name": "Корвалол-1",
-          "Weight": 28.28,
-          "Price": 710.82
+          "Weight": 15.8,
+          "Price": 591.67
         },
         "Value": 2
       },
       {
         "Key": {
-          "$type": "Cart.WashingMachine, Cart",
+          "$type": "Стиральная машина",
           "IsDryerIncluded": false,
-          "Id": 2,
-          "Name": "Стиральная машина-2",
-          "Weight": 22.63,
-          "Price": 897.18
-        },
-        "Value": 2
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Chips, Cart",
-          "Id": 3,
-          "Name": "Чипсы-3",
-          "Weight": 19.02,
-          "Price": 615.47
-        },
-        "Value": 3
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
-          "Id": 4,
-          "Name": "Корвалол-4",
-          "Weight": 17.38,
-          "Price": 740.46
-        },
-        "Value": 3
-      },
-      {
-        "Key": {
-          "$type": "Cart.WashingMachine, Cart",
-          "IsDryerIncluded": true,
           "Id": 5,
           "Name": "Стиральная машина-5",
-          "Weight": 16.24,
-          "Price": 819.42
-        },
-        "Value": 2
-      },
-      {
-        "Key": {
-          "$type": "Cart.WashingMachine, Cart",
-          "IsDryerIncluded": true,
-          "Id": 8,
-          "Name": "Стиральная машина-8",
-          "Weight": 24.77,
-          "Price": 704.69
-        },
-        "Value": 2
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
-          "Id": 10,
-          "Name": "Корвалол-10",
-          "Weight": 18.56,
-          "Price": 616.50
-        },
-        "Value": 3
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Chips, Cart",
-          "Id": 12,
-          "Name": "Чипсы-12",
-          "Weight": 18.66,
-          "Price": 663.55
-        },
-        "Value": 2
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
-          "Id": 13,
-          "Name": "Корвалол-13",
-          "Weight": 23.5,
-          "Price": 985.91
-        },
-        "Value": 2
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Chips, Cart",
-          "Id": 15,
-          "Name": "Чипсы-15",
-          "Weight": 28.88,
-          "Price": 632.24
+          "Weight": 24.62,
+          "Price": 706.97
         },
         "Value": 1
-      }
-    ],
-    "TimeOfDeparture": "2024-07-08T15:38:51.1318964+03:00"
-  },
-  {
-    "Products": [
-      {
-        "Key": {
-          "$type": "Cart.Products.Chips, Cart",
-          "Id": 3,
-          "Name": "Чипсы-3",
-          "Weight": 19.02,
-          "Price": 615.47
-        },
-        "Value": 2
       },
       {
         "Key": {
-          "$type": "Cart.Products.Chips, Cart",
+          "$type": "Чипсы",
           "Id": 6,
           "Name": "Чипсы-6",
-          "Weight": 22.52,
-          "Price": 654.81
+          "Weight": 20.16,
+          "Price": 741.53
         },
-        "Value": 2
+        "Value": 1
       },
       {
         "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
+          "$type": "Корвалол",
           "Id": 7,
           "Name": "Корвалол-7",
-          "Weight": 16.35,
-          "Price": 656.71
-        },
-        "Value": 3
-      },
-      {
-        "Key": {
-          "$type": "Cart.WashingMachine, Cart",
-          "IsDryerIncluded": true,
-          "Id": 8,
-          "Name": "Стиральная машина-8",
-          "Weight": 24.77,
-          "Price": 704.69
+          "Weight": 25.78,
+          "Price": 823.42
         },
         "Value": 2
       },
       {
         "Key": {
-          "$type": "Cart.Products.Chips, Cart",
-          "Id": 9,
-          "Name": "Чипсы-9",
-          "Weight": 17.27,
-          "Price": 909.59
-        },
-        "Value": 3
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Chips, Cart",
-          "Id": 12,
-          "Name": "Чипсы-12",
-          "Weight": 18.66,
-          "Price": 663.55
-        },
-        "Value": 1
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
-          "Id": 13,
-          "Name": "Корвалол-13",
-          "Weight": 23.5,
-          "Price": 985.91
-        },
-        "Value": 2
-      },
-      {
-        "Key": {
-          "$type": "Cart.WashingMachine, Cart",
-          "IsDryerIncluded": false,
-          "Id": 14,
-          "Name": "Стиральная машина-14",
-          "Weight": 18.74,
-          "Price": 710.64
+          "$type": "Чипсы",
+          "Id": 15,
+          "Name": "Чипсы-15",
+          "Weight": 16.97,
+          "Price": 863.74
         },
         "Value": 3
       }
     ],
-    "TimeOfDeparture": "2024-07-08T15:38:51.1319024+03:00"
+    "TimeOfDeparture": "2024-07-10T17:03:22.9581171+03:00"
   },
   {
     "Products": [
       {
         "Key": {
-          "$type": "Cart.WashingMachine, Cart",
+          "$type": "Стиральная машина",
           "IsDryerIncluded": false,
           "Id": 2,
           "Name": "Стиральная машина-2",
-          "Weight": 22.63,
-          "Price": 897.18
-        },
-        "Value": 2
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Chips, Cart",
-          "Id": 3,
-          "Name": "Чипсы-3",
-          "Weight": 19.02,
-          "Price": 615.47
-        },
-        "Value": 3
-      },
-      {
-        "Key": {
-          "$type": "Cart.WashingMachine, Cart",
-          "IsDryerIncluded": true,
-          "Id": 5,
-          "Name": "Стиральная машина-5",
-          "Weight": 16.24,
-          "Price": 819.42
+          "Weight": 15.25,
+          "Price": 857.87
         },
         "Value": 1
       },
       {
         "Key": {
-          "$type": "Cart.Products.Chips, Cart",
-          "Id": 6,
-          "Name": "Чипсы-6",
-          "Weight": 22.52,
-          "Price": 654.81
-        },
-        "Value": 3
-      },
-      {
-        "Key": {
-          "$type": "Cart.WashingMachine, Cart",
-          "IsDryerIncluded": true,
-          "Id": 8,
-          "Name": "Стиральная машина-8",
-          "Weight": 24.77,
-          "Price": 704.69
-        },
-        "Value": 2
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
-          "Id": 10,
-          "Name": "Корвалол-10",
-          "Weight": 18.56,
-          "Price": 616.50
-        },
-        "Value": 2
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Chips, Cart",
-          "Id": 12,
-          "Name": "Чипсы-12",
-          "Weight": 18.66,
-          "Price": 663.55
-        },
-        "Value": 3
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
-          "Id": 13,
-          "Name": "Корвалол-13",
-          "Weight": 23.5,
-          "Price": 985.91
-        },
-        "Value": 1
-      },
-      {
-        "Key": {
-          "$type": "Cart.WashingMachine, Cart",
-          "IsDryerIncluded": false,
-          "Id": 14,
-          "Name": "Стиральная машина-14",
-          "Weight": 18.74,
-          "Price": 710.64
-        },
-        "Value": 3
-      }
-    ],
-    "TimeOfDeparture": "2024-07-08T15:38:51.1319034+03:00"
-  },
-  {
-    "Products": [
-      {
-        "Key": {
-          "$type": "Cart.WashingMachine, Cart",
-          "IsDryerIncluded": false,
-          "Id": 2,
-          "Name": "Стиральная машина-2",
-          "Weight": 22.63,
-          "Price": 897.18
-        },
-        "Value": 3
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
+          "$type": "Корвалол",
           "Id": 4,
           "Name": "Корвалол-4",
-          "Weight": 17.38,
-          "Price": 740.46
+          "Weight": 27.9,
+          "Price": 831.56
         },
         "Value": 3
       },
       {
         "Key": {
-          "$type": "Cart.WashingMachine, Cart",
-          "IsDryerIncluded": true,
+          "$type": "Стиральная машина",
+          "IsDryerIncluded": false,
           "Id": 5,
           "Name": "Стиральная машина-5",
-          "Weight": 16.24,
-          "Price": 819.42
+          "Weight": 24.62,
+          "Price": 706.97
+        },
+        "Value": 3
+      },
+      {
+        "Key": {
+          "$type": "Чипсы",
+          "Id": 9,
+          "Name": "Чипсы-9",
+          "Weight": 15.6,
+          "Price": 515.82
         },
         "Value": 2
       },
       {
         "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
+          "$type": "Корвалол",
           "Id": 10,
           "Name": "Корвалол-10",
-          "Weight": 18.56,
-          "Price": 616.50
+          "Weight": 28.96,
+          "Price": 959.53
         },
-        "Value": 3
+        "Value": 2
       },
       {
         "Key": {
-          "$type": "Cart.WashingMachine, Cart",
+          "$type": "Стиральная машина",
           "IsDryerIncluded": true,
           "Id": 11,
           "Name": "Стиральная машина-11",
-          "Weight": 15.25,
-          "Price": 660.52
-        },
-        "Value": 1
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Chips, Cart",
-          "Id": 12,
-          "Name": "Чипсы-12",
-          "Weight": 18.66,
-          "Price": 663.55
+          "Weight": 23.6,
+          "Price": 981.88
         },
         "Value": 3
       },
       {
         "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
+          "$type": "Чипсы",
+          "Id": 12,
+          "Name": "Чипсы-12",
+          "Weight": 24.92,
+          "Price": 860.99
+        },
+        "Value": 1
+      },
+      {
+        "Key": {
+          "$type": "Корвалол",
           "Id": 13,
           "Name": "Корвалол-13",
-          "Weight": 23.5,
-          "Price": 985.91
+          "Weight": 23.47,
+          "Price": 992.40
         },
-        "Value": 2
+        "Value": 1
+      },
+      {
+        "Key": {
+          "$type": "Чипсы",
+          "Id": 15,
+          "Name": "Чипсы-15",
+          "Weight": 16.97,
+          "Price": 863.74
+        },
+        "Value": 1
       }
     ],
-    "TimeOfDeparture": "2024-07-08T15:38:51.1319041+03:00"
+    "TimeOfDeparture": "2024-07-10T17:03:22.9581234+03:00"
   },
   {
     "Products": [
       {
         "Key": {
-          "$type": "Cart.WashingMachine, Cart",
+          "$type": "Стиральная машина",
           "IsDryerIncluded": false,
-          "Id": 2,
-          "Name": "Стиральная машина-2",
-          "Weight": 22.63,
-          "Price": 897.18
-        },
-        "Value": 1
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Chips, Cart",
-          "Id": 3,
-          "Name": "Чипсы-3",
-          "Weight": 19.02,
-          "Price": 615.47
-        },
-        "Value": 1
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
-          "Id": 4,
-          "Name": "Корвалол-4",
-          "Weight": 17.38,
-          "Price": 740.46
+          "Id": 5,
+          "Name": "Стиральная машина-5",
+          "Weight": 24.62,
+          "Price": 706.97
         },
         "Value": 3
       },
       {
         "Key": {
-          "$type": "Cart.WashingMachine, Cart",
-          "IsDryerIncluded": true,
-          "Id": 5,
-          "Name": "Стиральная машина-5",
-          "Weight": 16.24,
-          "Price": 819.42
+          "$type": "Чипсы",
+          "Id": 12,
+          "Name": "Чипсы-12",
+          "Weight": 24.92,
+          "Price": 860.99
         },
         "Value": 2
       },
       {
         "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
-          "Id": 7,
-          "Name": "Корвалол-7",
-          "Weight": 16.35,
-          "Price": 656.71
-        },
-        "Value": 3
-      },
-      {
-        "Key": {
-          "$type": "Cart.WashingMachine, Cart",
-          "IsDryerIncluded": true,
-          "Id": 8,
-          "Name": "Стиральная машина-8",
-          "Weight": 24.77,
-          "Price": 704.69
-        },
-        "Value": 1
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
-          "Id": 10,
-          "Name": "Корвалол-10",
-          "Weight": 18.56,
-          "Price": 616.50
-        },
-        "Value": 3
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Chips, Cart",
-          "Id": 12,
-          "Name": "Чипсы-12",
-          "Weight": 18.66,
-          "Price": 663.55
-        },
-        "Value": 1
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Corvalol, Cart",
+          "$type": "Корвалол",
           "Id": 13,
           "Name": "Корвалол-13",
-          "Weight": 23.5,
-          "Price": 985.91
+          "Weight": 23.47,
+          "Price": 992.40
         },
-        "Value": 1
+        "Value": 2
       },
       {
         "Key": {
-          "$type": "Cart.WashingMachine, Cart",
+          "$type": "Стиральная машина",
           "IsDryerIncluded": false,
           "Id": 14,
           "Name": "Стиральная машина-14",
-          "Weight": 18.74,
-          "Price": 710.64
-        },
-        "Value": 3
-      },
-      {
-        "Key": {
-          "$type": "Cart.Products.Chips, Cart",
-          "Id": 15,
-          "Name": "Чипсы-15",
-          "Weight": 28.88,
-          "Price": 632.24
+          "Weight": 26.89,
+          "Price": 946.54
         },
         "Value": 2
       }
     ],
-    "TimeOfDeparture": "2024-07-08T15:38:51.1319052+03:00"
+    "TimeOfDeparture": "2024-07-10T17:03:22.9581249+03:00"
+  },
+  {
+    "Products": [
+      {
+        "Key": {
+          "$type": "Корвалол",
+          "Id": 1,
+          "Name": "Корвалол-1",
+          "Weight": 15.8,
+          "Price": 591.67
+        },
+        "Value": 3
+      },
+      {
+        "Key": {
+          "$type": "Стиральная машина",
+          "IsDryerIncluded": false,
+          "Id": 2,
+          "Name": "Стиральная машина-2",
+          "Weight": 15.25,
+          "Price": 857.87
+        },
+        "Value": 2
+      },
+      {
+        "Key": {
+          "$type": "Чипсы",
+          "Id": 3,
+          "Name": "Чипсы-3",
+          "Weight": 15.4,
+          "Price": 993.71
+        },
+        "Value": 3
+      },
+      {
+        "Key": {
+          "$type": "Чипсы",
+          "Id": 6,
+          "Name": "Чипсы-6",
+          "Weight": 20.16,
+          "Price": 741.53
+        },
+        "Value": 1
+      },
+      {
+        "Key": {
+          "$type": "Корвалол",
+          "Id": 7,
+          "Name": "Корвалол-7",
+          "Weight": 25.78,
+          "Price": 823.42
+        },
+        "Value": 3
+      },
+      {
+        "Key": {
+          "$type": "Стиральная машина",
+          "IsDryerIncluded": true,
+          "Id": 8,
+          "Name": "Стиральная машина-8",
+          "Weight": 15.86,
+          "Price": 996.98
+        },
+        "Value": 1
+      },
+      {
+        "Key": {
+          "$type": "Корвалол",
+          "Id": 13,
+          "Name": "Корвалол-13",
+          "Weight": 23.47,
+          "Price": 992.40
+        },
+        "Value": 2
+      },
+      {
+        "Key": {
+          "$type": "Чипсы",
+          "Id": 15,
+          "Name": "Чипсы-15",
+          "Weight": 16.97,
+          "Price": 863.74
+        },
+        "Value": 1
+      }
+    ],
+    "TimeOfDeparture": "2024-07-10T17:03:22.9581259+03:00"
+  },
+  {
+    "Products": [
+      {
+        "Key": {
+          "$type": "Корвалол",
+          "Id": 1,
+          "Name": "Корвалол-1",
+          "Weight": 15.8,
+          "Price": 591.67
+        },
+        "Value": 2
+      },
+      {
+        "Key": {
+          "$type": "Чипсы",
+          "Id": 3,
+          "Name": "Чипсы-3",
+          "Weight": 15.4,
+          "Price": 993.71
+        },
+        "Value": 1
+      },
+      {
+        "Key": {
+          "$type": "Корвалол",
+          "Id": 4,
+          "Name": "Корвалол-4",
+          "Weight": 27.9,
+          "Price": 831.56
+        },
+        "Value": 1
+      },
+      {
+        "Key": {
+          "$type": "Стиральная машина",
+          "IsDryerIncluded": false,
+          "Id": 5,
+          "Name": "Стиральная машина-5",
+          "Weight": 24.62,
+          "Price": 706.97
+        },
+        "Value": 1
+      },
+      {
+        "Key": {
+          "$type": "Чипсы",
+          "Id": 6,
+          "Name": "Чипсы-6",
+          "Weight": 20.16,
+          "Price": 741.53
+        },
+        "Value": 2
+      },
+      {
+        "Key": {
+          "$type": "Корвалол",
+          "Id": 7,
+          "Name": "Корвалол-7",
+          "Weight": 25.78,
+          "Price": 823.42
+        },
+        "Value": 3
+      },
+      {
+        "Key": {
+          "$type": "Чипсы",
+          "Id": 9,
+          "Name": "Чипсы-9",
+          "Weight": 15.6,
+          "Price": 515.82
+        },
+        "Value": 3
+      },
+      {
+        "Key": {
+          "$type": "Чипсы",
+          "Id": 12,
+          "Name": "Чипсы-12",
+          "Weight": 24.92,
+          "Price": 860.99
+        },
+        "Value": 1
+      }
+    ],
+    "TimeOfDeparture": "2024-07-10T17:03:22.9581271+03:00"
   }
 ]

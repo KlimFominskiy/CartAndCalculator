@@ -1,10 +1,11 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace Cart.Products;
 
-namespace Cart.Products;
-
-public record Chips : Product
+/// <summary>
+/// Чипсы.
+/// </summary>
+public class Chips : Product
 {
-    public Chips(uint id, string name, double weight, decimal price) : base(id, name, weight, price)
+    public Chips(uint id, string? name, double? weight, decimal? price) : base(id, name, weight, price)
     {
     }
 }

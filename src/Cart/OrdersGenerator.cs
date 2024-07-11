@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -39,11 +37,11 @@ public static class OrdersGenerator
     /// <summary>
     /// Настройка сеариализации.
     /// </summary>
-    private static JsonSerializerSettings jsonSerializerSettings = new()
+    private static JsonSerializerOptions jsonSerializerOptions = new()
     {
-        Formatting = Formatting.Indented,
-        TypeNameHandling = TypeNameHandling.Auto,
-        NullValueHandling = NullValueHandling.Include
+        WriteIndented = true,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        IncludeFields = true,
     };
 
     /// <summary>
@@ -59,15 +57,14 @@ public static class OrdersGenerator
             {
                 if (random.Next(0, 2) > 0)
                 {
-                    KeyValuePair<Product, uint> orderItem = new KeyValuePair<Product, uint>(product, Convert.ToUInt32(random.Next(1, 4)));
-                    order.Products.Add(orderItem);
+                    order.Products.Add(new KeyValuePair<Product, uint>(product, Convert.ToUInt32(random.Next(1, 4))));
                     order.TimeOfDeparture = DateTime.Now;
                 }
             }
             orders.Add(order);
         }
 
-        File.AppendAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders, JsonConvert.SerializeObject(orders, jsonSerializerSettings));
+        File.WriteAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders, JsonSerializer.Serialize(orders, jsonSerializerOptions));
     }
 
     /// <summary>
@@ -148,6 +145,6 @@ public static class OrdersGenerator
     public static void ReadOrdersFromFile()
     {
         string jsonOrdersList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders);
-        Orders = JsonConvert.DeserializeObject<List<Order>>(jsonOrdersList, jsonSerializerSettings);
+        Orders = JsonSerializer.Deserialize<List<Order>>(jsonOrdersList, jsonSerializerOptions);
     }
 }

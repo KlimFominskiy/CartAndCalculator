@@ -1,6 +1,6 @@
 ﻿using Cart.Products;
-using Newtonsoft.Json;
 using System.Reflection;
+using System.Text.Json;
 
 namespace Cart;
 
@@ -15,29 +15,29 @@ public static class Store
     public static List<Product> Products = new();
 
     /// <summary>
-    /// Настройка сеариализации.
-    /// </summary>
-    private static JsonSerializerSettings jsonSerializerSettings = new()
-    {
-        Formatting = Formatting.Indented,
-        TypeNameHandling = TypeNameHandling.Auto,
-        NullValueHandling = NullValueHandling.Include
-    };
-
-    /// <summary>
     /// Типы товаров магазина.
     /// </summary>
     public static List<Type> ProductsTypes = new();
 
     /// <summary>
-    /// Сгенерировать продукты, доступные в магазине.
+    /// Настройка сеариализации.
+    /// </summary>
+    private static JsonSerializerOptions jsonSerializerOptions = new()
+    {
+        WriteIndented = true,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        IncludeFields = true,
+    };
+
+    /// <summary>
+    /// Сгенерировать продукты.
     /// </summary>
     public static void GenerateProducts()
     {
         uint productId = 0;
         Random random = new();
 
-        for (int i = 0; i < 5; i++)
+        for (uint i = 0; i < 5; i++)
         {
             Corvalol corvarol = new(
                 id: productId += 1,
@@ -70,10 +70,10 @@ public static class Store
             switch(Console.ReadLine())
             {
                 case "y":
-                    string jsonString = JsonConvert.SerializeObject(Products, jsonSerializerSettings);
+                    string jsonString = JsonSerializer.Serialize(Products, jsonSerializerOptions);
                     string fileName = "Products.json";
                     string filePath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-                    File.AppendAllText(filePath + Path.DirectorySeparatorChar + fileName, jsonString);
+                    File.WriteAllText(filePath + Path.DirectorySeparatorChar + fileName, jsonString);
                     break;
                 case "n":
                     break;
@@ -106,7 +106,7 @@ public static class Store
         string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         string fileNameProducts = "Products.json";
         string jsonProductsList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameProducts);
-        Products = JsonConvert.DeserializeObject<List<Product>>(jsonProductsList, jsonSerializerSettings);
+        Products = JsonSerializer.Deserialize<List<Product>>(jsonProductsList, jsonSerializerOptions);
     }
 
     /// <summary>

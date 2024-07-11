@@ -1,15 +1,16 @@
-﻿using Newtonsoft.Json;
-using System.Reflection;
+﻿using System.Reflection;
+using System.Text.Json;
 
 namespace Cart;
 
 /// <summary>
 /// Корзина (заказ) Интернет-магазина.
 /// </summary>
+[Serializable]
 public class Order
 {
     /// <summary>
-    /// Товары, добавленные в заказ. TKey - товар. TValue - количество товара.
+    /// Товары в заказе. TKey - товар. TValue - количество товара.
     /// </summary>
     public List<KeyValuePair<Product, uint>> Products = new();
 
@@ -21,11 +22,11 @@ public class Order
     /// <summary>
     /// Настройка сеариализации.
     /// </summary>
-    private static JsonSerializerSettings jsonSerializerSettings = new()
+    private static JsonSerializerOptions jsonSerializerOptions = new()
     {
-        Formatting = Formatting.Indented,
-        TypeNameHandling = TypeNameHandling.Auto,
-        NullValueHandling = NullValueHandling.Include
+        WriteIndented = true,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        IncludeFields = true,
     };
 
     /// <summary>
@@ -40,6 +41,8 @@ public class Order
                 Console.WriteLine($"{propertyInfo.Name} - {propertyInfo.GetValue(product)?.ToString()}");
             }
         }
+        Console.WriteLine($"Итоговая стоимость - {Products.Sum(product => product.Key.Price * product.Value)}");
+        Console.WriteLine($"Итоговый вес - {Products.Sum(product => product.Key.Weight * product.Value)}");
     }
 
     /// <summary>
@@ -48,13 +51,13 @@ public class Order
     public void ReadOrderFromConsole()
     {
         Console.WriteLine("Введите через пробел номер товара, количество товара, требование к цене.");
-        Console.WriteLine("Возможные значени требований: 1 - самое низкое значение, 2 - самое высокое значение, 3 - любое значение.");
+        Console.WriteLine("Возможные значения требования: 1 - самое низкое значение, 2 - самое высокое значение, 3 - любое значение.");
         Console.WriteLine("Каждый товар указывайте с новой строки.");
         Console.WriteLine("При окончании ввода введите end.");
 
         Order orderFromConsole = new();
 
-        List<int[]> ordersFromConsole = new();
+        List<uint[]> ordersFromConsole = new();
         while (true)
         {
             string consoleReadLine = Console.ReadLine();
@@ -64,12 +67,12 @@ public class Order
             }
             else
             {
-                ordersFromConsole.Add(Array.ConvertAll(consoleReadLine.Split(" "), int.Parse));
-                int productTypeNumber = ordersFromConsole.Last()[0];
-                int productNumber = ordersFromConsole.Last()[1];
-                int priceRequirement = ordersFromConsole.Last()[2];
+                ordersFromConsole.Add(Array.ConvertAll(consoleReadLine.Split(" "), uint.Parse));
+                uint productTypeNumber = ordersFromConsole.Last()[0];
+                uint productNumber = ordersFromConsole.Last()[1];
+                uint priceRequirement = ordersFromConsole.Last()[2];
 
-                Type productType = Store.ProductsTypes[productTypeNumber - 1];
+                Type productType = Store.ProductsTypes[Convert.ToInt32(productTypeNumber - 1)];
                 List<Product> validProducts = Store.Products.Where(product => product.GetType() == productType).ToList();
                 Product validProduct;
                 if (priceRequirement == 1)
@@ -86,7 +89,7 @@ public class Order
                     validProduct = validProducts[random.Next(0, validProducts.Count)];
                 }
 
-                Products.Add(new KeyValuePair<Product, uint> (validProduct, Convert.ToUInt32(productNumber)));
+                Products.Add(new KeyValuePair<Product, uint> (validProduct, productNumber));
             }
         }
     }
@@ -98,7 +101,7 @@ public class Order
     {
         string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         string fileName = "Order.json";
-        string jsonOrder = JsonConvert.SerializeObject(this, jsonSerializerSettings);
+        string jsonOrder = JsonSerializer.Serialize(this, jsonSerializerOptions);
         File.AppendAllText(projectPath + Path.DirectorySeparatorChar + fileName, jsonOrder);
     }
 
@@ -117,6 +120,11 @@ public class Order
         }
         string jsonOrder = File.ReadAllText(fileName);
 
-        return JsonConvert.DeserializeObject<Order>(jsonOrder, jsonSerializerSettings);
+        return JsonSerializer.Deserialize<Order>(jsonOrder, jsonSerializerOptions);
+    }
+
+    public void UpdateProduct(Product newProduct)
+    {
+        Product oldProduct = Products.FirstOrDefault(product => product.Key.Id == newProduct.Id).Key;
     }
 }
