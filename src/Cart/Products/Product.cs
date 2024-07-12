@@ -7,7 +7,6 @@ namespace Cart;
 /// Базовый класс продукта.
 /// </summary>
 [Serializable]
-[JsonDerivedType(typeof(Product), typeDiscriminator: "Product")]
 [JsonDerivedType(typeof(Chips), typeDiscriminator: "Чипсы")]
 [JsonDerivedType(typeof(Corvalol), typeDiscriminator: "Корвалол")]
 [JsonDerivedType(typeof(WashingMachine), typeDiscriminator: "Стиральная машина")]

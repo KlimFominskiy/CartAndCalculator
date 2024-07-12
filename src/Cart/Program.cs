@@ -15,8 +15,6 @@ internal class Program
         myOrderB.TimeOfDeparture = DateTime.Now;
         Console.WriteLine(myOrderA.TimeOfDeparture);
 
-        return;
-
         // Задание 2. Считывание товаров из файла.
         //Store.GenerateProducts();
         Store.ReadProductsFromFile();
@@ -85,6 +83,7 @@ internal class Program
         DateTime maxDepartureDateTime = DateTime.Now.AddDays(1);
         validOrders = OrdersGenerator.Orders.Where(order => order.TimeOfDeparture <= maxDepartureDateTime).ToList();
 
+        // Задание 4. Метод редактирования продукта в заказе.
         orderFromFile.UpdateProduct(11, Store.Products.First(), 25);
     }
 }

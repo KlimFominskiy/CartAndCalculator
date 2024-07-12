@@ -124,16 +124,17 @@ public class Order
     }
 
     /// <summary>
-    /// Изменить товар в заказе.
+    /// Обновить продукт в заказе.
     /// </summary>
-    /// <param name="product"></param>
-    /// <param name="number"></param>
+    /// <param name="productId">Идентификационный номер товара.</param>
+    /// <param name="product">Данные о товаре.</param>
+    /// <param name="number">Количество товара.</param>
     public void UpdateProduct(uint productId, Product product, uint number)
     {
         int productIndexInOrder = this.Products.FindIndex(orderItem => orderItem.Key.Id == productId);
         int newProductIndexInOrder = this.Products.FindIndex(orderItem => orderItem.Key.Id == product.Id);
         KeyValuePair<Product, uint> newProduct;
-        // Если продукта с таким id нет в заказе.
+        // Если товара с таким id нет в заказе.
         if (newProductIndexInOrder == -1)
         {
             newProduct = new(product, number);

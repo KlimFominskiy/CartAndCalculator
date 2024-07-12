@@ -1,5 +1,6 @@
 ﻿using C_sharp_course.UnitTests;
 using C_sharp_course.UnitTests.Data.Cart;
+using static NUnit.Framework.Internal.OSPlatform;
 
 namespace Cart.UnitTests;
 
@@ -27,11 +28,11 @@ public class Tests
         List<Product> productsList = newOrder.Products.ToDictionary().Keys.ToList();
         foreach (Product product in orderWithThreeProducts.Products.ToDictionary().Keys)
         {
-            Assert.Contains(product, productsList);
+            Assert.That(productsList, Does.Contain(product));
         }
         foreach (Product product in orderWithOneProduct.Products.ToDictionary().Keys)
         {
-            Assert.Contains(product, productsList);
+            Assert.That(productsList, Does.Contain(product));
         }
     }
 
@@ -42,8 +43,8 @@ public class Tests
         Product productB = orderWithThreeProducts.Products[1].Key;
         Order newOrder = cartCalculator.Add(productA, productB);
         List<Product> productsList = newOrder.Products.ToDictionary().Keys.ToList();
-        Assert.Contains(productA, productsList);
-        Assert.Contains(productB, productsList);
+        Assert.That(productsList, Does.Contain(productA));
+        Assert.That(productsList, Does.Contain(productB));
     }
 
     [Test(Description = "Проверка успешного удаления единицы товара из заказа.")]
@@ -52,10 +53,9 @@ public class Tests
         Product product = orderWithThreeProducts.Products.First().Key;
         uint productNumber = orderWithThreeProducts.Products.First().Value;
         Order newOrder = cartCalculator.Subtract(orderWithThreeProducts, product);
-        // Или нет объекта или количесто уменьшилось на единицу.
         if (productNumber == 1)
         {
-            Assert.False(newOrder.Products.ToDictionary().ContainsKey(product));
+            Assert.That(newOrder.Products.ToDictionary().ContainsKey(product), Is.False);
         }
         else
         {
@@ -64,7 +64,7 @@ public class Tests
     }
 
     [Test(Description = "Проверка успешного удаления из первой корзины товаров, которые есть во второй корзине.")]
-    public void Subtract_ValidOrder_NewOrderWithDeletedProducts()
+    public void Subtract_ValidOrder_NewOrderWithoutDeletedProducts()
     {
         Order orderB = new();
         orderB.Products.Add(orderWithThreeProducts.Products[0]);
@@ -72,7 +72,40 @@ public class Tests
         Order newOrder = cartCalculator.Subtract(orderWithThreeProducts, orderB);
         foreach (KeyValuePair<Product, uint> orderItem in orderB.Products)
         {
-            Assert.False(newOrder.Products.Contains(orderItem));
+            Assert.That(newOrder.Products.Contains(orderItem), Is.False);
+        }
+    }
+
+    [Test(Description = "Проверка успешного удаления из заказа товаров определённого типа.")]
+    public void Divide_ValidProduct_NewOrderWithoutDeletedProduct()
+    {
+        Type productType = orderWithThreeProducts.Products.First().Key.GetType();
+        Order newOrder = cartCalculator.Divide(orderWithThreeProducts, productType);
+        foreach(Product product in newOrder.Products.ToDictionary().Keys)
+        {
+            Assert.That(product.GetType() == productType, Is.False);
+        }
+    }
+
+    [Test(Description = "Проверка уменьшения количества каждого товара в корзине в определённое количество раз.")]
+    public void Divide_ValidOrder_NewOrderWithReducedProductsNumber()
+    {
+        uint number = 3;
+        Order newOrder = cartCalculator.Divide(orderWithThreeProducts, number);
+        for (int i = 0; i < newOrder.Products.Count(); i++)
+        {
+            Assert.That(orderWithThreeProducts.Products[i].Value / 3, Is.EqualTo(newOrder.Products[i].Value));
+        }
+    }
+
+    [Test(Description = "Проверка увеличения количества каждого товара в корзине в определённое количество раз.")]
+    public void Multiply_ValidOrder_NewOrderWithIncreasedProductsNumber()
+    {
+        uint number = 3;
+        Order newOrder = cartCalculator.Multiply(orderWithThreeProducts, number);
+        for (int i = 0; i < newOrder.Products.Count(); i++)
+        {
+            Assert.That(orderWithThreeProducts.Products[i].Value * 3, Is.EqualTo(newOrder.Products[i].Value));
         }
     }
 }

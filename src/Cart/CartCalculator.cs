@@ -157,21 +157,15 @@ public class CartCalculator : Calculator.Calculator
     /// Удалить из корзины товары указанного типа.
     /// </summary>
     /// <param name="order">Исходная корзина.</param>
-    /// <param name="product">Товар.</param>
+    /// <param name="productType">Тип (класс) товара.</param>
     /// <returns>Новая исходная корзина без товаров указанного типа.</returns>
-    public Order Divide(Order order, Product product)
+    public Order Divide(Order order, Type productType)
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
         Order newOrder = new();
         order.CopyTo(newOrder);
-        foreach (KeyValuePair<Product, uint> orderItem in newOrder.Products)
-        {
-            if (orderItem.Key.GetType() == product.GetType())
-            {
-                newOrder.Products.Remove(orderItem);
-            }
-        }
+        newOrder.Products = newOrder.Products.Where(orderItem => orderItem.Key.GetType() != productType).ToList();
 
         return newOrder;
     }
