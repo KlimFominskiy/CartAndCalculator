@@ -120,7 +120,7 @@ public class CartCalculator : Calculator.Calculator
         }
         newOrder.Products = products.ToList();
 
-        return order;
+        return newOrder;
     }
 
     /// <summary>
@@ -136,14 +136,19 @@ public class CartCalculator : Calculator.Calculator
         
         Order orderC = new();
         orderA.CopyTo(orderC);
-        foreach (KeyValuePair<Product, uint> product in orderC.Products)
+        Dictionary<Product, uint> products = orderC.Products.ToDictionary();
+        foreach (Product product in orderB.Products.ToDictionary().Keys)
         {
-            KeyValuePair<Product, uint> orderItem = orderC.Products.FirstOrDefault(orderItem => orderItem.Key == product.Key);
-            if (!orderItem.Equals(default(KeyValuePair<Product, uint>)))
+            if(products.ContainsKey(product))
             {
-                throw new Exception($"Продукт {product.Key.Name} не найден в первой корзине.");
+                products.Remove(product);
+            }
+            else
+            {
+                throw new Exception($"Продукт {product.Name} с Id = {product.Id} не найден в первой корзине.");
             }
         }
+        orderC.Products = products.ToList();
 
         return orderC;
     }
@@ -182,7 +187,6 @@ public class CartCalculator : Calculator.Calculator
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
         Order newOrder = new();
-        order.CopyTo(newOrder);
         foreach (KeyValuePair<Product, uint> orderItem in newOrder.Products)
         {
             KeyValuePair<Product, uint> newOrderItem = new(orderItem.Key, orderItem.Value / number);
@@ -205,7 +209,6 @@ public class CartCalculator : Calculator.Calculator
         Order newOrder = new();
         foreach (KeyValuePair<Product, uint> orderItem in order.Products)
         {
-            int orderItemIndex = order.Products.IndexOf(orderItem);
             KeyValuePair<Product, uint> newOrderItem = new KeyValuePair<Product, uint>(orderItem.Key, orderItem.Value * number);
             newOrder.Products.Add(newOrderItem);
         }

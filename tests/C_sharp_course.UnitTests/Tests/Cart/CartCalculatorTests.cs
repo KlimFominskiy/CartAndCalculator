@@ -20,8 +20,6 @@ public class Tests
         orderWithThreeProducts = buildOrders.GetOrder(3);
     }
 
-
-
     [Test(Description = "Проверка успешного объединения заказов.")]
     public void Add_ValidOrders_NewMergedOrder()
     {
@@ -37,7 +35,7 @@ public class Tests
         }
     }
 
-    [Test(Description = "Проверка объединения двух продуктов в заказ.")]
+    [Test(Description = "Проверка успешного объединения двух продуктов в заказ.")]
     public void Add_ValidProducts_NewOrder()
     {
         Product productA = orderWithThreeProducts.Products[0].Key;
@@ -49,12 +47,32 @@ public class Tests
     }
 
     [Test(Description = "Проверка успешного удаления единицы товара из заказа.")]
-    public void Subtract_ValidProduct_NewOrderWithNewProduct()
+    public void Subtract_ValidProduct_NewOrderWithDeletedProduct()
     {
         Product product = orderWithThreeProducts.Products.First().Key;
+        uint productNumber = orderWithThreeProducts.Products.First().Value;
         Order newOrder = cartCalculator.Subtract(orderWithThreeProducts, product);
-        List<Product> productsList = newOrder.Products.ToDictionary().Keys.ToList();
         // Или нет объекта или количесто уменьшилось на единицу.
-        Assert.False(productsList.Contains(product));
+        if (productNumber == 1)
+        {
+            Assert.False(newOrder.Products.ToDictionary().ContainsKey(product));
+        }
+        else
+        {
+            Assert.That(newOrder.Products.ToDictionary()[product], Is.EqualTo(productNumber - 1));
+        }
+    }
+
+    [Test(Description = "Проверка успешного удаления из первой корзины товаров, которые есть во второй корзине.")]
+    public void Subtract_ValidOrder_NewOrderWithDeletedProducts()
+    {
+        Order orderB = new();
+        orderB.Products.Add(orderWithThreeProducts.Products[0]);
+        orderB.Products.Add(orderWithThreeProducts.Products[1]);
+        Order newOrder = cartCalculator.Subtract(orderWithThreeProducts, orderB);
+        foreach (KeyValuePair<Product, uint> orderItem in orderB.Products)
+        {
+            Assert.False(newOrder.Products.Contains(orderItem));
+        }
     }
 }
