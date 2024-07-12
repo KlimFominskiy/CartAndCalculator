@@ -118,6 +118,10 @@ public class CartCalculator : Calculator.Calculator
                 products.Remove(product);
             }
         }
+        else
+        {
+            throw new Exception($"Продукт {product.Name} с Id = {product.Id} не найден в корзине.");
+        }
         newOrder.Products = products.ToList();
 
         return newOrder;
@@ -136,19 +140,10 @@ public class CartCalculator : Calculator.Calculator
         
         Order orderC = new();
         orderA.CopyTo(orderC);
-        Dictionary<Product, uint> products = orderC.Products.ToDictionary();
-        foreach (Product product in orderB.Products.ToDictionary().Keys)
+        foreach (Product productB in orderB.Products.ToDictionary().Keys)
         {
-            if(products.ContainsKey(product))
-            {
-                products.Remove(product);
-            }
-            else
-            {
-                throw new Exception($"Продукт {product.Name} с Id = {product.Id} не найден в первой корзине.");
-            }
+            orderC = Subtract(orderC, productB);
         }
-        orderC.Products = products.ToList();
 
         return orderC;
     }
@@ -181,9 +176,9 @@ public class CartCalculator : Calculator.Calculator
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
         Order newOrder = new();
-        foreach (KeyValuePair<Product, uint> orderItem in newOrder.Products)
+        foreach (KeyValuePair<Product, uint> orderItem in order.Products)
         {
-            KeyValuePair<Product, uint> newOrderItem = new(orderItem.Key, orderItem.Value / number);
+            KeyValuePair<Product, uint> newOrderItem = newOrderItem = new(orderItem.Key, orderItem.Value / number);
             newOrder.Products.Add(newOrderItem);
         }
 

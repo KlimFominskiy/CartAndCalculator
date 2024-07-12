@@ -1,6 +1,5 @@
 ﻿using C_sharp_course.UnitTests;
 using C_sharp_course.UnitTests.Data.Cart;
-using static NUnit.Framework.Internal.OSPlatform;
 
 namespace Cart.UnitTests;
 
@@ -63,6 +62,17 @@ public class Tests
         }
     }
 
+    [Test(Description = "Проверка выдачи исключения при попытке удалить несуществующий товар.")]
+    public void Subtract_MissingProduct_NoProductExeception()
+    {
+        Product product = orderWithThreeProducts.Products.First().Key;
+        uint productNumber = orderWithThreeProducts.Products.First().Value;
+        Order newOrder = new();
+        orderWithThreeProducts.CopyTo(newOrder);
+        newOrder.Products.Remove(new KeyValuePair<Product, uint>(product, productNumber));
+        Assert.Throws<Exception>(delegate { newOrder = cartCalculator.Subtract(newOrder, product); }, message: $"Продукт {product.Name} с Id = {product.Id} не найден в корзине.");
+    }
+
     [Test(Description = "Проверка успешного удаления из первой корзины товаров, которые есть во второй корзине.")]
     public void Subtract_ValidOrder_NewOrderWithoutDeletedProducts()
     {
@@ -96,6 +106,12 @@ public class Tests
         {
             Assert.That(orderWithThreeProducts.Products[i].Value / 3, Is.EqualTo(newOrder.Products[i].Value));
         }
+    }
+
+    [Test(Description = "Проверка выдачи исключения при попытке деления количества товаров на 0.")]
+    public void Divide_DivideByZero_DivideByZeroEception()
+    {
+        Assert.Throws<DivideByZeroException>(delegate { cartCalculator.Divide(orderWithOneProduct, 0); });
     }
 
     [Test(Description = "Проверка увеличения количества каждого товара в корзине в определённое количество раз.")]
