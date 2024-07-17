@@ -10,25 +10,23 @@ internal class Program
     {
         Console.OutputEncoding = Encoding.UTF8;
 
-        Order myOrderA = new();
-        Order myOrderB = new();
-        myOrderB.TimeOfDeparture = DateTime.Now;
-        Console.WriteLine(myOrderA.TimeOfDeparture);
-
         // Задание 2. Считывание товаров из файла.
         //Store.GenerateProducts();
+        Console.WriteLine("Считывание продуктов из файла.");
         Store.ReadProductsFromFile();
 
         // Задание 4. Генератор тестовых заказов.
         //OrdersGenerator.GenerateRandomOrders();
+        Console.WriteLine("Считывание заказов из файла.");
         OrdersGenerator.ReadOrdersFromFile();
         Order randomOrder = OrdersGenerator.GenerateOrderBySum(20000M);
         randomOrder = OrdersGenerator.GenerateOrderBySum(10000M, 20000M);
         randomOrder = OrdersGenerator.GenerateOrderByCount(40);
 
         // Задание 1. Ввод заказа из консоли с учётом пожеланий пользователя.
-        Store.PrintProductsTypesInfo();
+        Store.PrintProductsTypes();
         Order orderFromConsole = new Order();
+        Console.WriteLine("Считывание заказа из консоли.");
         orderFromConsole.ReadOrderFromConsole();
         // Отсортировать по алфавиту без LINQ.
         orderFromConsole.Products.Sort((a, b) => a.Key.Name.CompareTo(b.Key.Name));

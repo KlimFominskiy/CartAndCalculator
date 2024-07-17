@@ -17,7 +17,7 @@ public static class Store
     /// <summary>
     /// Типы товаров магазина.
     /// </summary>
-    public static List<Type> ProductsTypes = new();
+    public static List<Type> ProductsTypes = typeof(Product).Assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(Product))).ToList();
 
     /// <summary>
     /// Настройка сеариализации.
@@ -151,10 +151,9 @@ public static class Store
     /// <summary>
     /// Вывод типов товаров магазина.
     /// </summary>
-    public static void PrintProductsTypesInfo()
+    public static void PrintProductsTypes()
     {
         Console.WriteLine("Типы товаров в магазине.");
-        ProductsTypes = typeof(Product).Assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(Product))).ToList();
         uint index = 0;
         foreach (Type productType in ProductsTypes)
         {

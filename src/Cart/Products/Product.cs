@@ -37,11 +37,11 @@ public class Product
     {
         if (weight <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(weight), message:"Вес должен быть положительным.");
+            throw new Exception(message:$"Вес должен быть положительным. Текущий вес = {weight}.");
         }
         if (price <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(price), message: "Цена должна быть положительной.");
+            throw new Exception(message: $"Цена должна быть положительной. Текущая цена = {price}.");
         }
         Id = id;
         Name = name;

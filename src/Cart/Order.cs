@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Text.Json;
 
 namespace Cart;
@@ -22,7 +23,7 @@ public class Order
     /// <summary>
     /// Настройка сеариализации.
     /// </summary>
-    private static JsonSerializerOptions jsonSerializerOptions = new()
+    private JsonSerializerOptions jsonSerializerOptions = new()
     {
         WriteIndented = true,
         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -50,46 +51,49 @@ public class Order
     /// </summary>
     public void ReadOrderFromConsole()
     {
-        Console.WriteLine("Введите через пробел номер товара, количество товара, требование к цене.");
-        Console.WriteLine("Возможные значения требования: 1 - самое низкое значение, 2 - самое высокое значение, 3 - любое значение.");
-        Console.WriteLine("Каждый товар указывайте с новой строки.");
-        Console.WriteLine("При окончании ввода введите end.");
-
-        Order orderFromConsole = new();
-
-        List<uint[]> ordersFromConsole = new();
         while (true)
         {
-            string consoleReadLine = Console.ReadLine();
-            if (consoleReadLine == "end")
-            {
-                break;
-            }
-            else
-            {
-                ordersFromConsole.Add(Array.ConvertAll(consoleReadLine.Split(" "), uint.Parse));
-                uint productTypeNumber = ordersFromConsole.Last()[0];
-                uint productNumber = ordersFromConsole.Last()[1];
-                uint priceRequirement = ordersFromConsole.Last()[2];
+            OrderItemSettings orderItemSettings = new();
 
-                Type productType = Store.ProductsTypes[Convert.ToInt32(productTypeNumber - 1)];
-                List<Product> validProducts = Store.Products.Where(product => product.GetType() == productType).ToList();
-                Product validProduct;
-                if (priceRequirement == 1)
-                {
+            Console.WriteLine("Введите номер товара в списке продуктов.");
+            orderItemSettings.ProductTypeNumber = ReadProductTypeNumberFromConsole();
+
+            Console.WriteLine("Введите количество товара.");
+            orderItemSettings.ProductQuantity = ReadProductQiantityFromConsole();
+
+            Console.WriteLine("Введите требование к цене.");
+            Console.WriteLine("Возможные значения требования: ");
+            Console.WriteLine($"{(uint)PriceRequirementSettings.TheLowestValue} - самое низкое значение,");
+            Console.WriteLine($"{(uint)PriceRequirementSettings.TheHighestValuem} - самое высокое значение,");
+            Console.WriteLine($"{(uint)PriceRequirementSettings.RandomValue} - любое значение.");
+
+            orderItemSettings.PriceRequirement = ReadPriceRequirementFromConsole();
+            Type productType = Store.ProductsTypes[Convert.ToInt32(orderItemSettings.ProductTypeNumber - 1)];
+            List<Product> validProducts = Store.Products.Where(product => product.GetType() == productType).ToList();
+            Product? validProduct = null;
+            switch (orderItemSettings.PriceRequirement)
+            {
+                case PriceRequirementSettings.TheLowestValue:
                     validProduct = validProducts.MinBy(product => product.Price);
-                }
-                else if (priceRequirement == 2)
-                {
+                    break;
+                case PriceRequirementSettings.TheHighestValuem:
                     validProduct = validProducts.MaxBy(product => product.Price);
-                }
-                else
-                {
+                    break;
+                case PriceRequirementSettings.RandomValue:
                     Random random = new Random();
                     validProduct = validProducts[random.Next(0, validProducts.Count)];
-                }
+                    break;
+            }
 
-                Products.Add(new KeyValuePair<Product, uint> (validProduct, productNumber));
+            if (validProduct is not null)
+            {
+                Products.Add(new KeyValuePair<Product, uint>(validProduct, orderItemSettings.ProductQuantity));
+            }
+
+            Console.WriteLine("Введите end, чтобы закончить ввод. Для продолжения введите любой символ.");
+            if(Console.ReadLine() == "end")
+            {
+                break;
             }
         }
     }
@@ -111,6 +115,7 @@ public class Order
     /// <param name="fileName">Путь к файлу.</param>
     public Order ReadOrderFromFile()
     {
+        Console.WriteLine("Считывание заказа из файла.");
         Console.WriteLine("Введите полный путь к файлу. Нажмите enter для использования файла по умолчанию.");
         string fileName = Console.ReadLine();
         if (string.IsNullOrEmpty(fileName))
@@ -152,5 +157,68 @@ public class Order
     {
         other.Products.AddRange(this.Products);
         other.TimeOfDeparture = this.TimeOfDeparture;
+    }
+
+    private uint ReadProductTypeNumberFromConsole()
+    {
+        while(true)
+        {
+            string orderItemSetting = Console.ReadLine();
+            if (uint.TryParse(orderItemSetting, out uint setting))
+            {
+                if (setting > Store.ProductsTypes.Count)
+                {
+                    Console.WriteLine($"Введён тип {setting}. Такого типа товара нет в списке. Повторите ввод.");
+                    continue;
+                }
+                return setting;
+            }
+            else
+            {
+                Console.WriteLine($"Введено {orderItemSetting}. Неправильный формат. Повторите ввод.");
+                continue;
+            }
+        }
+    }
+
+    private uint ReadProductQiantityFromConsole()
+    {
+        while (true)
+        {
+            string orderItemSetting = Console.ReadLine();
+            if (uint.TryParse(orderItemSetting, out uint setting))
+            {
+                return setting;
+            }
+            else
+            {
+                Console.WriteLine($"Введено {orderItemSetting}. Неправильный формат. Повторите ввод.");
+                continue;
+            }
+        }
+    }
+
+    private PriceRequirementSettings ReadPriceRequirementFromConsole()
+    {
+        while(true)
+        {
+            string orderItemSetting = Console.ReadLine();
+            if(Enum.TryParse(orderItemSetting, out PriceRequirementSettings setting))
+            {
+                if (Enum.IsDefined(typeof(PriceRequirementSettings), setting))
+                {
+                    return setting;
+                }
+                else
+                {
+                    Console.WriteLine($"Введено {setting}. Такой настройки требования нет. Повторите ввод.");
+                    continue;
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Введено {orderItemSetting}. Неправильный формат. Повторите ввод.");
+            }
+        }
     }
 }

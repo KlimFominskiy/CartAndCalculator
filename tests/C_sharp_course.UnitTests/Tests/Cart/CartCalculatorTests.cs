@@ -102,7 +102,7 @@ public class Tests
     {
         uint number = 3;
         Order newOrder = cartCalculator.Divide(orderWithThreeProducts, number);
-        for (int i = 0; i < newOrder.Products.Count(); i++)
+        for (int i = 0; i < newOrder.Products.Count; i++)
         {
             Assert.That(orderWithThreeProducts.Products[i].Value / 3, Is.EqualTo(newOrder.Products[i].Value));
         }
@@ -119,7 +119,7 @@ public class Tests
     {
         uint number = 3;
         Order newOrder = cartCalculator.Multiply(orderWithThreeProducts, number);
-        for (int i = 0; i < newOrder.Products.Count(); i++)
+        for (int i = 0; i < newOrder.Products.Count; i++)
         {
             Assert.That(orderWithThreeProducts.Products[i].Value * 3, Is.EqualTo(newOrder.Products[i].Value));
         }
