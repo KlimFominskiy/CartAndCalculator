@@ -1,4 +1,6 @@
-﻿namespace Cart;
+﻿using Cart.Enums;
+
+namespace Cart.Orders;
 
 /// <summary>
 /// Класс настройки требований к продукту при его поиске.

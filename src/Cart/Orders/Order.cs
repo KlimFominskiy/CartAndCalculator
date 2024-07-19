@@ -1,8 +1,9 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.Json;
+using Cart.Enums;
+using Cart.Stores;
 
-namespace Cart;
+namespace Cart.Orders;
 
 /// <summary>
 /// Корзина (заказ) Интернет-магазина.
@@ -35,14 +36,23 @@ public class Order
     /// </summary>
     public void PrintOrderInfo()
     {
-        foreach (KeyValuePair<Product, uint> product in Products)
+        Console.WriteLine();
+
+        foreach (KeyValuePair<Product, uint> orderItem in Products)
         {
-            foreach (PropertyInfo propertyInfo in product.GetType().GetProperties())
+            foreach (PropertyInfo orderItemInfo in orderItem.Key.GetType().GetProperties())
             {
-                Console.WriteLine($"{propertyInfo.Name} - {propertyInfo.GetValue(product)?.ToString()}");
+                //foreach (PropertyInfo productInfo in orderItemInfo)
+                //{
+                //    Console.WriteLine($"{productInfo.Name}, {productInfo.GetValue(productInfo)?.ToString()}");
+                //}
+            Console.WriteLine($"{orderItemInfo.Name} - {orderItemInfo.GetValue(orderItem.Key)?.ToString()}.");
             }
+            Console.WriteLine($"Количество - {orderItem.Value}.");
+            Console.WriteLine();
         }
         Console.WriteLine($"Итоговая стоимость - {Products.Sum(product => product.Key.Price * product.Value)}");
+        Console.WriteLine($"Общее количество товаров - {Products.Sum(product => product.Value)}");
         Console.WriteLine($"Итоговый вес - {Products.Sum(product => product.Key.Weight * product.Value)}");
     }
 
@@ -55,7 +65,6 @@ public class Order
         {
             OrderItemSettings orderItemSettings = new();
 
-            Console.WriteLine("Введите номер товара в списке продуктов.");
             orderItemSettings.ProductTypeNumber = ReadProductTypeNumberFromConsole();
 
             Console.WriteLine("Введите количество товара.");
@@ -63,9 +72,9 @@ public class Order
 
             Console.WriteLine("Введите требование к цене.");
             Console.WriteLine("Возможные значения требования: ");
-            Console.WriteLine($"{(uint)PriceRequirementSettings.TheLowestValue} - самое низкое значение,");
-            Console.WriteLine($"{(uint)PriceRequirementSettings.TheHighestValuem} - самое высокое значение,");
-            Console.WriteLine($"{(uint)PriceRequirementSettings.RandomValue} - любое значение.");
+            Console.WriteLine($"{(int)PriceRequirementSettings.TheLowestValue} - самое низкое значение,");
+            Console.WriteLine($"{(int)PriceRequirementSettings.TheHighestValuem} - самое высокое значение,");
+            Console.WriteLine($"{(int)PriceRequirementSettings.RandomValue} - любое значение.");
 
             orderItemSettings.PriceRequirement = ReadPriceRequirementFromConsole();
             Type productType = Store.ProductsTypes[Convert.ToInt32(orderItemSettings.ProductTypeNumber - 1)];
@@ -91,7 +100,7 @@ public class Order
             }
 
             Console.WriteLine("Введите end, чтобы закончить ввод. Для продолжения введите любой символ.");
-            if(Console.ReadLine() == "end")
+            if (Console.ReadLine() == "end")
             {
                 break;
             }
@@ -103,6 +112,7 @@ public class Order
     /// </summary>
     public void WriteOrderToFile()
     {
+        Console.WriteLine();
         string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         string fileName = "Order.json";
         string jsonOrder = JsonSerializer.Serialize(this, jsonSerializerOptions);
@@ -115,17 +125,27 @@ public class Order
     /// <param name="fileName">Путь к файлу.</param>
     public Order ReadOrderFromFile()
     {
-        Console.WriteLine("Считывание заказа из файла.");
-        Console.WriteLine("Введите полный путь к файлу. Нажмите enter для использования файла по умолчанию.");
-        string fileName = Console.ReadLine();
-        if (string.IsNullOrEmpty(fileName))
+        Console.WriteLine("Введите полный путь к файлу формата JSON. Нажмите enter для использования файла по умолчанию.");
+        while (true)
         {
-            string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-            fileName = (projectPath + Path.DirectorySeparatorChar + "Order.json");
-        }
-        string jsonOrder = File.ReadAllText(fileName);
+            string fileName = Console.ReadLine();
+            if (string.IsNullOrEmpty(fileName))
+            {
+                string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+                fileName = projectPath + Path.DirectorySeparatorChar + "Order.json";
+            }
+            else
+            {
+                if (!File.Exists(fileName))
+                {
+                    Console.WriteLine($"Считан путь:  {fileName}. Файл не найден. Повторите ввод.");
+                    continue;
+                }
 
-        return JsonSerializer.Deserialize<Order>(jsonOrder, jsonSerializerOptions);
+            }
+            string jsonOrder = File.ReadAllText(fileName);
+            return JsonSerializer.Deserialize<Order>(jsonOrder, jsonSerializerOptions);
+        }
     }
 
     /// <summary>
@@ -133,35 +153,35 @@ public class Order
     /// </summary>
     /// <param name="productId">Идентификационный номер товара.</param>
     /// <param name="product">Данные о товаре.</param>
-    /// <param name="number">Количество товара.</param>
-    public void UpdateProduct(uint productId, Product product, uint number)
+    /// <param name="quantity">Количество товара.</param>
+    public void UpdateProduct(uint productId, Product product, uint quantity)
     {
-        int productIndexInOrder = this.Products.FindIndex(orderItem => orderItem.Key.Id == productId);
-        int newProductIndexInOrder = this.Products.FindIndex(orderItem => orderItem.Key.Id == product.Id);
+        int productIndexInOrder = Products.FindIndex(orderItem => orderItem.Key.Id == productId);
+        int newProductIndexInOrder = Products.FindIndex(orderItem => orderItem.Key.Id == product.Id);
         KeyValuePair<Product, uint> newProduct;
         // Если товара с таким id нет в заказе.
         if (newProductIndexInOrder == -1)
         {
-            newProduct = new(product, number);
+            newProduct = new(product, quantity);
         }
         else
         {
-            newProduct = new(product, number + this.Products[newProductIndexInOrder].Value);
-            this.Products.RemoveAt(newProductIndexInOrder);
+            newProduct = new(product, quantity + Products[newProductIndexInOrder].Value);
+            Products.RemoveAt(newProductIndexInOrder);
         }
 
-        this.Products.Add(newProduct);
+        Products.Add(newProduct);
     }
 
     public void CopyTo(Order other)
     {
-        other.Products.AddRange(this.Products);
-        other.TimeOfDeparture = this.TimeOfDeparture;
+        other.Products.AddRange(Products);
+        other.TimeOfDeparture = TimeOfDeparture;
     }
 
     private uint ReadProductTypeNumberFromConsole()
     {
-        while(true)
+        while (true)
         {
             string orderItemSetting = Console.ReadLine();
             if (uint.TryParse(orderItemSetting, out uint setting))
@@ -200,10 +220,10 @@ public class Order
 
     private PriceRequirementSettings ReadPriceRequirementFromConsole()
     {
-        while(true)
+        while (true)
         {
             string orderItemSetting = Console.ReadLine();
-            if(Enum.TryParse(orderItemSetting, out PriceRequirementSettings setting))
+            if (Enum.TryParse(orderItemSetting, out PriceRequirementSettings setting))
             {
                 if (Enum.IsDefined(typeof(PriceRequirementSettings), setting))
                 {

@@ -1,11 +1,12 @@
 ﻿using C_sharp_course.UnitTests;
 using C_sharp_course.UnitTests.Data.Cart;
+using Cart.Orders;
 
 namespace Cart.UnitTests;
 
 public class Tests
 {
-    private CartCalculator cartCalculator = new(null);
+    private OrderCalculator cartCalculator = new(null);
     private Order emptyOrder;
     private Order orderWithOneProduct;
     private Order orderWithThreeProducts;
@@ -50,15 +51,15 @@ public class Tests
     public void Subtract_ValidProduct_NewOrderWithDeletedProduct()
     {
         Product product = orderWithThreeProducts.Products.First().Key;
-        uint productNumber = orderWithThreeProducts.Products.First().Value;
+        uint productQuantity = orderWithThreeProducts.Products.First().Value;
         Order newOrder = cartCalculator.Subtract(orderWithThreeProducts, product);
-        if (productNumber == 1)
+        if (productQuantity == 1)
         {
             Assert.That(newOrder.Products.ToDictionary().ContainsKey(product), Is.False);
         }
         else
         {
-            Assert.That(newOrder.Products.ToDictionary()[product], Is.EqualTo(productNumber - 1));
+            Assert.That(newOrder.Products.ToDictionary()[product], Is.EqualTo(productQuantity - 1));
         }
     }
 
@@ -66,10 +67,10 @@ public class Tests
     public void Subtract_MissingProduct_NoProductExeception()
     {
         Product product = orderWithThreeProducts.Products.First().Key;
-        uint productNumber = orderWithThreeProducts.Products.First().Value;
+        uint productQuantity = orderWithThreeProducts.Products.First().Value;
         Order newOrder = new();
         orderWithThreeProducts.CopyTo(newOrder);
-        newOrder.Products.Remove(new KeyValuePair<Product, uint>(product, productNumber));
+        newOrder.Products.Remove(new KeyValuePair<Product, uint>(product, productQuantity));
         Assert.Throws<Exception>(delegate { newOrder = cartCalculator.Subtract(newOrder, product); }, message: $"Продукт {product.Name} с Id = {product.Id} не найден в корзине.");
     }
 
@@ -98,7 +99,7 @@ public class Tests
     }
 
     [Test(Description = "Проверка уменьшения количества каждого товара в корзине в определённое количество раз.")]
-    public void Divide_ValidOrder_NewOrderWithReducedProductsNumber()
+    public void Divide_ValidOrder_NewOrderWithReducedProductsQuantity()
     {
         uint number = 3;
         Order newOrder = cartCalculator.Divide(orderWithThreeProducts, number);
@@ -115,7 +116,7 @@ public class Tests
     }
 
     [Test(Description = "Проверка увеличения количества каждого товара в корзине в определённое количество раз.")]
-    public void Multiply_ValidOrder_NewOrderWithIncreasedProductsNumber()
+    public void Multiply_ValidOrder_NewOrderWithIncreasedProductsQuantity()
     {
         uint number = 3;
         Order newOrder = cartCalculator.Multiply(orderWithThreeProducts, number);

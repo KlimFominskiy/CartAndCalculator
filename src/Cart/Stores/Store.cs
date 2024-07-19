@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text.Json;
 
-namespace Cart;
+namespace Cart.Stores;
 
 /// <summary>
 /// Класс магазина. Может генерировать продукты или считывать список продуктов из файла. Хранит список продуктов. 
@@ -64,10 +64,10 @@ public static class Store
             Products.Add(chips);
         }
 
-        while(true)
-        { 
+        while (true)
+        {
             Console.WriteLine("Сохранить список в файл? Введите y или n.");
-            switch(Console.ReadLine())
+            switch (Console.ReadLine())
             {
                 case "y":
                     string jsonString = JsonSerializer.Serialize(Products, jsonSerializerOptions);
@@ -117,7 +117,7 @@ public static class Store
     private static double GetWeight(uint ProductId)
     {
         Random random = new();
-        return Double.Round(random.NextDouble() * (30 - 15) + 15, 2);
+        return double.Round(random.NextDouble() * (30 - 15) + 15, 2);
     }
 
     /// <summary>
@@ -128,8 +128,8 @@ public static class Store
     private static decimal GetPrice(uint ProductId)
     {
         Random random = new();
-        
-        return Decimal.Round((decimal)(random.NextDouble() * (1000 - 500) + 500), 2);
+
+        return decimal.Round((decimal)(random.NextDouble() * (1000 - 500) + 500), 2);
     }
 
     /// <summary>
@@ -153,7 +153,6 @@ public static class Store
     /// </summary>
     public static void PrintProductsTypes()
     {
-        Console.WriteLine("Типы товаров в магазине.");
         uint index = 0;
         foreach (Type productType in ProductsTypes)
         {

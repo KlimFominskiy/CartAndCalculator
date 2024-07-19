@@ -1,4 +1,7 @@
-﻿using Cart.Products;
+﻿using Cart.Enums;
+using Cart.Orders;
+using Cart.Products;
+using Cart.Stores;
 using System.Reflection;
 using System.Text;
 
@@ -6,82 +9,259 @@ namespace Cart;
 
 internal class Program
 {
+    private static decimal ReadDecimalFromConsole()
+    {
+        while(true)
+        {
+            string userInput = Console.ReadLine();
+            if (decimal.TryParse(userInput, out decimal decimalValue))
+            {
+                return decimalValue;
+            }
+            else
+            {
+                Console.WriteLine($"Введено {userInput}. Неправильный формат. Повторите ввод.");
+                continue;
+            }
+        }
+        
+    }
+
+    private static uint ReadUintFromConsole()
+    {
+        while (true)
+        {
+            string userInput = Console.ReadLine();
+            if (uint.TryParse(userInput, out uint doubleValue))
+            {
+                return doubleValue;
+            }
+            else
+            {
+                Console.WriteLine($"Введено {userInput}. Неправильный формат. Повторите ввод.");
+                continue;
+            }
+        }
+    }
+
     internal static void Main(string[] args)
     {
         Console.OutputEncoding = Encoding.UTF8;
 
         // Задание 2. Считывание товаров из файла.
+        //Console.WriteLine("Генерация товаров в магазине.");
         //Store.GenerateProducts();
         Console.WriteLine("Считывание продуктов из файла.");
         Store.ReadProductsFromFile();
+        Console.WriteLine("Продукты считаны.");
+        Console.WriteLine();
 
         // Задание 4. Генератор тестовых заказов.
+        //Console.WriteLine("Генерация заказов");
         //OrdersGenerator.GenerateRandomOrders();
         Console.WriteLine("Считывание заказов из файла.");
         OrdersGenerator.ReadOrdersFromFile();
-        Order randomOrder = OrdersGenerator.GenerateOrderBySum(20000M);
-        randomOrder = OrdersGenerator.GenerateOrderBySum(10000M, 20000M);
-        randomOrder = OrdersGenerator.GenerateOrderByCount(40);
-
-        // Задание 1. Ввод заказа из консоли с учётом пожеланий пользователя.
-        Store.PrintProductsTypes();
-        Order orderFromConsole = new Order();
-        Console.WriteLine("Считывание заказа из консоли.");
-        orderFromConsole.ReadOrderFromConsole();
-        // Отсортировать по алфавиту без LINQ.
-        orderFromConsole.Products.Sort((a, b) => a.Key.Name.CompareTo(b.Key.Name));
-        // Вывести информацию о заказе (состав, итоговая стоимость, итоговый вес).
-        orderFromConsole.PrintOrderInfo();
-        //orderFromConsole.WriteOrderToFile();
-
-        //Задание 7. Ввод заказа из файла.
-        Order orderFromFile= new();
-        orderFromFile = orderFromFile.ReadOrderFromFile();
-        Dictionary<Product, uint> orderFromFileDictionary = orderFromFile.Products.ToDictionary();
-        Console.WriteLine("Общая информация о заказе.");
-        orderFromFile.PrintOrderInfo();
+        Console.WriteLine("Заказы считаны.");
         Console.WriteLine();
-        Console.WriteLine("Подробная информация о товарах в заказе.");
-        foreach (KeyValuePair<Product, uint> orderItem in orderFromFileDictionary)
+
+        Order userOrder = new();
+        while (true)
         {
-            PropertyInfo[] propertyInfo = orderItem.Key.GetType().GetProperties();
-            foreach (PropertyInfo property in propertyInfo)
+            Console.WriteLine("Выберите режим работы программы:");
+            Console.WriteLine("Считать заказ:");
+            Console.WriteLine($"{(int)ProgramModes.ReadOrderFromConsole} - считать заказ из консоли.");
+            Console.WriteLine($"{(int)ProgramModes.ReadOrderFromFile} - считать заказ из файла.");
+
+            decimal minSum = (decimal)OrdersGenerator.Orders.FirstOrDefault().Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value);
+            decimal maxSum = 0;
+            uint minTotalQuantity = (uint)OrdersGenerator.Orders.First().Products.Sum(orderItem => orderItem.Value);
+            uint maxTotalQuantity = 0;
+            foreach (Order order in OrdersGenerator.Orders)
             {
-                Console.WriteLine($"{property.Name}, {property.GetValue(orderItem.Key)?.ToString()}");
+                decimal sum = (decimal)order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value);
+                if (minSum > sum)
+                {
+                    minSum = sum;
+                }
+                if (maxSum < sum)
+                {
+                    maxSum = sum;
+                }
+                uint quantity = (uint)order.Products.Sum(orderItem => orderItem.Value);
+                if (minTotalQuantity > quantity)
+                {
+                    minTotalQuantity = quantity;
+                }
+                if (maxTotalQuantity < quantity)
+                {
+                    maxTotalQuantity = quantity;
+                }
             }
-            Console.WriteLine();
+            Console.WriteLine("Сгенерировать заказ по сумме:");
+            Console.WriteLine($"{(int)ProgramModes.GenerateOrderByMaxSum} - сгенерировать заказ по максимальной сумме.");
+            Console.WriteLine($"{(int)ProgramModes.GenerateOrderByMinMaxSumRange} - cгенерировать заказ по диапазону суммы.");
+            Console.WriteLine($"Минимальная общая сумма заказа - {minSum}.");
+            Console.WriteLine($"Максимальная общая сумма заказа - {maxSum}.");
+            Console.WriteLine($"{(int)ProgramModes.GenerateOrderByMaxTotalQuantity} - cгенерировать заказ по максимальному общему количеству товаров в заказе.");
+            Console.WriteLine($"Минимальное общее количество товаров в заказе - {minTotalQuantity}.");
+            Console.WriteLine($"Максимальное общее количество товаров в заказе - {maxTotalQuantity}.");
+
+            Console.WriteLine($"{(int)ProgramModes.ChangeProductInOrder} - изменить заказ.");
+            Console.WriteLine($"{(int)ProgramModes.PrintProducts} - вывести в консоль существующие продукты магазина.");
+            Console.WriteLine($"{(int)ProgramModes.PrintOrders} - вывести в консоль существующие заказы.");
+            Console.WriteLine($"{(int)ProgramModes.CalculateOrders} - режим калькультора заказов.");
+            
+            Console.WriteLine($"Отсортировать заказы:");
+            // Задание 5. Работа с LINQ.
+            List<Order> validOrders = new();
+            Console.WriteLine($"{(int)ProgramModes.GetOrdersByMaxSum} - заказы дешевле заданной суммы.");
+            validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) < 15000.00M).ToList();
+            Console.WriteLine($"{(int)ProgramModes.GetOrdersByMinSum} - заказы дороже заданной суммы.");
+            validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) > 15000.00M).ToList();
+            Console.WriteLine($"{(int)ProgramModes.GetOrdersByProductType} - заказы, имеющие в составе товары определённого типа.");
+            validOrders = OrdersGenerator.Orders.Where(order => order.Products.Any(orderItem => orderItem.Key.GetType() == typeof(Corvalol))).ToList();
+            Console.WriteLine($"{(int)ProgramModes.GetOrdersSortedByWeight} - заказы, отсортированные по весу в порядке возрастания.");
+            validOrders = OrdersGenerator.Orders.OrderBy(order => order.Products.Sum(orderItem => orderItem.Key.Weight)).ToList();
+            Console.WriteLine($"{(int)ProgramModes.GetOrdersWithUniqueProductsInList} - заказы, с уникальными названиями(заказы, в которых количество каждого товара не превышает единицы.");
+            //validOrders = orders.Select(order => order.DistinctBy(orderItem => orderItem.Key.Name).ToDictionary()).ToList();
+            validOrders = OrdersGenerator.Orders.Where(order => order.Products.All(orderItem => orderItem.Value == 1)).ToList();
+            Console.WriteLine($"{(int)ProgramModes.GetOrdersByMaxDepartureDate} - заказы, отправленные до указанной даты.");
+            DateTime maxDepartureDateTime = DateTime.Now.AddDays(1);
+            validOrders = OrdersGenerator.Orders.Where(order => order.TimeOfDeparture <= maxDepartureDateTime).ToList();
+
+            Console.WriteLine("end - закончить работу программы.");
+
+            string programModeString = Console.ReadLine();
+
+            if (programModeString == "end")
+            {
+                return;
+            }
+
+            string userInput;
+            decimal userMaxOrderSum;
+            decimal userMinOrderSum;
+            uint userMaxOrderQuantity;
+
+            if (Enum.TryParse(programModeString, out ProgramModes programMode))
+            {
+                if (Enum.IsDefined(typeof(ProgramModes), programMode))
+                {
+                    switch (programMode)
+                    {
+                        //Задание 1. Ввод заказа с помощью консоли.
+                        case ProgramModes.ReadOrderFromConsole:
+                            Console.WriteLine("Типы товаров в магазине.");
+                            Store.PrintProductsTypes();
+
+                            Console.WriteLine("Считывание заказа из консоли.");
+                            Console.WriteLine("Введите номер товара в списке продуктов.");
+                            userOrder.ReadOrderFromConsole();
+                            Console.WriteLine("Считывание заказа из консоли завершено.");
+                            Console.WriteLine("Информация о заказе.");
+                            userOrder.PrintOrderInfo();
+                            Console.WriteLine("Отсортироваться заказ по алфавиту? y - да, любой другой символ - нет.");
+                            if (Console.ReadLine() == "y")
+                            {
+                                //Задание 1. Отсортировать по алфавиту без LINQ.
+                                userOrder.Products.Sort((a, b) => a.Key.Name.CompareTo(b.Key.Name));
+                            }
+                            Console.WriteLine("Записать заказ в файл? y - да, любой другой символ - нет.");
+                            if (Console.ReadLine() == "y")
+                            {
+                                Console.WriteLine("Запись заказ в файл");
+                                userOrder.WriteOrderToFile();
+                                Console.WriteLine("Запись заказа в файл окончена.");
+                            }
+                            continue;
+                        case ProgramModes.ReadOrderFromFile:
+                            Console.WriteLine("Считывание заказа из файла.");
+                            userOrder = userOrder.ReadOrderFromFile();
+                            Console.WriteLine("Считывание заказа из файла завершено.");
+
+                            Console.WriteLine("Информация о заказе.");
+                            userOrder.PrintOrderInfo();
+                            continue;
+                        case ProgramModes.GenerateOrderByMaxSum:
+                            Console.WriteLine("Введите максимальную сумму заказа.");
+                            userMaxOrderSum = ReadDecimalFromConsole();
+
+                            userOrder = OrdersGenerator.GenerateOrderBySum(userMaxOrderSum);
+
+                            Console.WriteLine("Информация о заказе.");
+                            userOrder.PrintOrderInfo();
+                            continue;
+                        case ProgramModes.GenerateOrderByMinMaxSumRange:
+                            Console.WriteLine("Введите минимальную сумму заказа.");
+                            userMinOrderSum = ReadDecimalFromConsole();
+                            Console.WriteLine("Введите максимаьную сумму заказа.");
+                            userMaxOrderSum = ReadDecimalFromConsole();
+
+                            userOrder = OrdersGenerator.GenerateOrderBySum(userMinOrderSum, userMaxOrderSum);
+
+                            Console.WriteLine("Информация о заказе.");
+                            userOrder.PrintOrderInfo();
+                            continue;
+                        case ProgramModes.GenerateOrderByMaxTotalQuantity:
+                            Console.WriteLine("Введите максимальное общее количество товаров в заказе.");
+                            userMaxOrderQuantity = ReadUintFromConsole();
+
+                            userOrder = OrdersGenerator.GenerateOrderByMaxQuantity(userMaxOrderQuantity);
+                            
+                            Console.WriteLine("Информация о заказе.");
+                            userOrder.PrintOrderInfo();
+                            continue;
+                        case ProgramModes.ChangeProductInOrder:
+                            Console.WriteLine("Изменение продукта в заказе.");
+                            if (userOrder is null)
+                            {
+                                Console.WriteLine("Для начала введите заказ.");
+                                continue;
+                            }
+                            Console.WriteLine("Выберите тип продукта из списка.");
+                            /*
+                            ...
+                            */
+                            Console.WriteLine("Введите новые данные о продукте.");
+                            /*
+                            ...
+                            */
+                            Console.WriteLine("Введите новое количество продукта.");
+                            /*
+                            ...
+                            */
+                            continue;
+                        case ProgramModes.PrintProducts:
+                            Store.PrintProductsInfo();
+                            continue;
+                        case ProgramModes.PrintOrders:
+                            OrdersGenerator.PrintOrdersInfo();
+                            continue;
+                        case ProgramModes.CalculateOrders:
+                            Console.WriteLine("Калькулятор заказов.");
+                            Console.WriteLine("Введите второй заказ.");
+                            /*
+                            ...
+                            */
+                            continue;
+                        /*LINQ
+                        case
+                        */
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Считано {programMode}. Такого режима нет. Повторите ввод.");
+                    continue;
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Считано {programModeString}. Неправильный формат. Повторите ввод.");
+                continue;
+            }
+
+            return;
         }
-
-        // Задание 3. Калькулятор заказов.
-        CartCalculator cartCalculator = new(new Calculator.Logger());
-        Order orderA = new();
-        orderA = cartCalculator.Add(Store.Products[0], Store.Products[1]);
-        orderA = cartCalculator.Add(Store.Products[0], Store.Products[0]);
-        orderA = cartCalculator.Add(orderA, Store.Products[1]);
-        orderA = cartCalculator.Add(orderA, Store.Products[1]);
-        Order orderB = new();
-        orderB = cartCalculator.Add(orderB, Store.Products[1]);
-        Order orderC = cartCalculator.Add(orderA, orderB);
-        orderC = cartCalculator.Multiply(orderC, 2);
-
-        // Задание 5. Работа с LINQ.
-        List<Order> validOrders = new();
-        // Заказы, дешевле заданной суммы (15000.00).
-        validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) < 15000.00M).ToList();
-        // Заказы, дороже заданной суммы (15000.00).
-        validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) > 15000.00M).ToList();
-        // Заказы, имеющие в составе товары определённого типа (корвалол).
-        validOrders = OrdersGenerator.Orders.Where(order => order.Products.Any(orderItem => orderItem.Key.GetType() == typeof(Corvalol))).ToList();
-        // Заказы, отсортированные по весу в порядке возрастания.
-        validOrders = OrdersGenerator.Orders.OrderBy(order => order.Products.Sum(orderItem => orderItem.Key.Weight)).ToList();
-        // Заказы, с уникальными названиями (заказы, в которых количество каждого товара не превышает единицы).
-        //validOrders = orders.Select(order => order.DistinctBy(orderItem => orderItem.Key.Name).ToDictionary()).ToList();
-        validOrders = OrdersGenerator.Orders.Where(order => order.Products.All(orderItem => orderItem.Value == 1)).ToList();
-        // Заказы, отправленные до указанной даты.
-        DateTime maxDepartureDateTime = DateTime.Now.AddDays(1);
-        validOrders = OrdersGenerator.Orders.Where(order => order.TimeOfDeparture <= maxDepartureDateTime).ToList();
-
-        // Задание 4. Метод редактирования продукта в заказе.
-        orderFromFile.UpdateProduct(11, Store.Products.First(), 25);
     }
 }

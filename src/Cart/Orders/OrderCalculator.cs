@@ -1,14 +1,14 @@
 ﻿using Calculator;
 
-namespace Cart;
+namespace Cart.Orders;
 
 /// <summary>
 /// Калькулятора для корзины в Интернет магазине.
 /// </summary>
 
-public class CartCalculator : Calculator.Calculator
+public class OrderCalculator : Calculator.Calculator
 {
-    public CartCalculator(Logger? logger) : base(logger)
+    public OrderCalculator(Logger? logger) : base(logger)
     {
 
     }
@@ -137,7 +137,7 @@ public class CartCalculator : Calculator.Calculator
     public Order Subtract(Order orderA, Order orderB)
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
-        
+
         Order orderC = new();
         orderA.CopyTo(orderC);
         foreach (Product productB in orderB.Products.ToDictionary().Keys)

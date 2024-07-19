@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
+using Cart.Stores;
 
-namespace Cart;
+namespace Cart.Orders;
 
 /// <summary>
 /// Класс генератора тестовых заказов.
@@ -11,12 +12,12 @@ public static class OrdersGenerator
     /// Путь к директории проекта.
     /// </summary>
     private static string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-    
+
     /// <summary>
     /// Файл со списком сгенерированных заказов.
     /// </summary>
     private static string fileNameOrders = "Orders.json";
-    
+
     /// <summary>
     /// Список сгенерированных заказов.
     /// </summary>
@@ -71,8 +72,6 @@ public static class OrdersGenerator
     /// <returns>Заказ.</returns>
     public static Order GenerateRandomOrder()
     {
-        int orderNumber = random.Next(0, Orders.Count - 1);
-
         return Orders[random.Next(0, Orders.Count - 1)];
     }
 
@@ -84,7 +83,7 @@ public static class OrdersGenerator
     public static Order GenerateOrderBySum(decimal maxSum)
     {
         List<Order> validOrdersList = Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) < maxSum).ToList();
-        
+
         return Orders[random.Next(0, validOrdersList.Count)];
     }
 
@@ -108,7 +107,7 @@ public static class OrdersGenerator
     /// </summary>
     /// <param name="maxCount">Максимальное общее количество товаров в заказе.</param>
     /// <returns>Заказ, удовлетворяющий параметрам.</returns>
-    public static Order GenerateOrderByCount(uint maxCount)
+    public static Order GenerateOrderByMaxQuantity(uint maxCount)
     {
         List<Order> validOrders = Orders.Where(order => order.Products.Sum(orderItem => orderItem.Value) < maxCount).ToList();
 
@@ -122,17 +121,10 @@ public static class OrdersGenerator
     public static void PrintOrdersInfo()
     {
         uint index = 0;
-        foreach(Order order in Orders)
+        foreach (Order order in Orders)
         {
             Console.WriteLine($"Заказ №{index += 1}");
-            Console.WriteLine($"Название\t\tЦена\t\tКоличествоо\tСтоимость");
-            foreach(KeyValuePair<Product, uint> products in order.Products)
-            {
-                Console.WriteLine($"{products.Key.Name}\t\t{products.Key.Price}\t{products.Value}\t{products.Key.Price * products.Value}");
-            }
-            Console.WriteLine($"Сумма заказа = {order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value)}.");
-            Console.WriteLine($"Общее количество товаров в заказе = {order.Products.Sum(orderItem => orderItem.Value)}.");
-            Console.WriteLine($"Общий вес заказа = ${order.Products.Sum(orderItem => orderItem.Key.Weight)}.");
+            order.PrintOrderInfo();
             Console.WriteLine();
         }
     }
@@ -144,5 +136,21 @@ public static class OrdersGenerator
     {
         string jsonOrdersList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders);
         Orders = JsonSerializer.Deserialize<List<Order>>(jsonOrdersList, jsonSerializerOptions);
+    }
+
+    private static decimal ReadProductPriceFromConsole()
+    {
+        while (true)
+        {
+            string priceString = Console.ReadLine();
+            if (decimal.TryParse(priceString, out decimal price))
+            {
+                return price;
+            }
+            else
+            {
+                Console.WriteLine($"Введено {priceString}. Неправильный формат. Повторите ввод.");
+            }
+        }
     }
 }
