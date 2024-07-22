@@ -3,6 +3,10 @@
 internal enum ProgramModes
 {
     /// <summary>
+    /// Завершить работу.
+    /// </summary>
+    Exit = 0,
+    /// <summary>
     /// Считать заказ из консоли.
     /// </summary>
     ReadOrderFromConsole = 1,

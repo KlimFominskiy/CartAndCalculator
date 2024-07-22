@@ -14,17 +14,17 @@ internal class Program
         while(true)
         {
             string userInput = Console.ReadLine();
-            if (decimal.TryParse(userInput, out decimal decimalValue))
+            if (decimal.TryParse(userInput, out decimal value))
             {
-                return decimalValue;
+                return value;
             }
             else
             {
-                Console.WriteLine($"Введено {userInput}. Неправильный формат. Повторите ввод.");
+                ConsoleInputError(userInput);
+                Console.WriteLine("Повторите ввод.");
                 continue;
             }
         }
-        
     }
 
     private static uint ReadUintFromConsole()
@@ -32,15 +32,75 @@ internal class Program
         while (true)
         {
             string userInput = Console.ReadLine();
-            if (uint.TryParse(userInput, out uint doubleValue))
+            if (uint.TryParse(userInput, out uint value))
             {
-                return doubleValue;
+                return value;
             }
             else
             {
-                Console.WriteLine($"Введено {userInput}. Неправильный формат. Повторите ввод.");
+                ConsoleInputError(userInput);
+                Console.WriteLine("Повторите ввод.");
                 continue;
             }
+        }
+    }
+
+    private static int ReadIntFromConsole()
+    {
+        while (true)
+        {
+            string userInput = Console.ReadLine();
+            if (int.TryParse(userInput, out int value))
+            {
+                return value;
+            }
+            else
+            {
+                ConsoleInputError(userInput);
+                Console.WriteLine("Повторите ввод.");
+                continue;
+            }
+        }
+    }
+
+    private static ProgramModes ReadProgramModeFromConsole()
+    {
+        while (true)
+        {
+            string userInput = Console.ReadLine();
+            if (Enum.TryParse(userInput, out ProgramModes value))
+            {
+                if (!IsModeDefined(value))
+                {
+                    Console.WriteLine("Повторите ввод.");
+                    continue;
+                }
+                return value;
+            }
+            else
+            {
+                ConsoleInputError(userInput);
+                Console.WriteLine("Повторите ввод.");
+                continue;
+            }
+        }
+    }
+
+    private static void ConsoleInputError(string value)
+    {
+        Console.WriteLine($"Введено {value}. Неправильный формат.");
+    }
+
+    private static bool IsModeDefined(ProgramModes value)
+    {
+        if (Enum.IsDefined(typeof(ProgramModes), value))
+        {
+            return true;
+        }
+        else
+        {
+            Console.WriteLine($"Введено {(int)value}. Такого режима нет.");
+            return false;
         }
     }
 
@@ -72,9 +132,9 @@ internal class Program
             Console.WriteLine($"{(int)ProgramModes.ReadOrderFromConsole} - считать заказ из консоли.");
             Console.WriteLine($"{(int)ProgramModes.ReadOrderFromFile} - считать заказ из файла.");
 
-            decimal minSum = (decimal)OrdersGenerator.Orders.FirstOrDefault().Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value);
+            decimal minSum = decimal.MaxValue;
             decimal maxSum = 0;
-            uint minTotalQuantity = (uint)OrdersGenerator.Orders.First().Products.Sum(orderItem => orderItem.Value);
+            uint minTotalQuantity = uint.MaxValue;
             uint maxTotalQuantity = 0;
             foreach (Order order in OrdersGenerator.Orders)
             {
@@ -128,137 +188,169 @@ internal class Program
             Console.WriteLine($"{(int)ProgramModes.GetOrdersByMaxDepartureDate} - заказы, отправленные до указанной даты.");
             DateTime maxDepartureDateTime = DateTime.Now.AddDays(1);
             validOrders = OrdersGenerator.Orders.Where(order => order.TimeOfDeparture <= maxDepartureDateTime).ToList();
+            Console.WriteLine("0 - закончить работу программы.");
 
-            Console.WriteLine("end - закончить работу программы.");
-
-            string programModeString = Console.ReadLine();
-
-            if (programModeString == "end")
-            {
-                return;
-            }
-
-            string userInput;
             decimal userMaxOrderSum;
             decimal userMinOrderSum;
             uint userMaxOrderQuantity;
 
-            if (Enum.TryParse(programModeString, out ProgramModes programMode))
+            ProgramModes programMode = ReadProgramModeFromConsole();
+
+            switch (programMode)
             {
-                if (Enum.IsDefined(typeof(ProgramModes), programMode))
-                {
-                    switch (programMode)
+                case ProgramModes.Exit:
+                    break;
+                //Задание 1. Ввод заказа с помощью консоли.
+                case ProgramModes.ReadOrderFromConsole:
+                    Console.WriteLine("Типы товаров в магазине.");
+                    Store.PrintProductsTypes();
+
+                    Console.WriteLine("Считывание заказа из консоли.");
+                    Console.WriteLine("Введите номер товара в списке продуктов.");
+                    userOrder.ReadOrderFromConsole();
+                    Console.WriteLine("Считывание заказа из консоли завершено.");
+                    Console.WriteLine("Информация о заказе.");
+                    userOrder.PrintOrderInfo();
+                    Console.WriteLine("Отсортироваться заказ по алфавиту? y - да, любой другой символ - нет.");
+                    if (Console.ReadLine() == "y")
                     {
-                        //Задание 1. Ввод заказа с помощью консоли.
-                        case ProgramModes.ReadOrderFromConsole:
-                            Console.WriteLine("Типы товаров в магазине.");
-                            Store.PrintProductsTypes();
-
-                            Console.WriteLine("Считывание заказа из консоли.");
-                            Console.WriteLine("Введите номер товара в списке продуктов.");
-                            userOrder.ReadOrderFromConsole();
-                            Console.WriteLine("Считывание заказа из консоли завершено.");
-                            Console.WriteLine("Информация о заказе.");
-                            userOrder.PrintOrderInfo();
-                            Console.WriteLine("Отсортироваться заказ по алфавиту? y - да, любой другой символ - нет.");
-                            if (Console.ReadLine() == "y")
-                            {
-                                //Задание 1. Отсортировать по алфавиту без LINQ.
-                                userOrder.Products.Sort((a, b) => a.Key.Name.CompareTo(b.Key.Name));
-                            }
-                            Console.WriteLine("Записать заказ в файл? y - да, любой другой символ - нет.");
-                            if (Console.ReadLine() == "y")
-                            {
-                                Console.WriteLine("Запись заказ в файл");
-                                userOrder.WriteOrderToFile();
-                                Console.WriteLine("Запись заказа в файл окончена.");
-                            }
-                            continue;
-                        case ProgramModes.ReadOrderFromFile:
-                            Console.WriteLine("Считывание заказа из файла.");
-                            userOrder = userOrder.ReadOrderFromFile();
-                            Console.WriteLine("Считывание заказа из файла завершено.");
-
-                            Console.WriteLine("Информация о заказе.");
-                            userOrder.PrintOrderInfo();
-                            continue;
-                        case ProgramModes.GenerateOrderByMaxSum:
-                            Console.WriteLine("Введите максимальную сумму заказа.");
-                            userMaxOrderSum = ReadDecimalFromConsole();
-
-                            userOrder = OrdersGenerator.GenerateOrderBySum(userMaxOrderSum);
-
-                            Console.WriteLine("Информация о заказе.");
-                            userOrder.PrintOrderInfo();
-                            continue;
-                        case ProgramModes.GenerateOrderByMinMaxSumRange:
-                            Console.WriteLine("Введите минимальную сумму заказа.");
-                            userMinOrderSum = ReadDecimalFromConsole();
-                            Console.WriteLine("Введите максимаьную сумму заказа.");
-                            userMaxOrderSum = ReadDecimalFromConsole();
-
-                            userOrder = OrdersGenerator.GenerateOrderBySum(userMinOrderSum, userMaxOrderSum);
-
-                            Console.WriteLine("Информация о заказе.");
-                            userOrder.PrintOrderInfo();
-                            continue;
-                        case ProgramModes.GenerateOrderByMaxTotalQuantity:
-                            Console.WriteLine("Введите максимальное общее количество товаров в заказе.");
-                            userMaxOrderQuantity = ReadUintFromConsole();
-
-                            userOrder = OrdersGenerator.GenerateOrderByMaxQuantity(userMaxOrderQuantity);
-                            
-                            Console.WriteLine("Информация о заказе.");
-                            userOrder.PrintOrderInfo();
-                            continue;
-                        case ProgramModes.ChangeProductInOrder:
-                            Console.WriteLine("Изменение продукта в заказе.");
-                            if (userOrder is null)
-                            {
-                                Console.WriteLine("Для начала введите заказ.");
-                                continue;
-                            }
-                            Console.WriteLine("Выберите тип продукта из списка.");
-                            /*
-                            ...
-                            */
-                            Console.WriteLine("Введите новые данные о продукте.");
-                            /*
-                            ...
-                            */
-                            Console.WriteLine("Введите новое количество продукта.");
-                            /*
-                            ...
-                            */
-                            continue;
-                        case ProgramModes.PrintProducts:
-                            Store.PrintProductsInfo();
-                            continue;
-                        case ProgramModes.PrintOrders:
-                            OrdersGenerator.PrintOrdersInfo();
-                            continue;
-                        case ProgramModes.CalculateOrders:
-                            Console.WriteLine("Калькулятор заказов.");
-                            Console.WriteLine("Введите второй заказ.");
-                            /*
-                            ...
-                            */
-                            continue;
-                        /*LINQ
-                        case
-                        */
+                        //Задание 1. Отсортировать по алфавиту без LINQ.
+                        userOrder.Products.Sort((a, b) => a.Key.Name.CompareTo(b.Key.Name));
                     }
-                }
-                else
-                {
-                    Console.WriteLine($"Считано {programMode}. Такого режима нет. Повторите ввод.");
+                    Console.WriteLine("Записать заказ в файл? y - да, любой другой символ - нет.");
+                    if (Console.ReadLine() == "y")
+                    {
+                        Console.WriteLine("Запись заказ в файл");
+                        userOrder.WriteOrderToFile();
+                        Console.WriteLine("Запись заказа в файл окончена.");
+                    }
                     continue;
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Считано {programModeString}. Неправильный формат. Повторите ввод.");
-                continue;
+                case ProgramModes.ReadOrderFromFile:
+                    Console.WriteLine("Считывание заказа из файла.");
+                    userOrder = userOrder.ReadOrderFromFile();
+                    Console.WriteLine("Считывание заказа из файла завершено.");
+
+                    Console.WriteLine("Информация о заказе.");
+                    userOrder.PrintOrderInfo();
+                    continue;
+                case ProgramModes.GenerateOrderByMaxSum:
+                    Console.WriteLine("Введите максимальную сумму заказа.");
+                    userMaxOrderSum = ReadDecimalFromConsole();
+
+                    userOrder = OrdersGenerator.GenerateOrderBySum(userMaxOrderSum);
+
+                    Console.WriteLine("Информация о заказе.");
+                    userOrder.PrintOrderInfo();
+                    continue;
+                case ProgramModes.GenerateOrderByMinMaxSumRange:
+                    Console.WriteLine("Введите минимальную сумму заказа.");
+                    userMinOrderSum = ReadDecimalFromConsole();
+                    Console.WriteLine("Введите максимальную сумму заказа.");
+                    userMaxOrderSum = ReadDecimalFromConsole();
+
+                    userOrder = OrdersGenerator.GenerateOrderBySum(userMinOrderSum, userMaxOrderSum);
+
+                    Console.WriteLine("Информация о заказе.");
+                    userOrder.PrintOrderInfo();
+                    continue;
+                case ProgramModes.GenerateOrderByMaxTotalQuantity:
+                    Console.WriteLine("Введите максимальное общее количество товаров в заказе.");
+                    userMaxOrderQuantity = ReadUintFromConsole();
+
+                    userOrder = OrdersGenerator.GenerateOrderByMaxQuantity(userMaxOrderQuantity);
+
+                    Console.WriteLine("Информация о заказе.");
+                    userOrder.PrintOrderInfo();
+                    continue;
+                case ProgramModes.ChangeProductInOrder:
+                    Console.WriteLine("Изменение продукта в заказе.");
+                    if (userOrder is null)
+                    {
+                        Console.WriteLine("Для начала введите заказ.");
+                        continue;
+                    }
+                    Console.WriteLine("Выберите тип продукта из списка.");
+                    /*
+                    ...
+                    */
+                    Console.WriteLine("Введите новые данные о продукте.");
+                    /*
+                    ...
+                    */
+                    Console.WriteLine("Введите новое количество продукта.");
+                    /*
+                    ...
+                    */
+                    continue;
+                case ProgramModes.PrintProducts:
+                    Store.PrintProductsInfo();
+                    continue;
+                case ProgramModes.PrintOrders:
+                    OrdersGenerator.PrintOrdersInfo();
+                    continue;
+                case ProgramModes.CalculateOrders:
+                    Console.WriteLine("Калькулятор заказов.");
+                    Order firstOrder = new();
+                    Order secondOrder = new();
+                    Console.WriteLine("Введите первый заказ.");
+                    Console.WriteLine($"{(int)ProgramModes.ReadOrderFromConsole} - считать заказ из консоли.");
+                    Console.WriteLine($"{(int)ProgramModes.ReadOrderFromFile} - считать заказ из файла.");
+
+                    programMode = ReadProgramModeFromConsole();
+
+                    while (true)
+                    {
+                        if (programMode == ProgramModes.ReadOrderFromConsole)
+                        {
+                            Console.WriteLine("Считывание заказа из консоли.");
+                            firstOrder.ReadOrderFromConsole();
+                            Console.WriteLine("Считывание заказа из консоли завершено.");
+                        }
+                        else if (programMode == ProgramModes.ReadOrderFromFile)
+                        {
+                            Console.WriteLine("Считывание заказа из файла.");
+                            firstOrder.ReadOrderFromFile();
+                            Console.WriteLine("Считывание заказа из файла завершено.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Считано {programMode}. Такого режима нет. Повторите ввод.");
+                            continue;
+                        }
+                        break;
+                    }
+
+                    Console.WriteLine("Введите второй заказ.");
+                    Console.WriteLine($"{(int)ProgramModes.ReadOrderFromConsole} - считать заказ из консоли.");
+                    Console.WriteLine($"{(int)ProgramModes.ReadOrderFromFile} - считать заказ из файла.");
+
+                    programMode = ReadProgramModeFromConsole();
+
+                    while (true)
+                    {
+                        if (programMode == ProgramModes.ReadOrderFromConsole)
+                        {
+                            Console.WriteLine("Считывание заказа из консоли.");
+                            secondOrder.ReadOrderFromConsole();
+                            Console.WriteLine("Считывание заказа из консоли завершено.");
+                        }
+                        else if (programMode == ProgramModes.ReadOrderFromFile)
+                        {
+                            Console.WriteLine("Считывание заказа из файла.");
+                            secondOrder.ReadOrderFromFile();
+                            Console.WriteLine("Считывание заказа из файла завершено.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Считано {programMode}. Такого режима нет. Повторите ввод.");
+                            continue;
+                        }
+                        break;
+                    }
+                    continue;
+                    /*LINQ
+                    case
+                    */
             }
 
             return;
