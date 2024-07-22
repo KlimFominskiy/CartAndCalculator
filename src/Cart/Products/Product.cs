@@ -10,7 +10,7 @@ namespace Cart;
 [JsonDerivedType(typeof(Chips), typeDiscriminator: "Чипсы")]
 [JsonDerivedType(typeof(Corvalol), typeDiscriminator: "Корвалол")]
 [JsonDerivedType(typeof(WashingMachine), typeDiscriminator: "Стиральная машина")]
-public class Product
+public abstract record Product
 {
     /// <summary>
     /// Идентификационный номер.
@@ -47,18 +47,5 @@ public class Product
         Name = name;
         Weight = weight;
         Price = price;
-    }
-
-    public Product()
-    {
-
-    }
-
-    public void CopyTo(Product other)
-    {
-        other.Id = this.Id;
-        other.Name = this.Name;
-        other.Weight = this.Weight;
-        other.Price = this.Price;
     }
 }

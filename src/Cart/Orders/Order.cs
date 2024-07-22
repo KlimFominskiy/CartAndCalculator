@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Text.Json;
 using Cart.Enums;
+using Cart.Products;
 using Cart.Stores;
 
 namespace Cart.Orders;
@@ -80,11 +81,11 @@ public class Order
 
             orderItemSettings.PriceRequirement = ReadPriceRequirementFromConsole();
             Type productType = Store.ProductsTypes[Convert.ToInt32(orderItemSettings.ProductTypeNumber - 1)];
+            
             List<Product> validProducts = new();
             foreach(Product product in Store.Products.Where(product => product.GetType() == productType).ToList())
             {
-                Product newProduct = new();
-                product.CopyTo(newProduct);
+                Product newProduct = product with { };
                 validProducts.Add(newProduct);
             }
             Product? validProduct = null;
