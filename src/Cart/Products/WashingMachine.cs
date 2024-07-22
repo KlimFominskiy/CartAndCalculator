@@ -11,4 +11,10 @@ public class WashingMachine : Product
     {
         IsDryerIncluded = isDryerIncluded;
     }
+
+    public void CopyTo(WashingMachine other)
+    {
+        base.CopyTo(other);
+        other.IsDryerIncluded = this.IsDryerIncluded;
+    }
 }

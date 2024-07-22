@@ -38,8 +38,10 @@ public class Order
     {
         Console.WriteLine();
 
+        uint index = 0;
         foreach (KeyValuePair<Product, uint> orderItem in Products)
         {
+            Console.WriteLine($"{index += 1})");
             foreach (PropertyInfo orderItemInfo in orderItem.Key.GetType().GetProperties())
             {
                 //foreach (PropertyInfo productInfo in orderItemInfo)
@@ -78,7 +80,13 @@ public class Order
 
             orderItemSettings.PriceRequirement = ReadPriceRequirementFromConsole();
             Type productType = Store.ProductsTypes[Convert.ToInt32(orderItemSettings.ProductTypeNumber - 1)];
-            List<Product> validProducts = Store.Products.Where(product => product.GetType() == productType).ToList();
+            List<Product> validProducts = new();
+            foreach(Product product in Store.Products.Where(product => product.GetType() == productType).ToList())
+            {
+                Product newProduct = new();
+                product.CopyTo(newProduct);
+                validProducts.Add(newProduct);
+            }
             Product? validProduct = null;
             switch (orderItemSettings.PriceRequirement)
             {

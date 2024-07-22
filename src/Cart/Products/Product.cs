@@ -48,4 +48,17 @@ public class Product
         Weight = weight;
         Price = price;
     }
+
+    public Product()
+    {
+
+    }
+
+    public void CopyTo(Product other)
+    {
+        other.Id = this.Id;
+        other.Name = this.Name;
+        other.Weight = this.Weight;
+        other.Price = this.Price;
+    }
 }

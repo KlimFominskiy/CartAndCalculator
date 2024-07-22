@@ -137,8 +137,10 @@ public static class Store
     /// </summary>
     public static void PrintProductsInfo()
     {
+        uint index = 0;
         foreach (Product product in Products)
         {
+            Console.WriteLine($"{index += 1})");
             PropertyInfo[] propertyInfo = product.GetType().GetProperties();
             foreach (PropertyInfo property in propertyInfo)
             {

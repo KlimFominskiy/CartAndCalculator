@@ -42,12 +42,36 @@ internal enum ProgramModes
     /// Рассчитать заказы.
     /// </summary>
     CalculateOrders,
-    //LINQ
+    /// <summary>
+    /// Получить заказы дешевле заданной суммы.
+    /// </summary>
     GetOrdersByMaxSum,
+    /// <summary>
+    /// Получить заказы дороже заданной суммы.
+    /// </summary>
     GetOrdersByMinSum,
+    /// <summary>
+    /// Получить заказы, имеющие в составе товары определённого типа.
+    /// </summary>
     GetOrdersByProductType,
+    /// <summary>
+    /// Получить заказы, отсортированные по весу в порядке возрастания.
+    /// </summary>
     GetOrdersSortedByWeight,
+    /// <summary>
+    /// Получить заказы с уникальными названиями(заказы, в которых количество каждого товара не превышает единицы.
+    /// </summary>
     GetOrdersWithUniqueProductsInList,
-    GetOrdersByMaxDepartureDate
-
+    /// <summary>
+    /// Получить заказы, отправленные до указанной даты.
+    /// </summary>
+    GetOrdersByMaxDepartureDate,
+    /// <summary>
+    /// Добавить новый товар в заказ.
+    /// </summary>
+    AddProductToOrder,
+    /// <summary>
+    /// Обновить данные о товаре в заказе.
+    /// </summary>
+    UpdateProductInOrder,
 }

@@ -2,7 +2,6 @@
 using Cart.Orders;
 using Cart.Products;
 using Cart.Stores;
-using System.Reflection;
 using System.Text;
 
 namespace Cart;
@@ -125,6 +124,7 @@ internal class Program
         Console.WriteLine();
 
         Order userOrder = new();
+
         while (true)
         {
             Console.WriteLine("Выберите режим работы программы:");
@@ -182,7 +182,7 @@ internal class Program
             validOrders = OrdersGenerator.Orders.Where(order => order.Products.Any(orderItem => orderItem.Key.GetType() == typeof(Corvalol))).ToList();
             Console.WriteLine($"{(int)ProgramModes.GetOrdersSortedByWeight} - заказы, отсортированные по весу в порядке возрастания.");
             validOrders = OrdersGenerator.Orders.OrderBy(order => order.Products.Sum(orderItem => orderItem.Key.Weight)).ToList();
-            Console.WriteLine($"{(int)ProgramModes.GetOrdersWithUniqueProductsInList} - заказы, с уникальными названиями(заказы, в которых количество каждого товара не превышает единицы.");
+            Console.WriteLine($"{(int)ProgramModes.GetOrdersWithUniqueProductsInList} - заказы с уникальными названиями(заказы, в которых количество каждого товара не превышает единицы.");
             //validOrders = orders.Select(order => order.DistinctBy(orderItem => orderItem.Key.Name).ToDictionary()).ToList();
             validOrders = OrdersGenerator.Orders.Where(order => order.Products.All(orderItem => orderItem.Value == 1)).ToList();
             Console.WriteLine($"{(int)ProgramModes.GetOrdersByMaxDepartureDate} - заказы, отправленные до указанной даты.");
@@ -269,11 +269,13 @@ internal class Program
                         Console.WriteLine("Для начала введите заказ.");
                         continue;
                     }
-                    Console.WriteLine("Выберите тип продукта из списка.");
-                    /*
-                    ...
-                    */
-                    Console.WriteLine("Введите новые данные о продукте.");
+                    Console.WriteLine("Состав заказа.");
+                    userOrder.PrintOrderInfo();
+                    Console.WriteLine("Выберите продукт из списка.");
+                    Console.WriteLine("Выберите режим работы с заказом:");
+                    Console.WriteLine("Заменить продукт.");
+                    Console.WriteLine("Изменить текущий продукт.");
+                    
                     /*
                     ...
                     */
