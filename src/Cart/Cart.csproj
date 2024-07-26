@@ -11,4 +11,8 @@
     <ProjectReference Include="..\Calculator\Calculator.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ReadFromConsoleMethods\" />
+  </ItemGroup>
+
 </Project>

@@ -163,7 +163,7 @@ public class Order
     /// <param name="productId">Идентификационный номер товара.</param>
     /// <param name="product">Данные о товаре.</param>
     /// <param name="quantity">Количество товара.</param>
-    public void UpdateProduct(uint productId, Product product, uint quantity)
+    public void UpdateProduct()
     {
         int productIndexInOrder = Products.FindIndex(orderItem => orderItem.Key.Id == productId);
         int newProductIndexInOrder = Products.FindIndex(orderItem => orderItem.Key.Id == product.Id);
@@ -180,6 +180,16 @@ public class Order
         }
 
         Products.Add(newProduct);
+    }
+
+    /// <summary>
+    /// Добавить товар в заказ.
+    /// </summary>
+    public void AddProduct()
+    {
+        Store.PrintProductsInfo();
+        Console.WriteLine("Введите номер продукта из списка.");
+
     }
 
     public void CopyTo(Order other)

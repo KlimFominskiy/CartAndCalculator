@@ -2,13 +2,14 @@
 using Cart.Orders;
 using Cart.Products;
 using Cart.Stores;
+using System.ComponentModel;
 using System.Text;
 
 namespace Cart;
 
 internal class Program
 {
-    private static decimal ReadDecimalFromConsole()
+    public static decimal ReadDecimalFromConsole()
     {
         while(true)
         {
@@ -26,7 +27,7 @@ internal class Program
         }
     }
 
-    private static uint ReadUintFromConsole()
+    public static uint ReadUintFromConsole()
     {
         while (true)
         {
@@ -44,7 +45,7 @@ internal class Program
         }
     }
 
-    private static int ReadIntFromConsole()
+    public static int ReadIntFromConsole()
     {
         while (true)
         {
@@ -62,7 +63,7 @@ internal class Program
         }
     }
 
-    private static ProgramModes ReadProgramModeFromConsole()
+    public static ProgramModes ReadProgramModeFromConsole()
     {
         while (true)
         {
@@ -85,12 +86,12 @@ internal class Program
         }
     }
 
-    private static void ConsoleInputError(string value)
+    public static void ConsoleInputError(string value)
     {
         Console.WriteLine($"Введено {value}. Неправильный формат.");
     }
 
-    private static bool IsModeDefined(ProgramModes value)
+    public static bool IsModeDefined(ProgramModes value)
     {
         if (Enum.IsDefined(typeof(ProgramModes), value))
         {
@@ -103,9 +104,27 @@ internal class Program
         }
     }
 
+    public static bool Is(this string input, Type targetType)
+    {
+        try
+        {
+            TypeDescriptor.GetConverter(targetType).ConvertFromString(input);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     internal static void Main(string[] args)
     {
         Console.OutputEncoding = Encoding.UTF8;
+
+        ProgramModes programModes = new();
+        programModes = ProgramModes.AddProductToOrder;
+        Is(Console.ReadLine())
+        Console.WriteLine((int)programModes);
 
         // Задание 2. Считывание товаров из файла.
         //Console.WriteLine("Генерация товаров в магазине.");
@@ -272,14 +291,30 @@ internal class Program
                     Console.WriteLine("Состав заказа.");
                     userOrder.PrintOrderInfo();
                     Console.WriteLine("Выберите продукт из списка.");
-                    Console.WriteLine("Выберите режим работы с заказом:");
-                    Console.WriteLine("Заменить продукт.");
-                    Console.WriteLine("Изменить текущий продукт.");
-                    
+                    uint productNumber = ReadUintFromConsole();
+                    Console.WriteLine("Выберите режим работы с продуктом:");
+                    Console.WriteLine($"${ProgramModes.UpdateProductInOrder} - изменить текущий продукт.");
+                    Console.WriteLine($"{ProgramModes.ChangeProductInOrder} - заменить текущий продукт.");
+                    programMode = ReadProgramModeFromConsole();
+                    while (true)
+                    {
+                        if (programMode == ProgramModes.UpdateProductInOrder)
+                        {
+                            userOrder.UpdateProduct();
+                        }
+                        else if (programMode == ProgramModes.ChangeProductInOrder)
+                        {
+                            userOrder.AddProduct();
+                        }
+                        else
+                        {
+                            ConsoleInputError(programMode.ToString());
+                        }
+                    }
                     /*
                     ...
                     */
-                    Console.WriteLine("Введите новое количество продукта.");
+
                     /*
                     ...
                     */
