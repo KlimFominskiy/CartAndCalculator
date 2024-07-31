@@ -160,26 +160,50 @@ public class Order
     /// <summary>
     /// Обновить продукт в заказе.
     /// </summary>
-    /// <param name="productId">Идентификационный номер товара.</param>
-    /// <param name="product">Данные о товаре.</param>
-    /// <param name="quantity">Количество товара.</param>
     public void UpdateProduct()
     {
-        int productIndexInOrder = Products.FindIndex(orderItem => orderItem.Key.Id == productId);
-        int newProductIndexInOrder = Products.FindIndex(orderItem => orderItem.Key.Id == product.Id);
-        KeyValuePair<Product, uint> newProduct;
-        // Если товара с таким id нет в заказе.
-        if (newProductIndexInOrder == -1)
+        Console.WriteLine("Состав заказа.");
+        this.PrintOrderInfo();
+
+        Console.WriteLine("Выберите товар из заказа.");
+        uint productInOrderNumber;
+        while(true)
         {
-            newProduct = new(product, quantity);
-        }
-        else
-        {
-            newProduct = new(product, quantity + Products[newProductIndexInOrder].Value);
-            Products.RemoveAt(newProductIndexInOrder);
+            productInOrderNumber = Program.ReadUintFromConsole();
+            if (productInOrderNumber < this.Products.Count)
+            {
+                break;
+            }
+            else
+            {
+                Console.WriteLine($"Введено {productInOrderNumber}. Нет такого номера. Повторите ввод.");
+                continue;
+            }
         }
 
-        Products.Add(newProduct);
+        Console.WriteLine("Введите номер продукта из списка продуктов магазина.");
+        Store.PrintProductsInfo();
+        uint productInStoreNumber;
+        while (true)
+        {
+            productInStoreNumber = Program.ReadUintFromConsole();
+            if (productInOrderNumber < Store.Products.Count)
+            {
+                break;
+            }
+            else
+            {
+                Console.WriteLine($"Введено {productInStoreNumber}. Нет такого номера. Повторите ввод.");
+                continue;
+            }
+        }
+
+        //Считать номер продукта из списка продуктоа магазина.
+        Console.WriteLine("Введите количество нового продукта");
+        uint productQuantity = Program.ReadUintFromConsole();
+        
+        this.Products.Remove(this.Products[(int)productInOrderNumber - 1]);
+        this.Products.Add(new KeyValuePair<Product, uint>(Store.Products[(int)productInStoreNumber - 1], productQuantity));
     }
 
     /// <summary>
@@ -187,9 +211,11 @@ public class Order
     /// </summary>
     public void AddProduct()
     {
+        //Считать номер продукта из заказа.
+        Console.WriteLine("Введите номер продукта из списка продуктов магазина.");
         Store.PrintProductsInfo();
-        Console.WriteLine("Введите номер продукта из списка.");
-
+        //Считать номер продукта из списка продуктоа магазина.
+        Console.WriteLine("Введите количество нового продукта");
     }
 
     public void CopyTo(Order other)

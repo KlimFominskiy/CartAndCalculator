@@ -8,11 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Calculator\Calculator.csproj" />
+    <Compile Remove="ReadFromConsoleMethods\**" />
+    <EmbeddedResource Remove="ReadFromConsoleMethods\**" />
+    <None Remove="ReadFromConsoleMethods\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ReadFromConsoleMethods\" />
+    <ProjectReference Include="..\Calculator\Calculator.csproj" />
   </ItemGroup>
 
 </Project>

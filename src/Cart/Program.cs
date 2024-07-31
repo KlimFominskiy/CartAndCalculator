@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Cart;
 
-internal class Program
+internal static class Program
 {
     public static decimal ReadDecimalFromConsole()
     {
@@ -104,27 +104,23 @@ internal class Program
         }
     }
 
-    public static bool Is(this string input, Type targetType)
-    {
-        try
-        {
-            TypeDescriptor.GetConverter(targetType).ConvertFromString(input);
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
+    //public static bool Is(this string input, Type targetType)
+    //{
+    //    try
+    //    {
+    //        TypeDescriptor.GetConverter(targetType).ConvertFromString(input);
+    //        return true;
+    //    }
+    //    catch
+    //    {
+    //        Console.WriteLine($"Введено {input}. Неправильный формат.");
+    //        return false;
+    //    }
+    //}
 
-    internal static void Main(string[] args)
+    internal static void Main()
     {
         Console.OutputEncoding = Encoding.UTF8;
-
-        ProgramModes programModes = new();
-        programModes = ProgramModes.AddProductToOrder;
-        Is(Console.ReadLine())
-        Console.WriteLine((int)programModes);
 
         // Задание 2. Считывание товаров из файла.
         //Console.WriteLine("Генерация товаров в магазине.");
@@ -192,7 +188,7 @@ internal class Program
             
             Console.WriteLine($"Отсортировать заказы:");
             // Задание 5. Работа с LINQ.
-            List<Order> validOrders = new();
+            List<Order> validOrders = [];
             Console.WriteLine($"{(int)ProgramModes.GetOrdersByMaxSum} - заказы дешевле заданной суммы.");
             validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) < 15000.00M).ToList();
             Console.WriteLine($"{(int)ProgramModes.GetOrdersByMinSum} - заказы дороже заданной суммы.");
@@ -243,6 +239,7 @@ internal class Program
                         userOrder.WriteOrderToFile();
                         Console.WriteLine("Запись заказа в файл окончена.");
                     }
+
                     continue;
                 case ProgramModes.ReadOrderFromFile:
                     Console.WriteLine("Считывание заказа из файла.");
@@ -251,6 +248,7 @@ internal class Program
 
                     Console.WriteLine("Информация о заказе.");
                     userOrder.PrintOrderInfo();
+
                     continue;
                 case ProgramModes.GenerateOrderByMaxSum:
                     Console.WriteLine("Введите максимальную сумму заказа.");
@@ -260,6 +258,7 @@ internal class Program
 
                     Console.WriteLine("Информация о заказе.");
                     userOrder.PrintOrderInfo();
+
                     continue;
                 case ProgramModes.GenerateOrderByMinMaxSumRange:
                     Console.WriteLine("Введите минимальную сумму заказа.");
@@ -271,6 +270,7 @@ internal class Program
 
                     Console.WriteLine("Информация о заказе.");
                     userOrder.PrintOrderInfo();
+
                     continue;
                 case ProgramModes.GenerateOrderByMaxTotalQuantity:
                     Console.WriteLine("Введите максимальное общее количество товаров в заказе.");
@@ -282,48 +282,24 @@ internal class Program
                     userOrder.PrintOrderInfo();
                     continue;
                 case ProgramModes.ChangeProductInOrder:
-                    Console.WriteLine("Изменение продукта в заказе.");
-                    if (userOrder is null)
+                    Console.WriteLine("Изменение товара в заказе.");
+                    if (userOrder.Products.Count == 0)
                     {
                         Console.WriteLine("Для начала введите заказ.");
                         continue;
                     }
-                    Console.WriteLine("Состав заказа.");
+                    userOrder.UpdateProduct();
+                    Console.WriteLine("Заказ обновлён");
                     userOrder.PrintOrderInfo();
-                    Console.WriteLine("Выберите продукт из списка.");
-                    uint productNumber = ReadUintFromConsole();
-                    Console.WriteLine("Выберите режим работы с продуктом:");
-                    Console.WriteLine($"${ProgramModes.UpdateProductInOrder} - изменить текущий продукт.");
-                    Console.WriteLine($"{ProgramModes.ChangeProductInOrder} - заменить текущий продукт.");
-                    programMode = ReadProgramModeFromConsole();
-                    while (true)
-                    {
-                        if (programMode == ProgramModes.UpdateProductInOrder)
-                        {
-                            userOrder.UpdateProduct();
-                        }
-                        else if (programMode == ProgramModes.ChangeProductInOrder)
-                        {
-                            userOrder.AddProduct();
-                        }
-                        else
-                        {
-                            ConsoleInputError(programMode.ToString());
-                        }
-                    }
-                    /*
-                    ...
-                    */
 
-                    /*
-                    ...
-                    */
                     continue;
                 case ProgramModes.PrintProducts:
                     Store.PrintProductsInfo();
+
                     continue;
                 case ProgramModes.PrintOrders:
                     OrdersGenerator.PrintOrdersInfo();
+
                     continue;
                 case ProgramModes.CalculateOrders:
                     Console.WriteLine("Калькулятор заказов.");
@@ -384,6 +360,7 @@ internal class Program
                         }
                         break;
                     }
+
                     continue;
                     /*LINQ
                     case
