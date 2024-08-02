@@ -59,7 +59,7 @@ internal enum ProgramModes
     /// </summary>
     GetOrdersSortedByWeight,
     /// <summary>
-    /// Получить заказы с уникальными названиями(заказы, в которых количество каждого товара не превышает единицы.
+    /// Получить заказы с уникальными названиями (заказы, в которых количество каждого товара не превышает единицы).
     /// </summary>
     GetOrdersWithUniqueProductsInList,
     /// <summary>

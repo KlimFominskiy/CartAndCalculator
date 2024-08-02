@@ -57,7 +57,7 @@ public static class OrdersGenerator
                 if (random.Next(0, 2) > 0)
                 {
                     order.Products.Add(new KeyValuePair<Product, uint>(product, Convert.ToUInt32(random.Next(1, 4))));
-                    order.TimeOfDeparture = DateTime.Now;
+                    order.TimeOfDeparture = DateTime.Now.AddDays(random.Next(0, 46));
                 }
             }
             orders.Add(order);

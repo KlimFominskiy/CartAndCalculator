@@ -2,6 +2,7 @@
 using Cart.Orders;
 using Cart.Products;
 using Cart.Stores;
+using System;
 using System.ComponentModel;
 using System.Text;
 
@@ -86,6 +87,24 @@ internal static class Program
         }
     }
 
+    public static DateTime ReadDateFromConsole()
+    {
+        while (true)
+        {
+            string userInput = Console.ReadLine();
+            if (DateTime.TryParse(userInput, out DateTime value))
+            {
+                return value;
+            }
+            else
+            {
+                ConsoleInputError(userInput);
+                Console.WriteLine("Повторите ввод.");
+                continue;
+            }
+        }
+    }
+
     public static void ConsoleInputError(string value)
     {
         Console.WriteLine($"Введено {value}. Неправильный формат.");
@@ -101,6 +120,15 @@ internal static class Program
         {
             Console.WriteLine($"Введено {(int)value}. Такого режима нет.");
             return false;
+        }
+    }
+
+    public static void PrintOrdersList(List<Order> orders)
+    {
+        for (int i = 0; i < orders.Count; i++)
+        {
+            Console.WriteLine($"Заказ {i + 1}");
+            orders[i].PrintOrderInfo();
         }
     }
 
@@ -125,6 +153,7 @@ internal static class Program
         // Задание 2. Считывание товаров из файла.
         //Console.WriteLine("Генерация товаров в магазине.");
         //Store.GenerateProducts();
+        //Console.WriteLine("Товары в магазине сгенерированы.");
         Console.WriteLine("Считывание продуктов из файла.");
         Store.ReadProductsFromFile();
         Console.WriteLine("Продукты считаны.");
@@ -133,6 +162,7 @@ internal static class Program
         // Задание 4. Генератор тестовых заказов.
         //Console.WriteLine("Генерация заказов");
         //OrdersGenerator.GenerateRandomOrders();
+        //Console.WriteLine("Заказы сгенерированы.");
         Console.WriteLine("Считывание заказов из файла.");
         OrdersGenerator.ReadOrdersFromFile();
         Console.WriteLine("Заказы считаны.");
@@ -190,19 +220,11 @@ internal static class Program
             // Задание 5. Работа с LINQ.
             List<Order> validOrders = [];
             Console.WriteLine($"{(int)ProgramModes.GetOrdersByMaxSum} - заказы дешевле заданной суммы.");
-            validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) < 15000.00M).ToList();
             Console.WriteLine($"{(int)ProgramModes.GetOrdersByMinSum} - заказы дороже заданной суммы.");
-            validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) > 15000.00M).ToList();
             Console.WriteLine($"{(int)ProgramModes.GetOrdersByProductType} - заказы, имеющие в составе товары определённого типа.");
-            validOrders = OrdersGenerator.Orders.Where(order => order.Products.Any(orderItem => orderItem.Key.GetType() == typeof(Corvalol))).ToList();
             Console.WriteLine($"{(int)ProgramModes.GetOrdersSortedByWeight} - заказы, отсортированные по весу в порядке возрастания.");
-            validOrders = OrdersGenerator.Orders.OrderBy(order => order.Products.Sum(orderItem => orderItem.Key.Weight)).ToList();
-            Console.WriteLine($"{(int)ProgramModes.GetOrdersWithUniqueProductsInList} - заказы с уникальными названиями(заказы, в которых количество каждого товара не превышает единицы.");
-            //validOrders = orders.Select(order => order.DistinctBy(orderItem => orderItem.Key.Name).ToDictionary()).ToList();
-            validOrders = OrdersGenerator.Orders.Where(order => order.Products.All(orderItem => orderItem.Value == 1)).ToList();
+            Console.WriteLine($"{(int)ProgramModes.GetOrdersWithUniqueProductsInList} - заказы с уникальными названиями (заказы, в которых количество каждого товара не превышает единицы).");
             Console.WriteLine($"{(int)ProgramModes.GetOrdersByMaxDepartureDate} - заказы, отправленные до указанной даты.");
-            DateTime maxDepartureDateTime = DateTime.Now.AddDays(1);
-            validOrders = OrdersGenerator.Orders.Where(order => order.TimeOfDeparture <= maxDepartureDateTime).ToList();
             Console.WriteLine("0 - закончить работу программы.");
 
             decimal userMaxOrderSum;
@@ -362,9 +384,65 @@ internal static class Program
                     }
 
                     continue;
-                    /*LINQ
-                    case
-                    */
+                case ProgramModes.GetOrdersByMaxSum:
+                    Console.WriteLine("Заказы дешевле заданной суммы.");
+                    Console.WriteLine("Введите максимальную сумму заказа.");
+                    decimal orderMaxSum = ReadDecimalFromConsole();
+                    validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) < orderMaxSum).ToList();
+                    PrintOrdersList(validOrders);
+
+                    continue;
+                case ProgramModes.GetOrdersByMinSum:
+                    Console.WriteLine("Заказы дороже заданной суммы.");
+                    Console.WriteLine("Введите минимальную сумму заказа.");
+                    decimal orderMinSum = ReadDecimalFromConsole();
+                    validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) > orderMinSum).ToList();
+                    PrintOrdersList(validOrders);
+
+                    continue;
+                case ProgramModes.GetOrdersByProductType:
+                    Console.WriteLine("Заказы, имеющие в составе товары определённого типа.");
+                    Console.WriteLine("Выберите номер типа продукта из списка");
+                    Store.PrintProductsTypes();
+                    while(true)
+                    {
+                        uint productTypeNumber = ReadUintFromConsole();
+                        if (productTypeNumber <= Store.ProductsTypes.Count)
+                        {
+                            validOrders = OrdersGenerator.Orders.Where(order => order.Products.Any(orderItem => orderItem.Key.GetType() == typeof(Corvalol))).ToList();
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Нет такого типа товара. Повторите ввод.");
+                            continue;
+                        }
+                    }
+                    PrintOrdersList(validOrders);
+
+                    continue;
+                case ProgramModes.GetOrdersSortedByWeight:
+                    Console.WriteLine("Заказы, отсортированные по весу в порядке возрастания.");
+                    validOrders = OrdersGenerator.Orders.OrderBy(order => order.Products.Sum(orderItem => orderItem.Key.Weight)).ToList();
+                    PrintOrdersList(validOrders);
+
+                    continue;
+                case ProgramModes.GetOrdersWithUniqueProductsInList:
+                    Console.WriteLine("Заказы с уникальными названиями (заказы, в которых количество каждого товара не превышает единицы).");
+                    //Заказы с уникальными названиями.
+                    //validOrders = orders.Select(order => order.DistinctBy(orderItem => orderItem.Key.Name).ToDictionary()).ToList();
+                    validOrders = OrdersGenerator.Orders.Where(order => order.Products.All(orderItem => orderItem.Value == 1)).ToList();
+                    PrintOrdersList(validOrders);
+
+                    continue;
+                case ProgramModes.GetOrdersByMaxDepartureDate:
+                    Console.WriteLine("Заказы, отправленные до указанной даты.");
+                    Console.WriteLine("Введите дату в формате ДД/ММ/ГГГГ.");
+                    DateTime? userDateTime = ReadDateFromConsole();
+                    validOrders = OrdersGenerator.Orders.Where(order => order.TimeOfDeparture <= userDateTime).ToList();
+                    PrintOrdersList(validOrders);
+
+                    continue;
             }
 
             return;

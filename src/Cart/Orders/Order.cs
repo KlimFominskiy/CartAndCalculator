@@ -18,7 +18,7 @@ public class Order
     public List<KeyValuePair<Product, uint>> Products = new();
 
     /// <summary>
-    /// Дата отправления заказа.
+    /// Дата отправки заказа заказа.
     /// </summary>
     public DateTime? TimeOfDeparture = null;
 
@@ -33,7 +33,7 @@ public class Order
     };
 
     /// <summary>
-    /// Вывести в консоль информацию о товарах в корзине.
+    /// Вывести в консоль информацию заказе.
     /// </summary>
     public void PrintOrderInfo()
     {
@@ -57,6 +57,7 @@ public class Order
         Console.WriteLine($"Итоговая стоимость - {Products.Sum(product => product.Key.Price * product.Value)}");
         Console.WriteLine($"Общее количество товаров - {Products.Sum(product => product.Value)}");
         Console.WriteLine($"Итоговый вес - {Products.Sum(product => product.Key.Weight * product.Value)}");
+        Console.WriteLine($"Дата готовности заказа - {this.TimeOfDeparture}");
     }
 
     /// <summary>
@@ -204,18 +205,6 @@ public class Order
         
         this.Products.Remove(this.Products[(int)productInOrderNumber - 1]);
         this.Products.Add(new KeyValuePair<Product, uint>(Store.Products[(int)productInStoreNumber - 1], productQuantity));
-    }
-
-    /// <summary>
-    /// Добавить товар в заказ.
-    /// </summary>
-    public void AddProduct()
-    {
-        //Считать номер продукта из заказа.
-        Console.WriteLine("Введите номер продукта из списка продуктов магазина.");
-        Store.PrintProductsInfo();
-        //Считать номер продукта из списка продуктоа магазина.
-        Console.WriteLine("Введите количество нового продукта");
     }
 
     public void CopyTo(Order other)
