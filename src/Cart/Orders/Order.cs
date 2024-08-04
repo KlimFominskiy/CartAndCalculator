@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json;
 using Cart.Enums;
-using Cart.Products;
 using Cart.Stores;
 
 namespace Cart.Orders;
@@ -37,8 +36,6 @@ public class Order
     /// </summary>
     public void PrintOrderInfo()
     {
-        Console.WriteLine();
-
         uint index = 0;
         foreach (KeyValuePair<Product, uint> orderItem in Products)
         {
@@ -69,10 +66,10 @@ public class Order
         {
             OrderItemSettings orderItemSettings = new();
 
-            orderItemSettings.ProductTypeNumber = ReadProductTypeNumberFromConsole();
+            orderItemSettings.ProductTypeNumber = ReadTypesFromConsole.ReadProductTypeNumberFromConsole();
 
             Console.WriteLine("Введите количество товара.");
-            orderItemSettings.ProductQuantity = ReadProductQiantityFromConsole();
+            orderItemSettings.ProductQuantity = ReadTypesFromConsole.ReadUintFromConsole();
 
             Console.WriteLine("Введите требование к цене.");
             Console.WriteLine("Возможные значения требования: ");
@@ -80,7 +77,7 @@ public class Order
             Console.WriteLine($"{(int)PriceRequirementSettings.TheHighestValuem} - самое высокое значение,");
             Console.WriteLine($"{(int)PriceRequirementSettings.RandomValue} - любое значение.");
 
-            orderItemSettings.PriceRequirement = ReadPriceRequirementFromConsole();
+            orderItemSettings.PriceRequirement = ReadTypesFromConsole.ReadPriceRequirementFromConsole();
             Type productType = Store.ProductsTypes[Convert.ToInt32(orderItemSettings.ProductTypeNumber - 1)];
             
             List<Product> validProducts = new();
@@ -170,7 +167,7 @@ public class Order
         uint productInOrderNumber;
         while(true)
         {
-            productInOrderNumber = Program.ReadUintFromConsole();
+            productInOrderNumber = ReadTypesFromConsole.ReadUintFromConsole();
             if (productInOrderNumber < this.Products.Count)
             {
                 break;
@@ -187,7 +184,7 @@ public class Order
         uint productInStoreNumber;
         while (true)
         {
-            productInStoreNumber = Program.ReadUintFromConsole();
+            productInStoreNumber = ReadTypesFromConsole.ReadUintFromConsole();
             if (productInOrderNumber < Store.Products.Count)
             {
                 break;
@@ -201,78 +198,19 @@ public class Order
 
         //Считать номер продукта из списка продуктоа магазина.
         Console.WriteLine("Введите количество нового продукта");
-        uint productQuantity = Program.ReadUintFromConsole();
+        uint productQuantity = ReadTypesFromConsole.ReadUintFromConsole();
         
         this.Products.Remove(this.Products[(int)productInOrderNumber - 1]);
         this.Products.Add(new KeyValuePair<Product, uint>(Store.Products[(int)productInStoreNumber - 1], productQuantity));
     }
 
+    /// <summary>
+    /// Скопировать значения полей заказа.
+    /// </summary>
+    /// <param name="other">Заказ, в который производится копирование.</param>
     public void CopyTo(Order other)
     {
         other.Products.AddRange(Products);
         other.TimeOfDeparture = TimeOfDeparture;
-    }
-
-    private uint ReadProductTypeNumberFromConsole()
-    {
-        while (true)
-        {
-            string orderItemSetting = Console.ReadLine();
-            if (uint.TryParse(orderItemSetting, out uint setting))
-            {
-                if (setting > Store.ProductsTypes.Count)
-                {
-                    Console.WriteLine($"Введён тип {setting}. Такого типа товара нет в списке. Повторите ввод.");
-                    continue;
-                }
-                return setting;
-            }
-            else
-            {
-                Console.WriteLine($"Введено {orderItemSetting}. Неправильный формат. Повторите ввод.");
-                continue;
-            }
-        }
-    }
-
-    private uint ReadProductQiantityFromConsole()
-    {
-        while (true)
-        {
-            string orderItemSetting = Console.ReadLine();
-            if (uint.TryParse(orderItemSetting, out uint setting))
-            {
-                return setting;
-            }
-            else
-            {
-                Console.WriteLine($"Введено {orderItemSetting}. Неправильный формат. Повторите ввод.");
-                continue;
-            }
-        }
-    }
-
-    private PriceRequirementSettings ReadPriceRequirementFromConsole()
-    {
-        while (true)
-        {
-            string orderItemSetting = Console.ReadLine();
-            if (Enum.TryParse(orderItemSetting, out PriceRequirementSettings setting))
-            {
-                if (Enum.IsDefined(typeof(PriceRequirementSettings), setting))
-                {
-                    return setting;
-                }
-                else
-                {
-                    Console.WriteLine($"Введено {setting}. Такой настройки требования нет. Повторите ввод.");
-                    continue;
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Введено {orderItemSetting}. Неправильный формат. Повторите ввод.");
-            }
-        }
     }
 }

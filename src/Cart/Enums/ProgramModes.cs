@@ -1,6 +1,9 @@
 ﻿namespace Cart.Enums;
 
-internal enum ProgramModes
+/// <summary>
+/// Режимы работы программы.
+/// </summary>
+public enum ProgramModes
 {
     /// <summary>
     /// Завершить работу.
@@ -14,6 +17,10 @@ internal enum ProgramModes
     /// Считать заказ из файла.
     /// </summary>
     ReadOrderFromFile,
+    /// <summary>
+    /// Сгенерировать случайный заказ.
+    /// </summary>
+    GenerateRandomOrder,
     /// <summary>
     /// Сгенерировать заказ по максимальной сумме.
     /// </summary>
@@ -39,9 +46,37 @@ internal enum ProgramModes
     /// </summary>
     PrintOrders,
     /// <summary>
-    /// Рассчитать заказы.
+    /// Создать корзину с двумя указанными товарами. 
     /// </summary>
-    CalculateOrders,
+    CreateOrderFromTwoProducts,
+    /// <summary>
+    /// Добавить товар в корзину.
+    /// </summary>
+    AddProductToOrder,
+    /// <summary>
+    /// Объединить корзины.
+    /// </summary>
+    CombineTwoOrders,
+    /// <summary>
+    /// Удалить единицу товара из корзины.
+    /// </summary>
+    ReduceTheQuantityOfTheProductInOrderByOne,
+    /// <summary>
+    /// Удалить из первой корзины товары, которые есть во второй корзине.
+    /// </summary>
+    RemoveMatchingProducts,
+    /// <summary>
+    /// Удалить из корзины товары указанного типа.
+    /// </summary>
+    RemoveProductsFromOrderByType,
+    /// <summary>
+    /// Уменьшить в корзине каждое количество товара в указанное число раз.
+    /// </summary>
+    ReduceTheQuantityOfEachProductInOrderByNumberTimes,
+    /// <summary>
+    /// Увеличить в корзине каждое количество товара в указанное число раз.
+    /// </summary>
+    IncreaseTheQuantityOfEachProductInOrderByNumberTimes,
     /// <summary>
     /// Получить заказы дешевле заданной суммы.
     /// </summary>
@@ -66,10 +101,6 @@ internal enum ProgramModes
     /// Получить заказы, отправленные до указанной даты.
     /// </summary>
     GetOrdersByMaxDepartureDate,
-    /// <summary>
-    /// Добавить новый товар в заказ.
-    /// </summary>
-    AddProductToOrder,
     /// <summary>
     /// Обновить данные о товаре в заказе.
     /// </summary>

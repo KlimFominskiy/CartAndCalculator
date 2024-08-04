@@ -1,6 +1,9 @@
 ﻿namespace Cart.Enums;
 
-internal enum PriceRequirementSettings
+/// <summary>
+/// Настройки требования к цене.
+/// </summary>
+public enum PriceRequirementSettings
 {
     /// <summary>
     /// Самая низкая цена.

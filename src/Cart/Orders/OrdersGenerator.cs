@@ -137,20 +137,4 @@ public static class OrdersGenerator
         string jsonOrdersList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders);
         Orders = JsonSerializer.Deserialize<List<Order>>(jsonOrdersList, jsonSerializerOptions);
     }
-
-    private static decimal ReadProductPriceFromConsole()
-    {
-        while (true)
-        {
-            string priceString = Console.ReadLine();
-            if (decimal.TryParse(priceString, out decimal price))
-            {
-                return price;
-            }
-            else
-            {
-                Console.WriteLine($"Введено {priceString}. Неправильный формат. Повторите ввод.");
-            }
-        }
-    }
 }
