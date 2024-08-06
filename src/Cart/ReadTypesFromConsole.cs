@@ -8,6 +8,10 @@ namespace Cart;
 /// </summary>
 public static class ReadTypesFromConsole
 {
+    /// <summary>
+    /// Считать decimal из консоли.
+    /// </summary>
+    /// <returns>Считанное значение.</returns>
     public static decimal ReadDecimalFromConsole()
     {
         while (true)
@@ -26,6 +30,10 @@ public static class ReadTypesFromConsole
         }
     }
 
+    /// <summary>
+    /// Считать uint из консоли.
+    /// </summary>
+    /// <returns>Считанное значение.</returns>
     public static uint ReadUintFromConsole()
     {
         while (true)
@@ -44,6 +52,10 @@ public static class ReadTypesFromConsole
         }
     }
 
+    /// <summary>
+    /// Считать int из консоли.
+    /// </summary>
+    /// <returns>Считанное значение.</returns>
     public static int ReadIntFromConsole()
     {
         while (true)
@@ -62,6 +74,10 @@ public static class ReadTypesFromConsole
         }
     }
 
+    /// <summary>
+    /// Считать ProgramModes из консоли.
+    /// </summary>
+    /// <returns>Считанное значение.</returns>
     public static ProgramModes ReadProgramModeFromConsole()
     {
         while (true)
@@ -85,6 +101,10 @@ public static class ReadTypesFromConsole
         }
     }
 
+    /// <summary>
+    /// Считать DateTime из консоли.
+    /// </summary>
+    /// <returns>Считанное значение.</returns>
     public static DateTime ReadDateFromConsole()
     {
         while (true)
@@ -103,6 +123,10 @@ public static class ReadTypesFromConsole
         }
     }
 
+    /// <summary>
+    /// Считать PriceRequirementSettings из консоли.
+    /// </summary>
+    /// <returns>Считанное значение.</returns>
     public static PriceRequirementSettings ReadPriceRequirementFromConsole()
     {
         while (true)
@@ -127,24 +151,37 @@ public static class ReadTypesFromConsole
         }
     }
 
+    /// <summary>
+    /// Вывод в консоль сообщения о неправильном формате введённого значения.
+    /// </summary>
+    /// <param name="value">Считанное значение.</param>
     private static void ConsoleInputError(string value)
     {
         Console.WriteLine($"Введено {value}. Неправильный формат.");
     }
 
-    private static bool IsModeDefined(ProgramModes value)
+    /// <summary>
+    /// Проверка существования выбранного режима работы программы.
+    /// </summary>
+    /// <param name="mode">Введённое значение режима.</param>
+    /// <returns>true - режим существует. Иначе - false.</returns>
+    private static bool IsModeDefined(ProgramModes mode)
     {
-        if (Enum.IsDefined(typeof(ProgramModes), value))
+        if (Enum.IsDefined(typeof(ProgramModes), mode))
         {
             return true;
         }
         else
         {
-            Console.WriteLine($"Введено {(int)value}. Такого режима нет.");
+            Console.WriteLine($"Введено {(int)mode}. Такого режима нет.");
             return false;
         }
     }
 
+    /// <summary>
+    /// Считать номер типа продукта из консоли.
+    /// </summary>
+    /// <returns>Считанное значение.</returns>
     public static uint ReadProductTypeNumberFromConsole()
     {
         while (true)
@@ -167,6 +204,10 @@ public static class ReadTypesFromConsole
         }
     }
 
+    /// <summary>
+    /// Считать номер продукта из консоли.
+    /// </summary>
+    /// <returns>Считанное значение.</returns>
     public static uint ReadProductNumberFromConsole()
     {
         while (true)

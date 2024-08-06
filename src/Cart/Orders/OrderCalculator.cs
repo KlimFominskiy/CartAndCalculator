@@ -141,10 +141,6 @@ public class OrderCalculator : Calculator.Calculator
         Order orderC = new();
         orderA.CopyTo(orderC);
         orderC.Products = orderC.Products.Where(orderItem => orderC.Products.Contains(orderItem) is false).ToList();
-        //foreach (Product productB in orderB.Products.ToDictionary().Keys)
-        //{
-        //    orderC = Subtract(orderC, productB);
-        //}
 
         return orderC;
     }

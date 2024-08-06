@@ -42,10 +42,6 @@ public class Order
             Console.WriteLine($"{index += 1})");
             foreach (PropertyInfo orderItemInfo in orderItem.Key.GetType().GetProperties())
             {
-                //foreach (PropertyInfo productInfo in orderItemInfo)
-                //{
-                //    Console.WriteLine($"{productInfo.Name}, {productInfo.GetValue(productInfo)?.ToString()}");
-                //}
             Console.WriteLine($"{orderItemInfo.Name} - {orderItemInfo.GetValue(orderItem.Key)?.ToString()}.");
             }
             Console.WriteLine($"Количество - {orderItem.Value}.");
@@ -196,7 +192,6 @@ public class Order
             }
         }
 
-        //Считать номер продукта из списка продуктоа магазина.
         Console.WriteLine("Введите количество нового продукта");
         uint productQuantity = ReadTypesFromConsole.ReadUintFromConsole();
         

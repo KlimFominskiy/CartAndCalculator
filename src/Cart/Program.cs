@@ -17,20 +17,6 @@ internal static class Program
         }
     }
 
-    //public static bool Is(this string input, Type targetType)
-    //{
-    //    try
-    //    {
-    //        TypeDescriptor.GetConverter(targetType).ConvertFromString(input);
-    //        return true;
-    //    }
-    //    catch
-    //    {
-    //        Console.WriteLine($"Введено {input}. Неправильный формат.");
-    //        return false;
-    //    }
-    //}
-
     internal static void Main()
     {
         Console.OutputEncoding = Encoding.UTF8;
