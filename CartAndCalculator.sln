@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calculator", "src\Calculato
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cart", "src\Cart\Cart.csproj", "{3F507369-F3DF-4F5C-BC16-2DE917BAC69D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C_sharp_course.UnitTests.UnitTests", "tests\C_sharp_course.UnitTests\C_sharp_course.UnitTests.csproj", "{7B6ED3B4-D55F-414D-B211-651A4B528887}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CartAndCalculator.UnitTests", "tests\C_sharp_course.UnitTests\CartAndCalculator.UnitTests.csproj", "{7B6ED3B4-D55F-414D-B211-651A4B528887}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

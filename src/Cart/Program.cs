@@ -22,24 +22,37 @@ internal static class Program
         Console.OutputEncoding = Encoding.UTF8;
 
         // Задание 2. Считывание товаров из файла.
-        //Console.WriteLine("Генерация товаров в магазине.");
-        //Store.GenerateProducts();
-        //Console.WriteLine("Товары в магазине сгенерированы.");
-        Console.WriteLine("Считывание продуктов из файла.");
-        Store.ReadProductsFromFile();
-        Console.WriteLine("Продукты считаны.");
-        Console.WriteLine();
+        Console.WriteLine("Сгенерировать новый набор товаров в магазине?\nВведите y, чтобы сгенерировать новый набор.\nВведите любой другой символ, чтобы считать старый набор.");
+        if(Console.ReadLine() == "y")
+        {
+            Console.WriteLine("Генерация товаров в магазине.");
+            Store.GenerateProducts();
+            Console.WriteLine("Товары в магазине сгенерированы.");
+        }
+        else
+        {
+            Console.WriteLine("Считывание продуктов из файла.");
+            Store.ReadProductsFromFile();
+            Console.WriteLine("Продукты считаны.");
+        }
 
         // Задание 4. Генератор тестовых заказов.
-        //Console.WriteLine("Генерация заказов");
-        //OrdersGenerator.GenerateRandomOrders();
-        //Console.WriteLine("Заказы сгенерированы.");
-        Console.WriteLine("Считывание заказов из файла.");
-        OrdersGenerator.ReadOrdersFromFile();
-        Console.WriteLine("Заказы считаны.");
-        Console.WriteLine();
+        Console.WriteLine("Сгенерировать новый набор заказов?\nВведите y, чтобы сгенерировать новый набор.\nВведите любой другой символ, чтобы считать старый набор.");
+        if (Console.ReadLine() == "y")
+        {
+            Console.WriteLine("Генерация заказов");
+            OrdersGenerator.GenerateRandomOrders();
+            Console.WriteLine("Заказы сгенерированы.");
+        }
+        else
+        {
+            Console.WriteLine("Считывание заказов из файла.");
+            OrdersGenerator.ReadOrdersFromFile();
+            Console.WriteLine("Заказы считаны.");
+        }
 
-        Order userOrder = new();
+        string product = Store.Products.First().ToString();
+        Console.WriteLine(product);
 
         while (true)
         {
@@ -73,6 +86,7 @@ internal static class Program
                     maxTotalQuantity = quantity;
                 }
             }
+
             Console.WriteLine($"{(int)ProgramModes.GenerateRandomOrder} - сгенерировать случайный заказ");
             Console.WriteLine("Сгенерировать заказ по сумме:");
             Console.WriteLine($"{(int)ProgramModes.GenerateOrderByMaxSum} - сгенерировать заказ по максимальной сумме.");
@@ -97,9 +111,8 @@ internal static class Program
             Console.WriteLine($"{(int)ProgramModes.ReduceTheQuantityOfEachProductInOrderByNumberTimes} - уменьшить в корзине каждое количество товара в указанное число раз.");
             Console.WriteLine($"{(int)ProgramModes.IncreaseTheQuantityOfEachProductInOrderByNumberTimes} - увеличить в корзине каждое количество товара в указанное число раз.");
 
-            Console.WriteLine($"Отсортировать заказы:");
             // Задание 5. Работа с LINQ.
-            List<Order> validOrders = [];
+            Console.WriteLine($"Отсортировать заказы:");
             Console.WriteLine($"{(int)ProgramModes.GetOrdersByMaxSum} - заказы дешевле заданной суммы.");
             Console.WriteLine($"{(int)ProgramModes.GetOrdersByMinSum} - заказы дороже заданной суммы.");
             Console.WriteLine($"{(int)ProgramModes.GetOrdersByProductType} - заказы, имеющие в составе товары определённого типа.");
@@ -108,13 +121,10 @@ internal static class Program
             Console.WriteLine($"{(int)ProgramModes.GetOrdersByMaxDepartureDate} - заказы, отправленные до указанной даты.");
             Console.WriteLine("0 - закончить работу программы.");
 
-            decimal userMaxOrderSum;
-            decimal userMinOrderSum;
-            uint userMaxOrderQuantity;
-            OrderCalculator orderCalculator = new(new Calculator.Logger());
-
             ProgramModes programMode = ReadTypesFromConsole.ReadProgramModeFromConsole();
-
+            
+            Order userOrder = new();
+            OrderCalculator orderCalculator = new(new Calculator.Logger());
             switch (programMode)
             {
                 case ProgramModes.Exit:
@@ -170,7 +180,7 @@ internal static class Program
                 case ProgramModes.GenerateOrderByMaxSum:
                     {
                         Console.WriteLine("Введите максимальную сумму заказа.");
-                        userMaxOrderSum = ReadTypesFromConsole.ReadDecimalFromConsole();
+                        decimal userMaxOrderSum = ReadTypesFromConsole.ReadDecimalFromConsole();
 
                         userOrder = OrdersGenerator.GenerateOrderBySum(userMaxOrderSum);
 
@@ -182,9 +192,9 @@ internal static class Program
                 case ProgramModes.GenerateOrderByMinMaxSumRange:
                     {
                         Console.WriteLine("Введите минимальную сумму заказа.");
-                        userMinOrderSum = ReadTypesFromConsole.ReadDecimalFromConsole();
+                        decimal userMinOrderSum = ReadTypesFromConsole.ReadDecimalFromConsole();
                         Console.WriteLine("Введите максимальную сумму заказа.");
-                        userMaxOrderSum = ReadTypesFromConsole.ReadDecimalFromConsole();
+                        decimal userMaxOrderSum = ReadTypesFromConsole.ReadDecimalFromConsole();
 
                         userOrder = OrdersGenerator.GenerateOrderBySum(userMinOrderSum, userMaxOrderSum);
 
@@ -196,7 +206,7 @@ internal static class Program
                 case ProgramModes.GenerateOrderByMaxTotalQuantity:
                     {
                         Console.WriteLine("Введите максимальное общее количество товаров в заказе.");
-                        userMaxOrderQuantity = ReadTypesFromConsole.ReadUintFromConsole();
+                        uint userMaxOrderQuantity = ReadTypesFromConsole.ReadUintFromConsole();
 
                         userOrder = OrdersGenerator.GenerateOrderByMaxQuantity(userMaxOrderQuantity);
 
@@ -404,7 +414,7 @@ internal static class Program
                         Console.WriteLine("Заказы дешевле заданной суммы.");
                         Console.WriteLine("Введите максимальную сумму заказа.");
                         decimal orderMaxSum = ReadTypesFromConsole.ReadDecimalFromConsole();
-                        validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) < orderMaxSum).ToList();
+                        List<Order> validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) < orderMaxSum).ToList();
                         PrintOrdersList(validOrders);
 
                         continue;
@@ -414,7 +424,7 @@ internal static class Program
                         Console.WriteLine("Заказы дороже заданной суммы.");
                         Console.WriteLine("Введите минимальную сумму заказа.");
                         decimal orderMinSum = ReadTypesFromConsole.ReadDecimalFromConsole();
-                        validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) > orderMinSum).ToList();
+                        List<Order> validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) > orderMinSum).ToList();
                         PrintOrdersList(validOrders);
 
                         continue;
@@ -429,7 +439,8 @@ internal static class Program
                             uint productTypeNumber = ReadTypesFromConsole.ReadUintFromConsole();
                             if (productTypeNumber <= Store.ProductsTypes.Count)
                             {
-                                validOrders = OrdersGenerator.Orders.Where(order => order.Products.Any(orderItem => orderItem.Key.GetType() == typeof(Corvalol))).ToList();
+                                List<Order> validOrders = OrdersGenerator.Orders.Where(order => order.Products.Any(orderItem => orderItem.Key.GetType() == typeof(Corvalol))).ToList();
+                                PrintOrdersList(validOrders);
                                 break;
                             }
                             else
@@ -438,14 +449,13 @@ internal static class Program
                                 continue;
                             }
                         }
-                        PrintOrdersList(validOrders);
 
                         continue;
                     }
                 case ProgramModes.GetOrdersSortedByWeight:
                     {
                         Console.WriteLine("Заказы, отсортированные по весу в порядке возрастания.");
-                        validOrders = OrdersGenerator.Orders.OrderBy(order => order.Products.Sum(orderItem => orderItem.Key.Weight)).ToList();
+                        List<Order> validOrders = OrdersGenerator.Orders.OrderBy(order => order.Products.Sum(orderItem => orderItem.Key.Weight)).ToList();
                         PrintOrdersList(validOrders);
 
                         continue;
@@ -455,7 +465,7 @@ internal static class Program
                         Console.WriteLine("Заказы с уникальными названиями (заказы, в которых количество каждого товара не превышает единицы).");
                         //Заказы с уникальными названиями.
                         //validOrders = orders.Select(order => order.DistinctBy(orderItem => orderItem.Key.Name).ToDictionary()).ToList();
-                        validOrders = OrdersGenerator.Orders.Where(order => order.Products.All(orderItem => orderItem.Value == 1)).ToList();
+                        List<Order> validOrders = OrdersGenerator.Orders.Where(order => order.Products.All(orderItem => orderItem.Value == 1)).ToList();
                         PrintOrdersList(validOrders);
 
                         continue;
@@ -465,7 +475,7 @@ internal static class Program
                         Console.WriteLine("Заказы, отправленные до указанной даты.");
                         Console.WriteLine("Введите дату в формате ДД/ММ/ГГГГ.");
                         DateTime? userDateTime = ReadTypesFromConsole.ReadDateFromConsole();
-                        validOrders = OrdersGenerator.Orders.Where(order => order.TimeOfDeparture <= userDateTime).ToList();
+                        List<Order> validOrders = OrdersGenerator.Orders.Where(order => order.TimeOfDeparture <= userDateTime).ToList();
                         PrintOrdersList(validOrders);
 
                         continue;
