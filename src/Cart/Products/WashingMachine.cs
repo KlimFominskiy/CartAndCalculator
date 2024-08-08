@@ -11,4 +11,9 @@ public record WashingMachine : Product
     {
         IsDryerIncluded = isDryerIncluded;
     }
+
+    public override string ToString()
+    {
+        return base.ToString() + $"\nНаличие сушилки = Есть.";
+    }
 }

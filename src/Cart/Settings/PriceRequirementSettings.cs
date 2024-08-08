@@ -1,4 +1,4 @@
-﻿namespace Cart.Enums;
+﻿namespace Cart.Settings;
 
 /// <summary>
 /// Настройки требования к цене.

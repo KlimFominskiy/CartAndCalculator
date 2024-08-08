@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Cart.Settings;
 using Cart.Stores;
 
 namespace Cart.Orders;
@@ -34,16 +35,6 @@ public static class OrdersGenerator
     private static Order cart = new();
 
     /// <summary>
-    /// Настройка сеариализации.
-    /// </summary>
-    private static JsonSerializerOptions jsonSerializerOptions = new()
-    {
-        WriteIndented = true,
-        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        IncludeFields = true,
-    };
-
-    /// <summary>
     /// Создать и записать в файл 5 случайных заказов (наборов товаров) из списка товаров магазина.
     /// </summary>
     public static void GenerateRandomOrders()
@@ -63,7 +54,7 @@ public static class OrdersGenerator
             orders.Add(order);
         }
 
-        File.WriteAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders, JsonSerializer.Serialize(orders, jsonSerializerOptions));
+        File.WriteAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders, JsonSerializer.Serialize(orders, ProgramSettings.JsonSerializerOptions));
     }
 
     /// <summary>
@@ -124,7 +115,8 @@ public static class OrdersGenerator
         foreach (Order order in Orders)
         {
             Console.WriteLine($"Заказ №{index += 1}");
-            order.PrintOrderInfo();
+            OrderHandlers orderHandlers = new(order);
+            orderHandlers.PrintOrderInfo();
             Console.WriteLine();
         }
     }
@@ -135,6 +127,6 @@ public static class OrdersGenerator
     public static void ReadOrdersFromFile()
     {
         string jsonOrdersList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders);
-        Orders = JsonSerializer.Deserialize<List<Order>>(jsonOrdersList, jsonSerializerOptions);
+        Orders = JsonSerializer.Deserialize<List<Order>>(jsonOrdersList, ProgramSettings.JsonSerializerOptions);
     }
 }

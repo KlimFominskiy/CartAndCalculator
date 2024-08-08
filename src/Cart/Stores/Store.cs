@@ -1,4 +1,5 @@
 ﻿using Cart.Products;
+using Cart.Settings;
 using System.Reflection;
 using System.Text.Json;
 
@@ -18,16 +19,6 @@ public static class Store
     /// Типы товаров магазина.
     /// </summary>
     public static List<Type> ProductsTypes = typeof(Product).Assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(Product))).ToList();
-
-    /// <summary>
-    /// Настройка сеариализации.
-    /// </summary>
-    private static JsonSerializerOptions jsonSerializerOptions = new()
-    {
-        WriteIndented = true,
-        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        IncludeFields = true,
-    };
 
     /// <summary>
     /// Сгенерировать продукты.
@@ -70,7 +61,7 @@ public static class Store
             switch (Console.ReadLine())
             {
                 case "y":
-                    string jsonString = JsonSerializer.Serialize(Products, jsonSerializerOptions);
+                    string jsonString = JsonSerializer.Serialize(Products, ProgramSettings.JsonSerializerOptions);
                     string fileName = "Products.json";
                     string filePath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
                     File.WriteAllText(filePath + Path.DirectorySeparatorChar + fileName, jsonString);
@@ -106,7 +97,7 @@ public static class Store
         string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         string fileNameProducts = "Products.json";
         string jsonProductsList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameProducts);
-        Products = JsonSerializer.Deserialize<List<Product>>(jsonProductsList, jsonSerializerOptions);
+        Products = JsonSerializer.Deserialize<List<Product>>(jsonProductsList, ProgramSettings.JsonSerializerOptions);
     }
 
     /// <summary>
@@ -141,11 +132,7 @@ public static class Store
         foreach (Product product in Products)
         {
             Console.WriteLine($"{index += 1})");
-            PropertyInfo[] propertyInfo = product.GetType().GetProperties();
-            foreach (PropertyInfo property in propertyInfo)
-            {
-                Console.WriteLine($"{property.Name}, {property.GetValue(product)?.ToString()}");
-            }
+            Console.WriteLine(product.ToString());
             Console.WriteLine();
         }
     }
@@ -158,7 +145,7 @@ public static class Store
         uint index = 0;
         foreach (Type productType in ProductsTypes)
         {
-            Console.WriteLine($"{index += 1}) {productType}");
+            Console.WriteLine($"{index += 1}) {productType.Name.ToString()}");
         }
     }
 }

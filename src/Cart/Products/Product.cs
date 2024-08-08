@@ -48,4 +48,12 @@ public abstract record Product
         Weight = weight;
         Price = price;
     }
+
+    public override string ToString()
+    {
+        return $"Идентификационный номер = {Id}\n" +
+            $"Наименование = {Name}\n" +
+            $"Вес = {Weight}\n" +
+            $"Цена = {Price}";
+    }
 }

@@ -1,4 +1,4 @@
-﻿namespace Cart.Enums;
+﻿namespace Cart.Settings;
 
 /// <summary>
 /// Режимы работы программы.
@@ -12,7 +12,7 @@ public enum ProgramModes
     /// <summary>
     /// Считать заказ из консоли.
     /// </summary>
-    ReadOrderFromConsole = 1,
+    ReadOrderFromConsole,
     /// <summary>
     /// Считать заказ из файла.
     /// </summary>
