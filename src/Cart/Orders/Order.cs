@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Text.Json;
 using Cart.Enums;
 using Cart.Stores;
@@ -207,5 +208,29 @@ public class Order
     {
         other.Products.AddRange(Products);
         other.TimeOfDeparture = TimeOfDeparture;
+    }
+
+    /// <summary>
+    /// Сортировка списка товаров в алфавитном порядке.
+    /// </summary>
+    public void SortProductsByAlphabet()
+    {
+        int n = Products.Count;
+        bool swapped;
+        do
+        {
+            swapped = false;
+            for (int i = 0; i < n - 1; i++)
+            {
+                if (string.Compare(Products[i].Key.Name, Products[i + 1].Key.Name) > 0)
+                {
+                    var temp = Products[i];
+                    Products[i] = Products[i + 1];
+                    Products[i + 1] = temp;
+                    swapped = true;
+                }
+            }
+            n--;
+        } while (swapped);
     }
 }
