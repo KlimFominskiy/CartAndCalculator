@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using System.Text.Json;
-using Cart.Stores;
-
-namespace Cart.Orders;
+﻿namespace Cart.Orders;
 
 /// <summary>
 /// Корзина (заказ) Интернет-магазина.

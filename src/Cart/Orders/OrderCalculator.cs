@@ -8,6 +8,8 @@ namespace Cart.Orders;
 
 public class OrderCalculator : Calculator.Calculator
 {
+    OrderHandlers orderHandlers = new();
+
     public OrderCalculator(Logger? logger) : base(logger)
     {
 
@@ -48,8 +50,7 @@ public class OrderCalculator : Calculator.Calculator
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
         Order newOrder = new();
-        OrderHandlers orderHandlers = new(newOrder);
-        orderHandlers.CopyTo(newOrder);
+        orderHandlers.CopyFrom(newOrder);
         KeyValuePair<Product, uint> orderItem = newOrder.Products.FirstOrDefault(orderItem => orderItem.Key == product);
         Dictionary<Product, uint> products = newOrder.Products.ToDictionary();
         if (products.ContainsKey(product))
@@ -87,8 +88,7 @@ public class OrderCalculator : Calculator.Calculator
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
         Order orderC = new();
-        OrderHandlers orderHandlers = new(orderC);
-        orderHandlers.CopyTo(orderC);
+        orderHandlers.CopyFrom(orderC);
         foreach (KeyValuePair<Product, uint> productB in orderB.Products)
         {
             for (uint i = 0; i < productB.Value; i++)
@@ -111,8 +111,7 @@ public class OrderCalculator : Calculator.Calculator
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
         Order newOrder = new();
-        OrderHandlers orderHandlers = new(newOrder);
-        orderHandlers.CopyTo(newOrder);
+        orderHandlers.CopyFrom(newOrder);
         Dictionary<Product, uint> products = newOrder.Products.ToDictionary();
         if (products.ContainsKey(product))
         {
@@ -142,8 +141,7 @@ public class OrderCalculator : Calculator.Calculator
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
         Order orderC = new();
-        OrderHandlers orderHandlers = new(orderC);
-        orderHandlers.CopyTo(orderC);
+        orderHandlers.CopyFrom(orderC);
         orderC.Products = orderC.Products.Where(orderItem => orderC.Products.Contains(orderItem) is false).ToList();
 
         return orderC;
@@ -160,8 +158,7 @@ public class OrderCalculator : Calculator.Calculator
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
         Order newOrder = new();
-        OrderHandlers orderHandlers = new(newOrder);
-        orderHandlers.CopyTo(newOrder);
+        orderHandlers.CopyFrom(newOrder);
         newOrder.Products = newOrder.Products.Where(orderItem => orderItem.Key.GetType() != productType).ToList();
 
         return newOrder;

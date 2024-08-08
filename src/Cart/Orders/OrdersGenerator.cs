@@ -106,22 +106,6 @@ public static class OrdersGenerator
     }
 
     /// <summary>
-    /// Вывести в консоль информацию о наборе заказов.
-    /// </summary>
-    /// <returns>Информация о заказах.</returns>
-    public static void PrintOrdersInfo()
-    {
-        uint index = 0;
-        foreach (Order order in Orders)
-        {
-            Console.WriteLine($"Заказ №{index += 1}");
-            OrderHandlers orderHandlers = new(order);
-            orderHandlers.PrintOrderInfo();
-            Console.WriteLine();
-        }
-    }
-
-    /// <summary>
     /// Прочитать заказы из файла.
     /// </summary>
     public static void ReadOrdersFromFile()

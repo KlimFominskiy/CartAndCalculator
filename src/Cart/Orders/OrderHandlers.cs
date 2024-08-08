@@ -6,38 +6,18 @@ namespace Cart.Orders;
 
 internal class OrderHandlers
 {
-    private Order order;
-    public OrderHandlers(Order order)
-    {
-        this.order = order; 
-    }
+    private IPrintOrder printOrderToAPI = new PrintOrderToAPI();
 
-    /// <summary>
-    /// Вывести в консоль информацию заказе.
-    /// </summary>
-    public void PrintOrderInfo()
-    {
-        uint index = 0;
-        foreach (KeyValuePair<Product, uint> orderItem in order.Products)
-        {
-            Console.WriteLine($"{index += 1})");
-            Console.WriteLine(orderItem.Key.ToString());
-            Console.WriteLine($"Количество - {orderItem.Value}.");
-            Console.WriteLine();
-        }
-        Console.WriteLine($"Итоговая стоимость - {order.Products.Sum(product => product.Key.Price * product.Value)}");
-        Console.WriteLine($"Общее количество товаров - {order.Products.Sum(product => product.Value)}");
-        Console.WriteLine($"Итоговый вес - {order.Products.Sum(product => product.Key.Weight * product.Value)}");
-        Console.WriteLine($"Дата готовности заказа - {order.TimeOfDeparture}");
-    }
+    private IPrintOrder printOrderToConsole = new PrintOrderToConsole();
 
     /// <summary>
     /// Считать заказ из консоли.
     /// </summary>
-    public void ReadOrderFromConsole()
+    public Order ReadOrderFromConsole()
     {
         while (true)
         {
+            Order order = new();
             OrderItemSettings orderItemSettings = new();
 
             orderItemSettings.ProductTypeNumber = ReadTypesFromConsole.ReadProductTypeNumberFromConsole();
@@ -83,7 +63,7 @@ internal class OrderHandlers
             Console.WriteLine("Введите end, чтобы закончить ввод. Для продолжения введите любой символ.");
             if (Console.ReadLine() == "end")
             {
-                break;
+                return order;
             }
         }
     }
@@ -132,10 +112,10 @@ internal class OrderHandlers
     /// <summary>
     /// Обновить продукт в заказе.
     /// </summary>
-    public void UpdateProduct()
+    public Order UpdateProduct(Order order)
     {
         Console.WriteLine("Состав заказа.");
-        this.PrintOrderInfo();
+        printOrderToConsole.Print(order);
 
         Console.WriteLine("Выберите товар из заказа.");
         uint productInOrderNumber;
@@ -175,22 +155,27 @@ internal class OrderHandlers
 
         order.Products.Remove(order.Products[(int)productInOrderNumber - 1]);
         order.Products.Add(new KeyValuePair<Product, uint>(Store.Products[(int)productInStoreNumber - 1], productQuantity));
+
+        return order;
     }
 
     /// <summary>
     /// Скопировать значения полей заказа.
     /// </summary>
     /// <param name="other">Заказ, в который производится копирование.</param>
-    public void CopyTo(Order other)
+    public Order CopyFrom(Order other)
     {
-        other.Products.AddRange(order.Products);
-        other.TimeOfDeparture = order.TimeOfDeparture;
+        Order order = new Order();
+        order.Products.AddRange(other.Products);
+        order.TimeOfDeparture = other.TimeOfDeparture;
+
+        return order;
     }
 
     /// <summary>
     /// Сортировка списка товаров в алфавитном порядке.
     /// </summary>
-    public void SortProductsByAlphabet()
+    public Order SortProductsByAlphabet(Order order)
     {
         int n = order.Products.Count;
         bool swapped;
@@ -209,5 +194,7 @@ internal class OrderHandlers
             }
             n--;
         } while (swapped);
+
+        return order;
     }
 }
