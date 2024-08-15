@@ -1,10 +1,11 @@
-﻿using Cart.Settings;
+﻿using Cart.Menus;
+using Cart.Settings;
 using Cart.Stores;
 using System.Text.Json;
 
 namespace Cart.Orders;
 
-internal class OrderHandlers
+public class OrderHandlers
 {
     private IPrintOrder printOrderToAPI = new PrintOrderToAPI();
 
@@ -24,15 +25,7 @@ internal class OrderHandlers
 
             Console.WriteLine("Введите количество товара.");
             orderItemSettings.ProductQuantity = ReadTypesFromConsole.ReadUintFromConsole();
-
-            Console.WriteLine(
-                "Введите требование к цене.\n" +
-                "Возможные значения требования:\n" +
-                $"{(int)PriceRequirementSettings.TheLowestValue} - самое низкое значение,\n" +
-                $"{(int)PriceRequirementSettings.TheHighestValue} - самое высокое значение,\n" +
-                $"{(int)PriceRequirementSettings.RandomValue} - любое значение."
-            );
-
+            Menu.PrintOrderItemPriceSettings();
 
             orderItemSettings.PriceRequirement = ReadTypesFromConsole.ReadPriceRequirementFromConsole();
             Type productType = Store.ProductsTypes[Convert.ToInt32(orderItemSettings.ProductTypeNumber - 1)];

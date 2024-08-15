@@ -27,7 +27,7 @@ namespace Cart.Menus
         /// </summary>
         private static uint maxProductsQuantityInOrder = 0;
 
-        private static Order userOrder;
+        private static Order userOrder = new();
 
         private static OrderHandlers orderHandlers = new();
 
@@ -536,6 +536,20 @@ namespace Cart.Menus
                 Console.WriteLine($"Заказ {i + 1}");
                 printOrderToConsole.Print(userOrder);
             }
+        }
+
+        /// <summary>
+        /// Вывести в консоль варианты требования к цене.
+        /// </summary>
+        public static void PrintOrderItemPriceSettings()
+        {
+            Console.WriteLine(
+                "Введите требование к цене.\n" +
+                "Возможные значения требования:\n" +
+                $"{(int)PriceRequirementSettings.RandomValue} - любое значение.",
+                $"{(int)PriceRequirementSettings.TheLowestValue} - самое низкое значение,\n" +
+                $"{(int)PriceRequirementSettings.TheHighestValue} - самое высокое значение,\n"
+            );
         }
     }
 }

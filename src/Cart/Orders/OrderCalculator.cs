@@ -49,8 +49,8 @@ public class OrderCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order newOrder = new();
-        orderHandlers.CopyFrom(newOrder);
+        Order newOrder = orderHandlers.CopyFrom(order);
+
         KeyValuePair<Product, uint> orderItem = newOrder.Products.FirstOrDefault(orderItem => orderItem.Key == product);
         Dictionary<Product, uint> products = newOrder.Products.ToDictionary();
         if (products.ContainsKey(product))
@@ -87,8 +87,8 @@ public class OrderCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order orderC = new();
-        orderHandlers.CopyFrom(orderC);
+        Order orderC = orderHandlers.CopyFrom(orderA);
+
         foreach (KeyValuePair<Product, uint> productB in orderB.Products)
         {
             for (uint i = 0; i < productB.Value; i++)
@@ -110,8 +110,8 @@ public class OrderCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order newOrder = new();
-        orderHandlers.CopyFrom(newOrder);
+        Order newOrder = orderHandlers.CopyFrom(order);
+
         Dictionary<Product, uint> products = newOrder.Products.ToDictionary();
         if (products.ContainsKey(product))
         {
@@ -140,8 +140,8 @@ public class OrderCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order orderC = new();
-        orderHandlers.CopyFrom(orderC);
+        Order orderC = orderHandlers.CopyFrom(orderA);
+
         orderC.Products = orderC.Products.Where(orderItem => orderC.Products.Contains(orderItem) is false).ToList();
 
         return orderC;
@@ -157,8 +157,8 @@ public class OrderCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order newOrder = new();
-        orderHandlers.CopyFrom(newOrder);
+        Order newOrder = orderHandlers.CopyFrom(order);
+
         newOrder.Products = newOrder.Products.Where(orderItem => orderItem.Key.GetType() != productType).ToList();
 
         return newOrder;

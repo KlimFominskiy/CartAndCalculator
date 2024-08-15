@@ -1,7 +1,7 @@
 ﻿namespace Cart.Settings;
 
 /// <summary>
-/// Настройки требования к цене.
+/// Варианты требования к цене.
 /// </summary>
 public enum PriceRequirementSettings
 {

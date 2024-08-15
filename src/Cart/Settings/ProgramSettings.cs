@@ -8,7 +8,7 @@ namespace Cart.Settings;
 internal static class ProgramSettings
 {
     /// <summary>
-    /// Настройка сеариализации.
+    /// Настройки сеариализации.
     /// </summary>
     public static JsonSerializerOptions JsonSerializerOptions = new()
     {

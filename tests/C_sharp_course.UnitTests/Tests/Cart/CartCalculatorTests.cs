@@ -68,8 +68,8 @@ public class Tests
     {
         Product product = orderWithThreeProducts.Products.First().Key;
         uint productQuantity = orderWithThreeProducts.Products.First().Value;
-        Order newOrder = new();
-        orderWithThreeProducts.CopyTo(newOrder);
+        OrderHandlers orderHandlers = new();
+        Order newOrder = orderHandlers.CopyFrom(orderWithThreeProducts);
         newOrder.Products.Remove(new KeyValuePair<Product, uint>(product, productQuantity));
         Assert.Throws<Exception>(delegate { newOrder = cartCalculator.Subtract(newOrder, product); }, message: $"Продукт {product.Name} с Id = {product.Id} не найден в корзине.");
     }
