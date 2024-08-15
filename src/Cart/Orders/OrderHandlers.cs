@@ -25,11 +25,14 @@ internal class OrderHandlers
             Console.WriteLine("Введите количество товара.");
             orderItemSettings.ProductQuantity = ReadTypesFromConsole.ReadUintFromConsole();
 
-            Console.WriteLine("Введите требование к цене.");
-            Console.WriteLine("Возможные значения требования: ");
-            Console.WriteLine($"{(int)PriceRequirementSettings.TheLowestValue} - самое низкое значение,");
-            Console.WriteLine($"{(int)PriceRequirementSettings.TheHighestValuem} - самое высокое значение,");
-            Console.WriteLine($"{(int)PriceRequirementSettings.RandomValue} - любое значение.");
+            Console.WriteLine(
+                "Введите требование к цене.\n" +
+                "Возможные значения требования:\n" +
+                $"{(int)PriceRequirementSettings.TheLowestValue} - самое низкое значение,\n" +
+                $"{(int)PriceRequirementSettings.TheHighestValue} - самое высокое значение,\n" +
+                $"{(int)PriceRequirementSettings.RandomValue} - любое значение."
+            );
+
 
             orderItemSettings.PriceRequirement = ReadTypesFromConsole.ReadPriceRequirementFromConsole();
             Type productType = Store.ProductsTypes[Convert.ToInt32(orderItemSettings.ProductTypeNumber - 1)];
@@ -46,7 +49,7 @@ internal class OrderHandlers
                 case PriceRequirementSettings.TheLowestValue:
                     validProduct = validProducts.MinBy(product => product.Price);
                     break;
-                case PriceRequirementSettings.TheHighestValuem:
+                case PriceRequirementSettings.TheHighestValue:
                     validProduct = validProducts.MaxBy(product => product.Price);
                     break;
                 case PriceRequirementSettings.RandomValue:

@@ -29,7 +29,7 @@ namespace Cart.Menus
 
         private static Order userOrder;
 
-        private static OrderHandlers orderHandlers;
+        private static OrderHandlers orderHandlers = new();
 
         private static IPrintOrder printOrderToConsole = new PrintOrderToConsole();
         
@@ -78,44 +78,46 @@ namespace Cart.Menus
         {
             CalculateParams();
 
-            Console.WriteLine("Выберите режим работы программы:\n" +
+            Console.WriteLine(
+                "Выберите режим работы программы:\n" +
                 "Считать заказ:\n" +
                 $"{(int)ProgramModes.ReadOrderFromConsole} - считать заказ из консоли.\n" +
                 $"{(int)ProgramModes.ReadOrderFromFile} - считать заказ из файла.\n" +
-                $"{(int)ProgramModes.GenerateRandomOrder} - сгенерировать случайный заказ.");
+                $"{(int)ProgramModes.GenerateRandomOrder} - сгенерировать случайный заказ.\n\n" +
 
-            Console.WriteLine("Сгенерировать заказ по сумме:");
-            Console.WriteLine($"{(int)ProgramModes.GenerateOrderByMaxSum} - сгенерировать заказ по максимальной сумме.");
-            Console.WriteLine($"{(int)ProgramModes.GenerateOrderByMinMaxSumRange} - cгенерировать заказ по диапазону суммы.");
-            Console.WriteLine($"Минимальная общая сумма заказа - {orderMinSum}.");
-            Console.WriteLine($"Максимальная общая сумма заказа - {orderMaxSum}.");
-            Console.WriteLine($"{(int)ProgramModes.GenerateOrderByMaxTotalQuantity} - cгенерировать заказ по максимальному общему количеству товаров в заказе.");
-            Console.WriteLine($"Минимальное общее количество товаров в заказе - {minTotalProductsQuantityInOrder}.");
-            Console.WriteLine($"Максимальное общее количество товаров в заказе - {maxProductsQuantityInOrder}.");
+                "Сгенерировать заказ по сумме:\n" +
+                $"{(int)ProgramModes.GenerateOrderByMaxSum} - сгенерировать заказ по максимальной сумме.\n" +
+                $"{(int)ProgramModes.GenerateOrderByMinMaxSumRange} - cгенерировать заказ по диапазону суммы.\n" +
+                $"Минимальная общая сумма заказа - {orderMinSum}.\n" +
+                $"Максимальная общая сумма заказа - {orderMaxSum}.\n" +
+                $"{(int)ProgramModes.GenerateOrderByMaxTotalQuantity} - cгенерировать заказ по максимальному общему количеству товаров в заказе.\n" +
+                $"Минимальное общее количество товаров в заказе - {minTotalProductsQuantityInOrder}.\n" +
+                $"Максимальное общее количество товаров в заказе - {maxProductsQuantityInOrder}.\n\n" +
 
-            Console.WriteLine($"{(int)ProgramModes.ChangeProductInOrder} - изменить заказ.");
-            Console.WriteLine($"{(int)ProgramModes.PrintProducts} - вывести в консоль существующие продукты магазина.");
-            Console.WriteLine($"{(int)ProgramModes.PrintOrders} - вывести в консоль существующие заказы.");
+                $"{(int)ProgramModes.ChangeProductInOrder} - изменить заказ.\n" +
+                $"{(int)ProgramModes.PrintProducts} - вывести в консоль существующие продукты магазина.\n" +
+                $"{(int)ProgramModes.PrintOrders} - вывести в консоль существующие заказы.\n\n" +
 
-            Console.WriteLine("Калькультор заказов:");
-            Console.WriteLine($"{(int)ProgramModes.CreateOrderFromTwoProducts} - создать корзину с двумя указанными товарами.");
-            Console.WriteLine($"{(int)ProgramModes.AddProductToOrder} - добавить товар в корзину.");
-            Console.WriteLine($"{(int)ProgramModes.CombineTwoOrders} - объединить корзины.");
-            Console.WriteLine($"{(int)ProgramModes.ReduceTheQuantityOfTheProductInOrderByOne} - удалить единицу каждого товара из корзины.");
-            Console.WriteLine($"{(int)ProgramModes.RemoveMatchingProducts} - удалить из первой корзины товары, которые есть во второй корзине.");
-            Console.WriteLine($"{(int)ProgramModes.RemoveProductsFromOrderByType} - удалить из корзины товары указанного типа.");
-            Console.WriteLine($"{(int)ProgramModes.ReduceTheQuantityOfEachProductInOrderByNumberTimes} - уменьшить в корзине каждое количество товара в указанное число раз.");
-            Console.WriteLine($"{(int)ProgramModes.IncreaseTheQuantityOfEachProductInOrderByNumberTimes} - увеличить в корзине каждое количество товара в указанное число раз.");
+                "Калькультор заказов:\n" +
+                $"{(int)ProgramModes.CreateOrderFromTwoProducts} - создать корзину с двумя указанными товарами.\n" +
+                $"{(int)ProgramModes.AddProductToOrder} - добавить товар в корзину.\n" +
+                $"{(int)ProgramModes.CombineTwoOrders} - объединить корзины.\n" +
+                $"{(int)ProgramModes.ReduceTheQuantityOfTheProductInOrderByOne} - удалить единицу каждого товара из корзины.\n" +
+                $"{(int)ProgramModes.RemoveMatchingProducts} - удалить из первой корзины товары, которые есть во второй корзине.\n" +
+                $"{(int)ProgramModes.RemoveProductsFromOrderByType} - удалить из корзины товары указанного типа.\n" +
+                $"{(int)ProgramModes.ReduceTheQuantityOfEachProductInOrderByNumberTimes} - уменьшить в корзине каждое количество товара в указанное число раз.\n" +
+                $"{(int)ProgramModes.IncreaseTheQuantityOfEachProductInOrderByNumberTimes} - увеличить в корзине каждое количество товара в указанное число раз.\n\n" +
+                // Задание 5. Работа с LINQ.
+                "Отсортировать заказы:\n" +
+                $"{(int)ProgramModes.GetOrdersByMaxSum} - заказы дешевле заданной суммы.\n" +
+                $"{(int)ProgramModes.GetOrdersByMinSum} - заказы дороже заданной суммы.\n" +
+                $"{(int)ProgramModes.GetOrdersByProductType} - заказы, имеющие в составе товары определённого типа.\n" +
+                $"{(int)ProgramModes.GetOrdersSortedByWeight} - заказы, отсортированные по весу в порядке возрастания.\n" +
+                $"{(int)ProgramModes.GetOrdersWithUniqueProductsInList} - заказы с уникальными названиями (заказы, в которых количество каждого товара не превышает единицы).\n" +
+                $"{(int)ProgramModes.GetOrdersByMaxDepartureDate} - заказы, отправленные до указанной даты.\n\n" +
 
-            // Задание 5. Работа с LINQ.
-            Console.WriteLine($"Отсортировать заказы:");
-            Console.WriteLine($"{(int)ProgramModes.GetOrdersByMaxSum} - заказы дешевле заданной суммы.");
-            Console.WriteLine($"{(int)ProgramModes.GetOrdersByMinSum} - заказы дороже заданной суммы.");
-            Console.WriteLine($"{(int)ProgramModes.GetOrdersByProductType} - заказы, имеющие в составе товары определённого типа.");
-            Console.WriteLine($"{(int)ProgramModes.GetOrdersSortedByWeight} - заказы, отсортированные по весу в порядке возрастания.");
-            Console.WriteLine($"{(int)ProgramModes.GetOrdersWithUniqueProductsInList} - заказы с уникальными названиями (заказы, в которых количество каждого товара не превышает единицы).");
-            Console.WriteLine($"{(int)ProgramModes.GetOrdersByMaxDepartureDate} - заказы, отправленные до указанной даты.");
-            Console.WriteLine("0 - закончить работу программы.");
+                $"{(int)ProgramModes.Exit} - закончить работу программы."
+            );
         }
 
         /// <summary>
