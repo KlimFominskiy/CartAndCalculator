@@ -1,4 +1,6 @@
-﻿namespace Cart.Orders;
+﻿using System.Text.Json.Serialization;
+
+namespace Cart.Orders;
 
 /// <summary>
 /// Корзина (заказ) Интернет-магазина.
@@ -6,11 +8,13 @@
 [Serializable]
 public class Order
 {
+    [JsonPropertyName("Состав заказа")]
     /// <summary>
     /// Товары в заказе. TKey - товар. TValue - количество товара.
     /// </summary>
     public List<KeyValuePair<Product, uint>> Products = new();
 
+    [JsonPropertyName("Дата отправки заказа")]
     /// <summary>
     /// Дата отправки заказа заказа.
     /// </summary>

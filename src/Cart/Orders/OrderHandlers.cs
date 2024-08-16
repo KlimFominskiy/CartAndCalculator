@@ -16,11 +16,12 @@ public class OrderHandlers
     /// </summary>
     public Order ReadOrderFromConsole()
     {
+        Order order = new();
         while (true)
         {
-            Order order = new();
             OrderItemSettings orderItemSettings = new();
 
+            Console.WriteLine("Введите тип товара.");
             orderItemSettings.ProductTypeNumber = ReadTypesFromConsole.ReadProductTypeNumberFromConsole();
 
             Console.WriteLine("Введите количество товара.");
@@ -61,18 +62,22 @@ public class OrderHandlers
             {
                 return order;
             }
+            else
+            {
+                continue;
+            }
         }
     }
 
     /// <summary>
     /// Записать заказ в файл Order.json.
     /// </summary>
-    public void WriteOrderToFile()
+    public void WriteOrderToFile(Order order)
     {
         Console.WriteLine();
         string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         string fileName = "Order.json";
-        string jsonOrder = JsonSerializer.Serialize(this, ProgramSettings.JsonSerializerOptions);
+        string jsonOrder = JsonSerializer.Serialize(order, ProgramSettings.JsonSerializerOptions);
         File.AppendAllText(projectPath + Path.DirectorySeparatorChar + fileName, jsonOrder);
     }
 

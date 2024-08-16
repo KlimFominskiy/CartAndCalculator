@@ -171,8 +171,7 @@ namespace Cart.Menus
                             Store.PrintProductsTypes();
 
                             Console.WriteLine("Считывание заказа из консоли.");
-                            Console.WriteLine("Введите номер товара в списке продуктов.");
-                            orderHandlers.ReadOrderFromConsole();
+                            userOrder = orderHandlers.ReadOrderFromConsole();
                             Console.WriteLine("Считывание заказа из консоли завершено.");
                             Console.WriteLine("Информация о заказе.");
                             
@@ -180,13 +179,13 @@ namespace Cart.Menus
                             if (Console.ReadLine() == "y")
                             {
                                 //Задание 1. Отсортировать по алфавиту без LINQ.
-                                orderHandlers.SortProductsByAlphabet(userOrder);
+                                userOrder = orderHandlers.SortProductsByAlphabet(userOrder);
                             }
                             Console.WriteLine("Записать заказ в файл? y - да, любой другой символ - нет.");
                             if (Console.ReadLine() == "y")
                             {
                                 Console.WriteLine("Запись заказ в файл");
-                                orderHandlers.WriteOrderToFile();
+                                orderHandlers.WriteOrderToFile(userOrder);
                                 Console.WriteLine("Запись заказа в файл окончена.");
                             }
 
@@ -546,9 +545,9 @@ namespace Cart.Menus
             Console.WriteLine(
                 "Введите требование к цене.\n" +
                 "Возможные значения требования:\n" +
-                $"{(int)PriceRequirementSettings.RandomValue} - любое значение.",
+                $"{(int)PriceRequirementSettings.RandomValue} - любое значение.\n" +
                 $"{(int)PriceRequirementSettings.TheLowestValue} - самое низкое значение,\n" +
-                $"{(int)PriceRequirementSettings.TheHighestValue} - самое высокое значение,\n"
+                $"{(int)PriceRequirementSettings.TheHighestValue} - самое высокое значение."
             );
         }
     }

@@ -12,21 +12,25 @@ namespace Cart;
 [JsonDerivedType(typeof(WashingMachine), typeDiscriminator: "Стиральная машина")]
 public abstract record Product
 {
+    [JsonPropertyName("Идентификационный номер")]
     /// <summary>
     /// Идентификационный номер.
     /// </summary>
     public uint Id { get; set; }
 
+    [JsonPropertyName("Наименование")]
     /// <summary>
     /// Наименование.
     /// </summary>
     public string? Name { get; set; }
 
+    [JsonPropertyName("Вес")]
     /// <summary>
     /// Вес.
     /// </summary>
     public double? Weight { get; set; }
 
+    [JsonPropertyName("Цена")]
     /// <summary>
     /// Стоимость.
     /// </summary>
