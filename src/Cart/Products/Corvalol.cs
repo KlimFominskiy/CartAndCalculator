@@ -1,4 +1,6 @@
-﻿namespace Cart.Products;
+﻿using System.ComponentModel;
+
+namespace Cart.Products;
 
 /// <summary>
 /// Корвалол.

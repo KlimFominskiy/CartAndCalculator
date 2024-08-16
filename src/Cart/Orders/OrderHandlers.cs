@@ -26,17 +26,19 @@ public class OrderHandlers
 
             Console.WriteLine("Введите количество товара.");
             orderItemSettings.ProductQuantity = ReadTypesFromConsole.ReadUintFromConsole();
+            
+            Console.WriteLine("Введите требование к цене.");
             Menu.PrintOrderItemPriceSettings();
-
             orderItemSettings.PriceRequirement = ReadTypesFromConsole.ReadPriceRequirementFromConsole();
-            Type productType = Store.ProductsTypes[Convert.ToInt32(orderItemSettings.ProductTypeNumber - 1)];
 
+            Type productType = Store.ProductsTypes[Convert.ToInt32(orderItemSettings.ProductTypeNumber - 1)];
             List<Product> validProducts = new();
             foreach (Product product in Store.Products.Where(product => product.GetType() == productType).ToList())
             {
                 Product newProduct = product with { };
                 validProducts.Add(newProduct);
             }
+            
             Product? validProduct = null;
             switch (orderItemSettings.PriceRequirement)
             {
@@ -48,7 +50,7 @@ public class OrderHandlers
                     break;
                 case PriceRequirementSettings.RandomValue:
                     Random random = new Random();
-                    validProduct = validProducts[random.Next(0, validProducts.Count)];
+                    validProduct = validProducts[random.Next(0, validProducts.Count - 1)];
                     break;
             }
 
@@ -74,11 +76,10 @@ public class OrderHandlers
     /// </summary>
     public void WriteOrderToFile(Order order)
     {
-        Console.WriteLine();
         string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         string fileName = "Order.json";
         string jsonOrder = JsonSerializer.Serialize(order, ProgramSettings.JsonSerializerOptions);
-        File.AppendAllText(projectPath + Path.DirectorySeparatorChar + fileName, jsonOrder);
+        File.WriteAllText(projectPath + Path.DirectorySeparatorChar + fileName, jsonOrder);
     }
 
     /// <summary>
@@ -100,10 +101,9 @@ public class OrderHandlers
             {
                 if (!File.Exists(fileName))
                 {
-                    Console.WriteLine($"Считан путь:  {fileName}. Файл не найден. Повторите ввод.");
+                    Console.WriteLine($"Считан путь: {fileName}.\nФайл не найден. Повторите ввод.");
                     continue;
                 }
-
             }
             string jsonOrder = File.ReadAllText(fileName);
             return JsonSerializer.Deserialize<Order>(jsonOrder, ProgramSettings.JsonSerializerOptions);

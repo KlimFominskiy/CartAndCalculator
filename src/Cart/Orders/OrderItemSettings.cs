@@ -8,7 +8,7 @@ namespace Cart.Orders;
 internal class OrderItemSettings
 {
     /// <summary>
-    /// Номер товара в списке продуктов.
+    /// Номер типа товара в списке типов товаров.
     /// </summary>
     public uint ProductTypeNumber { get; set; }
 

@@ -81,7 +81,7 @@ namespace Cart.Menus
             Console.WriteLine(
                 "Выберите режим работы программы:\n" +
                 "Считать заказ:\n" +
-                $"{(int)ProgramModes.ReadOrderFromConsole} - считать заказ из консоли.\n" +
+                $"{(int)ProgramModes.ReadOrderFromConsole} - ввести заказ через консоль.\n" +
                 $"{(int)ProgramModes.ReadOrderFromFile} - считать заказ из файла.\n" +
                 $"{(int)ProgramModes.GenerateRandomOrder} - сгенерировать случайный заказ.\n\n" +
 
@@ -167,13 +167,13 @@ namespace Cart.Menus
                     //Задание 1. Ввод заказа с помощью консоли.
                     case ProgramModes.ReadOrderFromConsole:
                         {
+                            Console.WriteLine("Ввод заказа с помощью консоли");
                             Console.WriteLine("Типы товаров в магазине.");
                             Store.PrintProductsTypes();
 
                             Console.WriteLine("Считывание заказа из консоли.");
                             userOrder = orderHandlers.ReadOrderFromConsole();
                             Console.WriteLine("Считывание заказа из консоли завершено.");
-                            Console.WriteLine("Информация о заказе.");
                             
                             Console.WriteLine("Отсортироваться заказ по алфавиту? y - да, любой другой символ - нет.");
                             if (Console.ReadLine() == "y")
@@ -189,16 +189,17 @@ namespace Cart.Menus
                                 Console.WriteLine("Запись заказа в файл окончена.");
                             }
 
+                            Console.WriteLine("Введённый из консоли заказ заказе.");
+                            printOrderToConsole.Print(userOrder);
                             break;
                         }
                     case ProgramModes.ReadOrderFromFile:
                         {
                             Console.WriteLine("Считывание заказа из файла.");
-                            userOrder = new();
                             userOrder = orderHandlers.ReadOrderFromFile();
                             Console.WriteLine("Считывание заказа из файла завершено.");
 
-                            Console.WriteLine("Информация о заказе.");
+                            Console.WriteLine("Считанный из файла заказе.");
                             printOrderToConsole.Print(userOrder);
 
                             break;
@@ -207,6 +208,7 @@ namespace Cart.Menus
                         {
                             Console.WriteLine("Генерация случайного заказа.");
                             userOrder = OrdersGenerator.GenerateRandomOrder();
+
                             Console.WriteLine("Сгенерированный заказ.");
                             printOrderToConsole.Print(userOrder);
 
@@ -218,7 +220,7 @@ namespace Cart.Menus
                             decimal userMaxOrderSum = ReadTypesFromConsole.ReadDecimalFromConsole();
 
                             userOrder = OrdersGenerator.GenerateOrderBySum(userMaxOrderSum);
-                            Console.WriteLine("Информация о заказе.");
+                            Console.WriteLine("Сгенерированный заказ.");
                             printOrderToConsole.Print(userOrder);
 
                             break;
@@ -231,7 +233,7 @@ namespace Cart.Menus
                             decimal userMaxOrderSum = ReadTypesFromConsole.ReadDecimalFromConsole();
 
                             userOrder = OrdersGenerator.GenerateOrderBySum(userMinOrderSum, userMaxOrderSum);
-                            Console.WriteLine("Информация о заказе.");
+                            Console.WriteLine("Сгенерированный заказ.");
                             printOrderToConsole.Print(userOrder);
 
                             break;
@@ -243,7 +245,7 @@ namespace Cart.Menus
 
                             userOrder = OrdersGenerator.GenerateOrderByMaxQuantity(userMaxOrderQuantity);
 
-                            Console.WriteLine("Информация о заказе.");
+                            Console.WriteLine("Сгенерированный заказ.");
                             printOrderToConsole.Print(userOrder);
 
                             break;
@@ -257,7 +259,8 @@ namespace Cart.Menus
                                 break;
                             }
                             userOrder = orderHandlers.UpdateProduct(userOrder);
-                            Console.WriteLine("Заказ обновлён");
+
+                            Console.WriteLine("Обновлённый заказ.");
                             printOrderToConsole.Print(userOrder);
 
                             break;
@@ -279,20 +282,21 @@ namespace Cart.Menus
                         }
                     case ProgramModes.CreateOrderFromTwoProducts:
                         {
-                            Console.WriteLine("Создать корзину с двумя указанными товарами.");
+                            Console.WriteLine("Создание корзины с двумя указанными товарами.");
                             Console.WriteLine("Список товаров магазина.");
                             Store.PrintProductsInfo();
 
                             Console.WriteLine("Ввод первого товара.");
                             Console.WriteLine("Введите номер товара из списка товаров магазина.");
-                            uint firstAddedProductNumber = ReadTypesFromConsole.ReadProductNumberFromConsole();
+                            uint firstExtraProductNumber = ReadTypesFromConsole.ReadProductNumberFromConsole();
 
                             Console.WriteLine("Ввод второго товара.");
                             Console.WriteLine("Введите номер товара из списка товаров магазина.");
-                            uint secondAddedProductNumber = ReadTypesFromConsole.ReadProductNumberFromConsole(); ;
+                            uint secondExtraProductNumber = ReadTypesFromConsole.ReadProductNumberFromConsole(); ;
 
-                            userOrder = orderCalculator.Add(Store.Products[(int)firstAddedProductNumber - 1], Store.Products[(int)secondAddedProductNumber - 1]);
-                            Console.WriteLine("Созданая корзина.");
+                            userOrder = orderCalculator.Add(Store.Products[(int)firstExtraProductNumber - 1], Store.Products[(int)secondExtraProductNumber - 1]);
+                            
+                            Console.WriteLine("Созданная корзина.");
                             printOrderToConsole.Print(userOrder);
 
                             break;
@@ -332,13 +336,13 @@ namespace Cart.Menus
                                 if (programMode == ProgramModes.ReadOrderFromConsole)
                                 {
                                     Console.WriteLine("Считывание заказа из консоли.");
-                                    userOrder = orderHandlers.ReadOrderFromConsole();
+                                    secondOrder = orderHandlers.ReadOrderFromConsole();
                                     Console.WriteLine("Считывание заказа из консоли завершено.");
                                 }
                                 else if (programMode == ProgramModes.ReadOrderFromFile)
                                 {
                                     Console.WriteLine("Считывание заказа из файла.");
-                                    userOrder = orderHandlers.ReadOrderFromFile();
+                                    secondOrder = orderHandlers.ReadOrderFromFile();
                                     Console.WriteLine("Считывание заказа из файла завершено.");
                                 }
                                 else
@@ -543,7 +547,6 @@ namespace Cart.Menus
         public static void PrintOrderItemPriceSettings()
         {
             Console.WriteLine(
-                "Введите требование к цене.\n" +
                 "Возможные значения требования:\n" +
                 $"{(int)PriceRequirementSettings.RandomValue} - любое значение.\n" +
                 $"{(int)PriceRequirementSettings.TheLowestValue} - самое низкое значение,\n" +
