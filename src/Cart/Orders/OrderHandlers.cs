@@ -21,11 +21,13 @@ public class OrderHandlers
         {
             OrderItemSettings orderItemSettings = new();
 
+            Console.WriteLine("Типы товаров в магазине.");
+            Store.PrintProductsTypes();
             Console.WriteLine("Введите тип товара.");
             orderItemSettings.ProductTypeNumber = ReadTypesFromConsole.ReadProductTypeNumberFromConsole();
 
             Console.WriteLine("Введите количество товара.");
-            orderItemSettings.ProductQuantity = ReadTypesFromConsole.ReadUintFromConsole();
+            orderItemSettings.QuantityOfProduct = ReadTypesFromConsole.ReadUintFromConsole();
             
             Console.WriteLine("Введите требование к цене.");
             Menu.PrintOrderItemPriceSettings();
@@ -56,7 +58,7 @@ public class OrderHandlers
 
             if (validProduct is not null)
             {
-                order.Products.Add(new KeyValuePair<Product, uint>(validProduct, orderItemSettings.ProductQuantity));
+                order.Products.Add(new KeyValuePair<Product, uint>(validProduct, orderItemSettings.QuantityOfProduct));
             }
 
             Console.WriteLine("Введите end, чтобы закончить ввод. Для продолжения введите любой символ.");
@@ -134,7 +136,8 @@ public class OrderHandlers
             }
         }
 
-        Console.WriteLine("Введите номер продукта из списка продуктов магазина.");
+        Console.WriteLine("Введите номер продукта из списка товаров магазина.");
+        Console.WriteLine("Список товаров магазина.");
         Store.PrintProductsInfo();
         uint productInStoreNumber;
         while (true)
@@ -154,8 +157,7 @@ public class OrderHandlers
         Console.WriteLine("Введите количество нового продукта");
         uint productQuantity = ReadTypesFromConsole.ReadUintFromConsole();
 
-        order.Products.Remove(order.Products[(int)productInOrderNumber - 1]);
-        order.Products.Add(new KeyValuePair<Product, uint>(Store.Products[(int)productInStoreNumber - 1], productQuantity));
+        order.Products[(int)productInOrderNumber - 1] = new KeyValuePair<Product, uint>(Store.Products[(int)productInStoreNumber - 1], productQuantity);
 
         return order;
     }

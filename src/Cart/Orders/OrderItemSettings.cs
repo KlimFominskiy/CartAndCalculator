@@ -15,7 +15,7 @@ internal class OrderItemSettings
     /// <summary>
     /// Количество товара.
     /// </summary>
-    public uint ProductQuantity { get; set; }
+    public uint QuantityOfProduct { get; set; }
 
     /// <summary>
     /// Требование к цене.

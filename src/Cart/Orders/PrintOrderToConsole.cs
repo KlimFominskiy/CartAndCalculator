@@ -19,7 +19,7 @@ internal class PrintOrderToConsole : IPrintOrder
         Console.WriteLine($"Итоговая стоимость - {order.Products.Sum(product => product.Key.Price * product.Value)}.\n" +
             $"Общее количество товаров - {order.Products.Sum(product => product.Value)}.\n" +
             $"Итоговый вес - {order.Products.Sum(product => product.Key.Weight * product.Value)}.\n" +
-            $"Дата готовности заказа - {order.TimeOfDeparture}.\n"
+            $"Дата отправления заказа - {order.TimeOfDeparture}.\n"
             );
     }
 }

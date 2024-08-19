@@ -44,7 +44,7 @@ public class OrderCalculator : Calculator.Calculator
     /// </summary>
     /// <param name="order">Корзина.</param>
     /// <param name="product">Добавляемый товар.</param>
-    /// <returns>Карточка с добавленным товаром.</returns>
+    /// <returns>Корзина с добавленным товаром.</returns>
     public Order Add(Order order, Product product)
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
@@ -101,11 +101,11 @@ public class OrderCalculator : Calculator.Calculator
     }
 
     /// <summary>
-    /// Удалить единицу товара из корзины.
+    /// Удалить из корзины единицу указанного товара.
     /// </summary>
     /// <param name="order">Корзина, из которой удаляется единица товара.</param>
     /// <param name="product">Удаляемый товар.</param>
-    /// <returns>Карточка с удалённой единицей указанного товара.</returns>
+    /// <returns>Заказ с удалённой единицей указанного товара.</returns>
     public Order Subtract(Order order, Product product)
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);

@@ -17,6 +17,6 @@ public record WashingMachine : Product
 
     public override string ToString()
     {
-        return base.ToString() + $"\nНаличие сушилки = Есть.";
+        return base.ToString() + $"\nНаличие сушилки = Да.";
     }
 }

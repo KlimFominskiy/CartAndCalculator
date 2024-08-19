@@ -120,7 +120,7 @@ namespace Cart.Menus
                 $"{(int)ProgramModes.CreateOrderFromTwoProducts} - создать корзину с двумя указанными товарами.\n" +
                 $"{(int)ProgramModes.AddProductToOrder} - добавить товар в корзину.\n" +
                 $"{(int)ProgramModes.CombineTwoOrders} - объединить корзины.\n" +
-                $"{(int)ProgramModes.ReduceTheQuantityOfTheProductInOrderByOne} - удалить единицу каждого товара из корзины.\n" +
+                $"{(int)ProgramModes.ReduceTheQuantityOfTheProductInOrderByOne} - удалить единицу указзанного товара из корзины.\n" +
                 $"{(int)ProgramModes.RemoveMatchingProducts} - удалить из первой корзины товары, которые есть во второй корзине.\n" +
                 $"{(int)ProgramModes.RemoveProductsFromOrderByType} - удалить из корзины товары указанного типа.\n" +
                 $"{(int)ProgramModes.ReduceTheQuantityOfEachProductInOrderByNumberTimes} - уменьшить в корзине каждое количество товара в указанное число раз.\n" +
@@ -385,9 +385,11 @@ namespace Cart.Menus
                             
                             Console.WriteLine("Ввод товара.");
                             Console.WriteLine("Введите номер товара из списка товаров магазина.");
+                            Console.WriteLine("Списов товаров магазина.");
                             Store.PrintProductsInfo();
                             uint deletedProductNumber = ReadTypesFromConsole.ReadProductNumberFromConsole();
-                            userOrder = orderCalculator.Subtract(userOrder, Store.Products[(int)deletedProductNumber]);
+                            userOrder = orderCalculator.Subtract(userOrder, Store.Products[(int)deletedProductNumber - 1]);
+
                             Console.WriteLine("Заказ с удалённой единицей товара.");
                             printOrderToConsole.Print(userOrder);
 
@@ -556,7 +558,7 @@ namespace Cart.Menus
             for (int i = 0; i < orders.Count; i++)
             {
                 Console.WriteLine($"Заказ {i + 1}");
-                printOrderToConsole.Print(userOrder);
+                printOrderToConsole.Print(orders[i]);
             }
         }
 
@@ -569,8 +571,7 @@ namespace Cart.Menus
                 "Возможные значения требования:\n" +
                 $"{(int)PriceRequirementSettings.RandomValue} - любое значение.\n" +
                 $"{(int)PriceRequirementSettings.TheLowestValue} - самое низкое значение,\n" +
-                $"{(int)PriceRequirementSettings.TheHighestValue} - самое высокое значение."
-            );
+                $"{(int)PriceRequirementSettings.TheHighestValue} - самое высокое значение.");
         }
     }
 }
