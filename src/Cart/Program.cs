@@ -1,4 +1,5 @@
 ﻿using Cart.Menus;
+using Cart.Settings;
 using Cart.Stores;
 using System.Text;
 

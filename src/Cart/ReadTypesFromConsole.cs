@@ -4,7 +4,7 @@ using Cart.Stores;
 namespace Cart;
 
 /// <summary>
-/// Класс содержит методы считывания типов из консоли.
+/// Класс содержит методы считывания различных типов данных из консоли.
 /// </summary>
 public static class ReadTypesFromConsole
 {

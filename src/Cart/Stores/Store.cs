@@ -108,6 +108,7 @@ public static class Store
     private static double GetWeight(uint ProductId)
     {
         Random random = new();
+
         return double.Round(random.NextDouble() * (30 - 15) + 15, 2);
     }
 

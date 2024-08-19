@@ -75,7 +75,7 @@ public static class OrdersGenerator
     {
         List<Order> validOrdersList = Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) < maxSum).ToList();
 
-        return Orders[random.Next(0, validOrdersList.Count)];
+        return validOrdersList[random.Next(0, validOrdersList.Count - 1)];
     }
 
     /// <summary>
@@ -86,23 +86,23 @@ public static class OrdersGenerator
     /// <returns>Заказ, удовлетворяющий параметрам.</returns>
     public static Order GenerateOrderBySum(decimal minSum, decimal maxSum)
     {
-        List<Order> validOrders = Orders.Where
+        List<Order> validOrdersList = Orders.Where
             (order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) < maxSum
         && order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) > minSum).ToList();
 
-        return Orders[random.Next(0, validOrders.Count)];
+        return validOrdersList[random.Next(0, validOrdersList.Count - 1)];
     }
 
     /// <summary>
     /// Сформировать (выбрать) заказ, общее количество товаров в котором не превышает заданного значения.
     /// </summary>
-    /// <param name="maxCount">Максимальное общее количество товаров в заказе.</param>
+    /// <param name="maxQuantityOfProducts">Максимальное общее количество товаров в заказе.</param>
     /// <returns>Заказ, удовлетворяющий параметрам.</returns>
-    public static Order GenerateOrderByMaxQuantity(uint maxCount)
+    public static Order GenerateOrderByMaxQuantity(uint maxQuantityOfProducts)
     {
-        List<Order> validOrders = Orders.Where(order => order.Products.Sum(orderItem => orderItem.Value) < maxCount).ToList();
+        List<Order> validOrdersList = Orders.Where(order => order.Products.Sum(orderItem => orderItem.Value) < maxQuantityOfProducts).ToList();
 
-        return Orders[random.Next(0, validOrders.Count)];
+        return validOrdersList[random.Next(0, validOrdersList.Count - 1)];
     }
 
     /// <summary>

@@ -11,28 +11,46 @@ namespace Cart.Menus
     internal static class Menu
     {
         /// <summary>
-        /// Стоимость самого дешёвого заказа из предсгенированных заказов.
+        /// Параметры предсгенерированного набор заказов.
         /// </summary>
-        private static decimal orderMinSum = decimal.MaxValue;
-        /// <summary>
-        /// Стоимость самого дорого заказа из предсгенированных заказов.
-        /// </summary>
-        private static decimal orderMaxSum = 0;
-        /// <summary>
-        /// Количество товаров в заказе с наименьшим количеством товаров из предсгенированных заказов.
-        /// </summary>
-        private static uint minTotalProductsQuantityInOrder = uint.MaxValue;
-        /// <summary>
-        /// Количество товаров в заказе с наибольшим количеством товаров из предсгенированных заказов.
-        /// </summary>
-        private static uint maxProductsQuantityInOrder = 0;
+        private struct RandomOrdersParams
+        {
+            /// <summary>
+            /// Стоимость самого дешёвого заказа из предсгенированных заказов.
+            /// </summary>
+            internal static decimal orderMinSum = decimal.MaxValue;
+            /// <summary>
+            /// Стоимость самого дорого заказа из предсгенированных заказов.
+            /// </summary>
+            internal static decimal orderMaxSum = 0;
+            /// <summary>
+            /// Количество товаров в заказе с наименьшим количеством товаров из предсгенированных заказов.
+            /// </summary>
+            internal static uint minQuantityOfProductsInOrder = uint.MaxValue;
+            /// <summary>
+            /// Количество товаров в заказе с наибольшим количеством товаров из предсгенированных заказов.
+            /// </summary>
+            internal static uint maxQuantityOfProductsInOrder = 0;
+        }
 
+        /// <summary>
+        /// Заказ пользователя.
+        /// </summary>
         private static Order userOrder = new();
 
+        /// <summary>
+        /// Обработчики заказа.
+        /// </summary>
         private static OrderHandlers orderHandlers = new();
 
+        /// <summary>
+        /// Обработчик печати заказа в консоль.
+        /// </summary>
         private static IPrintOrder printOrderToConsole = new PrintOrderToConsole();
-        
+
+        /// <summary>
+        /// Обработчик печати заказа в API.
+        /// </summary>
         private static IPrintOrder printOrderToAPI = new PrintOrderToAPI();
 
         /// <summary>
@@ -69,6 +87,8 @@ namespace Cart.Menus
                 OrdersGenerator.ReadOrdersFromFile();
                 Console.WriteLine("Заказы считаны.");
             }
+
+            CalculateParams();
         }
 
         /// <summary>
@@ -76,8 +96,6 @@ namespace Cart.Menus
         /// </summary>
         public static void PrintProgramModes()
         {
-            CalculateParams();
-
             Console.WriteLine(
                 "Выберите режим работы программы:\n" +
                 "Считать заказ:\n" +
@@ -88,11 +106,11 @@ namespace Cart.Menus
                 "Сгенерировать заказ по сумме:\n" +
                 $"{(int)ProgramModes.GenerateOrderByMaxSum} - сгенерировать заказ по максимальной сумме.\n" +
                 $"{(int)ProgramModes.GenerateOrderByMinMaxSumRange} - cгенерировать заказ по диапазону суммы.\n" +
-                $"Минимальная общая сумма заказа - {orderMinSum}.\n" +
-                $"Максимальная общая сумма заказа - {orderMaxSum}.\n" +
+                $"Минимальная общая сумма заказа - {RandomOrdersParams.orderMinSum}.\n" +
+                $"Максимальная общая сумма заказа - {RandomOrdersParams.orderMaxSum}.\n" +
                 $"{(int)ProgramModes.GenerateOrderByMaxTotalQuantity} - cгенерировать заказ по максимальному общему количеству товаров в заказе.\n" +
-                $"Минимальное общее количество товаров в заказе - {minTotalProductsQuantityInOrder}.\n" +
-                $"Максимальное общее количество товаров в заказе - {maxProductsQuantityInOrder}.\n\n" +
+                $"Минимальное общее количество товаров в заказе - {RandomOrdersParams.minQuantityOfProductsInOrder}.\n" +
+                $"Максимальное общее количество товаров в заказе - {RandomOrdersParams.maxQuantityOfProductsInOrder}.\n\n" +
 
                 $"{(int)ProgramModes.ChangeProductInOrder} - изменить заказ.\n" +
                 $"{(int)ProgramModes.PrintProducts} - вывести в консоль существующие продукты магазина.\n" +
@@ -107,6 +125,7 @@ namespace Cart.Menus
                 $"{(int)ProgramModes.RemoveProductsFromOrderByType} - удалить из корзины товары указанного типа.\n" +
                 $"{(int)ProgramModes.ReduceTheQuantityOfEachProductInOrderByNumberTimes} - уменьшить в корзине каждое количество товара в указанное число раз.\n" +
                 $"{(int)ProgramModes.IncreaseTheQuantityOfEachProductInOrderByNumberTimes} - увеличить в корзине каждое количество товара в указанное число раз.\n\n" +
+                
                 // Задание 5. Работа с LINQ.
                 "Отсортировать заказы:\n" +
                 $"{(int)ProgramModes.GetOrdersByMaxSum} - заказы дешевле заданной суммы.\n" +
@@ -129,22 +148,22 @@ namespace Cart.Menus
             foreach (Order order in OrdersGenerator.Orders)
             {
                 decimal tempSum = order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) ?? throw new ArgumentNullException();
-                if (orderMinSum > tempSum)
+                if (RandomOrdersParams.orderMinSum > tempSum)
                 {
-                    orderMinSum = tempSum;
+                    RandomOrdersParams.orderMinSum = tempSum;
                 }
-                if (orderMaxSum < tempSum)
+                if (RandomOrdersParams.orderMaxSum < tempSum)
                 {
-                    orderMaxSum = tempSum;
+                    RandomOrdersParams.orderMaxSum = tempSum;
                 }
                 uint quantity = (uint)order.Products.Sum(orderItem => orderItem.Value);
-                if (minTotalProductsQuantityInOrder > quantity)
+                if (RandomOrdersParams.minQuantityOfProductsInOrder > quantity)
                 {
-                    minTotalProductsQuantityInOrder = quantity;
+                    RandomOrdersParams.minQuantityOfProductsInOrder = quantity;
                 }
-                if (maxProductsQuantityInOrder < quantity)
+                if (RandomOrdersParams.maxQuantityOfProductsInOrder < quantity)
                 {
-                    maxProductsQuantityInOrder = quantity;
+                    RandomOrdersParams.maxQuantityOfProductsInOrder = quantity;
                 }
             }
         }
