@@ -244,11 +244,11 @@ public static class ReadTypesFromConsole
             string fileName = Console.ReadLine();
             if (string.IsNullOrEmpty(fileName))
             {
-                fullPathToFile = ProgramSettings.projectPath + Path.DirectorySeparatorChar + ProgramSettings.productsFileNameDefault;
+                fullPathToFile = ProgramSettings.ProjectPath + Path.DirectorySeparatorChar + fileNameDefault;
             }
             else
             {
-                fullPathToFile = ProgramSettings.projectPath + Path.DirectorySeparatorChar + fileName;
+                fullPathToFile = ProgramSettings.ProjectPath + Path.DirectorySeparatorChar + fileName;
             }
 
             return fullPathToFile;

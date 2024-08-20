@@ -181,8 +181,9 @@ internal static class Menu
             switch (programMode)
             {
                 case ProgramModes.Exit:
-
-                    return;
+                    {
+                        return;
+                    }
                 //Задание 1. Ввод заказа с помощью консоли.
                 case ProgramModes.ReadOrderFromConsole:
                     {

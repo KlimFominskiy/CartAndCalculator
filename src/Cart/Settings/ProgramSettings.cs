@@ -10,22 +10,22 @@ internal static class ProgramSettings
     /// <summary>
     /// Путь к директории проекта.
     /// </summary>
-    public static string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+    public static string ProjectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
 
     /// <summary>
     /// Файл по умолчанию со списком сгенерированных товаров.
     /// </summary>
-    public static string productsFileNameDefault = "Products.json";
+    public static string ProductsFileNameDefault = "Products.json";
 
     /// <summary>
     /// Файл по умолчанию со списком сгенерированных заказов.
     /// </summary>
-    public static string ordersFileNameDefault = "Orders.json";
+    public static string OrdersFileNameDefault = "Orders.json";
 
     /// <summary>
     /// Файл по умолчанию с заказом, введённым и сохранённым пользователем.
     /// </summary>
-    public static string orderFileNameDefault = "Order.json";
+    public static string OrderFileNameDefault = "Order.json";
 
     /// <summary>
     /// Настройки сеариализации.

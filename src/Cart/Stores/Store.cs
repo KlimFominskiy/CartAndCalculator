@@ -61,10 +61,9 @@ public static class Store
             switch (Console.ReadLine())
             {
                 case "y":
+                    string fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.ProductsFileNameDefault);
                     string jsonString = JsonSerializer.Serialize(Products, ProgramSettings.JsonSerializerOptions);
-                    string fileName = "Products.json";
-                    string filePath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-                    File.WriteAllText(filePath + Path.DirectorySeparatorChar + fileName, jsonString);
+                    File.WriteAllText(fullPathToFile, jsonString);
                     break;
                 case "n":
                     break;
@@ -96,23 +95,9 @@ public static class Store
     /// </summary>
     public static void ReadProductsFromFile()
     {
-        string fullPathToFile;
-        while (true)
-        {
-            fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.productsFileNameDefault);
-            if (!File.Exists(fullPathToFile))
-            {
-                Console.WriteLine($"Считан путь: {fullPathToFile}.\n" +
-                    $"Файл не найден. Повторите ввод.");
-
-                continue;
-            }
-
-            break;
-        }
-
-        string jsonProducts = File.ReadAllText(fullPathToFile);
-        Products = JsonSerializer.Deserialize<List<Product>>(jsonProducts, ProgramSettings.JsonSerializerOptions);
+        string fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.ProductsFileNameDefault);
+        string productsJson = FileReader.ReadDataFromFile(fullPathToFile);
+        Products = JsonSerializer.Deserialize<List<Product>>(productsJson, ProgramSettings.JsonSerializerOptions);
     }
 
     /// <summary>

@@ -78,7 +78,7 @@ public class OrderHandlers
     /// </summary>
     public void WriteOrderToFile(Order order)
     {
-        string fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.orderFileNameDefault);
+        string fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.OrderFileNameDefault);
         string jsonOrder = JsonSerializer.Serialize(order, ProgramSettings.JsonSerializerOptions);
         File.WriteAllText(fullPathToFile, jsonOrder);
     }
@@ -89,22 +89,10 @@ public class OrderHandlers
     /// <param name="fileName">Путь к файлу.</param>
     public Order ReadOrderFromFile()
     {
-        string fullPathToFile;
-        while (true)
-        {
-            fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.orderFileNameDefault);
-            if (!File.Exists(fullPathToFile))
-            {
-                Console.WriteLine($"Считан путь: {fullPathToFile}.\n" +
-                    $"Файл не найден. Повторите ввод.");
+        string fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.OrderFileNameDefault);
+        string orderJson = FileReader.ReadDataFromFile(fullPathToFile);
 
-                continue;
-            }
-
-            string orderString = File.ReadAllText(fullPathToFile);
-
-            return JsonSerializer.Deserialize<Order>(orderString, ProgramSettings.JsonSerializerOptions);
-        }
+        return JsonSerializer.Deserialize<Order>(orderJson, ProgramSettings.JsonSerializerOptions);
     }
 
     /// <summary>

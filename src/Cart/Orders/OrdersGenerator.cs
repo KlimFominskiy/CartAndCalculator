@@ -44,7 +44,7 @@ public static class OrdersGenerator
             orders.Add(order);
         }
 
-        File.WriteAllText(ProgramSettings.projectPath + Path.DirectorySeparatorChar + ProgramSettings.ordersFileNameDefault, JsonSerializer.Serialize(orders, ProgramSettings.JsonSerializerOptions));
+        File.WriteAllText(ProgramSettings.ProjectPath + Path.DirectorySeparatorChar + ProgramSettings.OrdersFileNameDefault, JsonSerializer.Serialize(orders, ProgramSettings.JsonSerializerOptions));
 
         return orders;
     }
@@ -102,10 +102,8 @@ public static class OrdersGenerator
     /// </summary>
     public static void ReadOrdersFromFile()
     {
-        string fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.ordersFileNameDefault);
-
-
-        string jsonOrdersList = File.ReadAllText(ProgramSettings.projectPath + Path.DirectorySeparatorChar + ProgramSettings.ordersFileNameDefault);
-        Orders = JsonSerializer.Deserialize<List<Order>>(jsonOrdersList, ProgramSettings.JsonSerializerOptions);
+        string fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.OrdersFileNameDefault);
+        string ordersJson = FileReader.ReadDataFromFile(fullPathToFile);
+        Orders = JsonSerializer.Deserialize<List<Order>>(ordersJson, ProgramSettings.JsonSerializerOptions);
     }
 }
