@@ -1,4 +1,4 @@
-﻿namespace Cart;
+﻿namespace Cart.Readers;
 
 internal static class FileReader
 {
