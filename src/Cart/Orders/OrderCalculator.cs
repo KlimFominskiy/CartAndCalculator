@@ -8,7 +8,7 @@ namespace Cart.Orders;
 
 public class OrderCalculator : Calculator.Calculator
 {
-    OrderHandlers orderHandlers = new();
+    private OrderHandlers orderHandlers = new();
 
     public OrderCalculator(Logger? logger) : base(logger)
     {

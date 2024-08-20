@@ -1,11 +1,11 @@
-namespace Calculator;
+п»їnamespace Calculator;
 
 public class Logger
 {
     /// <summary>
-    /// Метод записывает сообщение в консоль.
+    /// РњРµС‚РѕРґ Р·Р°РїРёСЃС‹РІР°РµС‚ СЃРѕРѕР±С‰РµРЅРёРµ РІ РєРѕРЅСЃРѕР»СЊ.
     /// </summary>
-    /// <param name="message">Записываемое в консоль сообщение.</param>
+    /// <param name="message">Р—Р°РїРёСЃС‹РІР°РµРјРѕРµ РІ РєРѕРЅСЃРѕР»СЊ СЃРѕРѕР±С‰РµРЅРёРµ.</param>
     public void Write(string message)
     {
         Console.WriteLine(message);

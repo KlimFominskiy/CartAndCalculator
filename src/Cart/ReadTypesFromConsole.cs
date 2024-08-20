@@ -229,4 +229,29 @@ public static class ReadTypesFromConsole
             }
         }
     }
+
+    public static string ReadFullFileNameFromConsole(string fileNameDefault)
+    {
+        Console.WriteLine("Введите полное имя файла (путь к файлу + имя файла). Нажмите enter для использования файла по умолчанию");
+        if (string.IsNullOrEmpty(fileNameDefault))
+        {
+            throw new ArgumentNullException("Файл по умолчанию не задан");
+        }
+
+        while(true)
+        {
+            string fullPathToFile;
+            string fileName = Console.ReadLine();
+            if (string.IsNullOrEmpty(fileName))
+            {
+                fullPathToFile = ProgramSettings.projectPath + Path.DirectorySeparatorChar + ProgramSettings.productsFileNameDefault;
+            }
+            else
+            {
+                fullPathToFile = ProgramSettings.projectPath + Path.DirectorySeparatorChar + fileName;
+            }
+
+            return fullPathToFile;
+        }
+    }
 }

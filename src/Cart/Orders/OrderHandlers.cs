@@ -78,10 +78,9 @@ public class OrderHandlers
     /// </summary>
     public void WriteOrderToFile(Order order)
     {
-        string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-        string fileName = "Order.json";
+        string fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.orderFileNameDefault);
         string jsonOrder = JsonSerializer.Serialize(order, ProgramSettings.JsonSerializerOptions);
-        File.WriteAllText(projectPath + Path.DirectorySeparatorChar + fileName, jsonOrder);
+        File.WriteAllText(fullPathToFile, jsonOrder);
     }
 
     /// <summary>
@@ -90,25 +89,21 @@ public class OrderHandlers
     /// <param name="fileName">Путь к файлу.</param>
     public Order ReadOrderFromFile()
     {
-        Console.WriteLine("Введите полный путь к файлу формата JSON. Нажмите enter для использования файла по умолчанию.");
+        string fullPathToFile;
         while (true)
         {
-            string fileName = Console.ReadLine();
-            if (string.IsNullOrEmpty(fileName))
+            fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.orderFileNameDefault);
+            if (!File.Exists(fullPathToFile))
             {
-                string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-                fileName = projectPath + Path.DirectorySeparatorChar + "Order.json";
+                Console.WriteLine($"Считан путь: {fullPathToFile}.\n" +
+                    $"Файл не найден. Повторите ввод.");
+
+                continue;
             }
-            else
-            {
-                if (!File.Exists(fileName))
-                {
-                    Console.WriteLine($"Считан путь: {fileName}.\nФайл не найден. Повторите ввод.");
-                    continue;
-                }
-            }
-            string jsonOrder = File.ReadAllText(fileName);
-            return JsonSerializer.Deserialize<Order>(jsonOrder, ProgramSettings.JsonSerializerOptions);
+
+            string orderString = File.ReadAllText(fullPathToFile);
+
+            return JsonSerializer.Deserialize<Order>(orderString, ProgramSettings.JsonSerializerOptions);
         }
     }
 

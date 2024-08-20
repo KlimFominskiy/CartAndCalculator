@@ -1,6 +1,6 @@
-﻿using Cart.Products;
+﻿using Cart.Orders;
+using Cart.Products;
 using Cart.Settings;
-using System.Reflection;
 using System.Text.Json;
 
 namespace Cart.Stores;
@@ -23,7 +23,7 @@ public static class Store
     /// <summary>
     /// Сгенерировать продукты.
     /// </summary>
-    public static void GenerateProducts()
+    public static List<Product> GenerateProducts()
     {
         uint productId = 0;
         Random random = new();
@@ -87,6 +87,8 @@ public static class Store
             }
             break;
         }
+
+        return Products;
     }
 
     /// <summary>
@@ -94,10 +96,23 @@ public static class Store
     /// </summary>
     public static void ReadProductsFromFile()
     {
-        string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-        string fileNameProducts = "Products.json";
-        string jsonProductsList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameProducts);
-        Products = JsonSerializer.Deserialize<List<Product>>(jsonProductsList, ProgramSettings.JsonSerializerOptions);
+        string fullPathToFile;
+        while (true)
+        {
+            fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.productsFileNameDefault);
+            if (!File.Exists(fullPathToFile))
+            {
+                Console.WriteLine($"Считан путь: {fullPathToFile}.\n" +
+                    $"Файл не найден. Повторите ввод.");
+
+                continue;
+            }
+
+            break;
+        }
+
+        string jsonProducts = File.ReadAllText(fullPathToFile);
+        Products = JsonSerializer.Deserialize<List<Product>>(jsonProducts, ProgramSettings.JsonSerializerOptions);
     }
 
     /// <summary>

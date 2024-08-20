@@ -10,16 +10,6 @@ namespace Cart.Orders;
 public static class OrdersGenerator
 {
     /// <summary>
-    /// Путь к директории проекта.
-    /// </summary>
-    private static string projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-
-    /// <summary>
-    /// Файл со списком сгенерированных заказов.
-    /// </summary>
-    private static string fileNameOrders = "Orders.json";
-
-    /// <summary>
     /// Список сгенерированных заказов.
     /// </summary>
     public static List<Order> Orders = new();
@@ -37,7 +27,7 @@ public static class OrdersGenerator
     /// <summary>
     /// Создать и записать в файл 5 случайных заказов (наборов товаров) из списка товаров магазина.
     /// </summary>
-    public static void GenerateRandomOrders()
+    public static List<Order> GenerateRandomOrders()
     {
         List<Order> orders = new();
         for (int i = 0; i < 5; i++)
@@ -54,7 +44,9 @@ public static class OrdersGenerator
             orders.Add(order);
         }
 
-        File.WriteAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders, JsonSerializer.Serialize(orders, ProgramSettings.JsonSerializerOptions));
+        File.WriteAllText(ProgramSettings.projectPath + Path.DirectorySeparatorChar + ProgramSettings.ordersFileNameDefault, JsonSerializer.Serialize(orders, ProgramSettings.JsonSerializerOptions));
+
+        return orders;
     }
 
     /// <summary>
@@ -110,7 +102,10 @@ public static class OrdersGenerator
     /// </summary>
     public static void ReadOrdersFromFile()
     {
-        string jsonOrdersList = File.ReadAllText(projectPath + Path.DirectorySeparatorChar + fileNameOrders);
+        string fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.ordersFileNameDefault);
+
+
+        string jsonOrdersList = File.ReadAllText(ProgramSettings.projectPath + Path.DirectorySeparatorChar + ProgramSettings.ordersFileNameDefault);
         Orders = JsonSerializer.Deserialize<List<Order>>(jsonOrdersList, ProgramSettings.JsonSerializerOptions);
     }
 }
