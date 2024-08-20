@@ -1,8 +1,4 @@
-﻿using Cart.Orders;
-using Cart.Settings;
-using System.Text.Json;
-
-namespace Cart;
+﻿namespace Cart;
 
 internal static class FileReader
 {

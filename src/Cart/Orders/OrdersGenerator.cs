@@ -102,7 +102,7 @@ public static class OrdersGenerator
     /// </summary>
     public static void ReadOrdersFromFile()
     {
-        string fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.OrdersFileNameDefault);
+        string fullPathToFile = ConsoleReader.ReadFullFileNameFromConsole(ProgramSettings.OrdersFileNameDefault);
         string ordersJson = FileReader.ReadDataFromFile(fullPathToFile);
         Orders = JsonSerializer.Deserialize<List<Order>>(ordersJson, ProgramSettings.JsonSerializerOptions);
     }

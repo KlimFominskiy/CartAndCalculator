@@ -24,14 +24,14 @@ public class OrderHandlers
             Console.WriteLine("Типы товаров в магазине.");
             Store.PrintProductsTypes();
             Console.WriteLine("Введите тип товара.");
-            orderItemSettings.ProductTypeNumber = ReadTypesFromConsole.ReadProductTypeNumberFromConsole();
+            orderItemSettings.ProductTypeNumber = ConsoleReader.ReadProductTypeNumberFromConsole();
 
             Console.WriteLine("Введите количество товара.");
-            orderItemSettings.QuantityOfProduct = ReadTypesFromConsole.ReadUintFromConsole();
+            orderItemSettings.QuantityOfProduct = ConsoleReader.ReadUintFromConsole();
             
             Console.WriteLine("Введите требование к цене.");
             Menu.PrintOrderItemPriceSettings();
-            orderItemSettings.PriceRequirement = ReadTypesFromConsole.ReadPriceRequirementFromConsole();
+            orderItemSettings.PriceRequirement = ConsoleReader.ReadPriceRequirementFromConsole();
 
             Type productType = Store.ProductsTypes[Convert.ToInt32(orderItemSettings.ProductTypeNumber - 1)];
             List<Product> validProducts = new();
@@ -78,7 +78,7 @@ public class OrderHandlers
     /// </summary>
     public void WriteOrderToFile(Order order)
     {
-        string fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.OrderFileNameDefault);
+        string fullPathToFile = ConsoleReader.ReadFullFileNameFromConsole(ProgramSettings.OrderFileNameDefault);
         string jsonOrder = JsonSerializer.Serialize(order, ProgramSettings.JsonSerializerOptions);
         File.WriteAllText(fullPathToFile, jsonOrder);
     }
@@ -89,7 +89,7 @@ public class OrderHandlers
     /// <param name="fileName">Путь к файлу.</param>
     public Order ReadOrderFromFile()
     {
-        string fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.OrderFileNameDefault);
+        string fullPathToFile = ConsoleReader.ReadFullFileNameFromConsole(ProgramSettings.OrderFileNameDefault);
         string orderJson = FileReader.ReadDataFromFile(fullPathToFile);
 
         return JsonSerializer.Deserialize<Order>(orderJson, ProgramSettings.JsonSerializerOptions);
@@ -107,7 +107,7 @@ public class OrderHandlers
         uint productInOrderNumber;
         while (true)
         {
-            productInOrderNumber = ReadTypesFromConsole.ReadUintFromConsole();
+            productInOrderNumber = ConsoleReader.ReadUintFromConsole();
             if (productInOrderNumber < order.Products.Count)
             {
                 break;
@@ -125,7 +125,7 @@ public class OrderHandlers
         uint productInStoreNumber;
         while (true)
         {
-            productInStoreNumber = ReadTypesFromConsole.ReadUintFromConsole();
+            productInStoreNumber = ConsoleReader.ReadUintFromConsole();
             if (productInOrderNumber < Store.Products.Count)
             {
                 break;
@@ -138,7 +138,7 @@ public class OrderHandlers
         }
 
         Console.WriteLine("Введите количество нового продукта");
-        uint productQuantity = ReadTypesFromConsole.ReadUintFromConsole();
+        uint productQuantity = ConsoleReader.ReadUintFromConsole();
 
         order.Products[(int)productInOrderNumber - 1] = new KeyValuePair<Product, uint>(Store.Products[(int)productInStoreNumber - 1], productQuantity);
 

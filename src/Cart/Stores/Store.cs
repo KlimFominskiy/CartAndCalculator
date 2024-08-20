@@ -61,7 +61,7 @@ public static class Store
             switch (Console.ReadLine())
             {
                 case "y":
-                    string fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.ProductsFileNameDefault);
+                    string fullPathToFile = ConsoleReader.ReadFullFileNameFromConsole(ProgramSettings.ProductsFileNameDefault);
                     string jsonString = JsonSerializer.Serialize(Products, ProgramSettings.JsonSerializerOptions);
                     File.WriteAllText(fullPathToFile, jsonString);
                     break;
@@ -95,7 +95,7 @@ public static class Store
     /// </summary>
     public static void ReadProductsFromFile()
     {
-        string fullPathToFile = ReadTypesFromConsole.ReadFullFileNameFromConsole(ProgramSettings.ProductsFileNameDefault);
+        string fullPathToFile = ConsoleReader.ReadFullFileNameFromConsole(ProgramSettings.ProductsFileNameDefault);
         string productsJson = FileReader.ReadDataFromFile(fullPathToFile);
         Products = JsonSerializer.Deserialize<List<Product>>(productsJson, ProgramSettings.JsonSerializerOptions);
     }

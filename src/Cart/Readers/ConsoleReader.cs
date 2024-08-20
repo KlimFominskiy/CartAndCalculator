@@ -1,12 +1,12 @@
 ﻿using Cart.Settings;
 using Cart.Stores;
 
-namespace Cart;
+namespace Cart.Readers;
 
 /// <summary>
 /// Класс содержит методы считывания различных типов данных из консоли.
 /// </summary>
-public static class ReadTypesFromConsole
+public static class ConsoleReader
 {
     /// <summary>
     /// Считать decimal из консоли.
@@ -238,7 +238,7 @@ public static class ReadTypesFromConsole
             throw new ArgumentNullException("Файл по умолчанию не задан");
         }
 
-        while(true)
+        while (true)
         {
             string fullPathToFile;
             string fileName = Console.ReadLine();
