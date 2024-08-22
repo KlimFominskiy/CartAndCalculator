@@ -15,15 +15,16 @@ public class OrderHandlers
     /// <summary>
     /// Считать заказ из консоли.
     /// </summary>
-    public Order ReadOrderFromConsole()
+    public Order ReadOrderFromConsole(string title = "")
     {
+        Console.Write(title);
+
         Order order = new();
         while (true)
         {
             OrderItemSettings orderItemSettings = new();
 
-            Console.WriteLine("Типы товаров в магазине.");
-            Store.PrintProductsTypes();
+            Store.PrintProductsTypes("Типы товаров в магазине.");
             Console.WriteLine("Введите тип товара.");
             orderItemSettings.ProductTypeNumber = ConsoleReader.ReadProductTypeNumberFromConsole();
 
@@ -65,6 +66,7 @@ public class OrderHandlers
             Console.WriteLine("Введите end, чтобы закончить ввод. Для продолжения введите любой символ.");
             if (Console.ReadLine() == "end")
             {
+                Console.WriteLine("Считывание заказа из консоли завершено.");
                 return order;
             }
             else
@@ -77,21 +79,28 @@ public class OrderHandlers
     /// <summary>
     /// Записать заказ в файл Order.json.
     /// </summary>
-    public void WriteOrderToFile(Order order)
+    public void WriteOrderToFile(Order order, string title ="")
     {
+        Console.Write(title);
+
         string fullPathToFile = ConsoleReader.ReadFullFileNameFromConsole(ProgramSettings.OrderFileNameDefault);
         string jsonOrder = JsonSerializer.Serialize(order, ProgramSettings.JsonSerializerOptions);
         File.WriteAllText(fullPathToFile, jsonOrder);
+        Console.WriteLine("Запись заказа в файл окончена.");
     }
 
     /// <summary>
     /// Считать заказ из файла.
     /// </summary>
     /// <param name="fileName">Путь к файлу.</param>
-    public Order ReadOrderFromFile()
+    public Order ReadOrderFromFile(string title = "")
     {
+        Console.Write(title);
+
         string fullPathToFile = ConsoleReader.ReadFullFileNameFromConsole(ProgramSettings.OrderFileNameDefault);
         string orderJson = FileReader.ReadDataFromFile(fullPathToFile);
+
+        Console.WriteLine("Считывание заказа из файла завершено.");
 
         return JsonSerializer.Deserialize<Order>(orderJson, ProgramSettings.JsonSerializerOptions);
     }
@@ -99,8 +108,16 @@ public class OrderHandlers
     /// <summary>
     /// Обновить продукт в заказе.
     /// </summary>
-    public Order UpdateProduct(Order order)
+    public Order UpdateProduct(Order order, string title = "")
     {
+        Console.Write(title);
+
+        if (order.Products.Count == 0)
+        {
+            Console.WriteLine("Заказ пуст.");
+            return order;
+        }
+
         Console.WriteLine("Состав заказа.");
         printOrderToConsole.Print(order);
 
@@ -120,9 +137,8 @@ public class OrderHandlers
             }
         }
 
+        Store.PrintProductsInfo("Список товаров магазина.\n");
         Console.WriteLine("Введите номер продукта из списка товаров магазина.");
-        Console.WriteLine("Список товаров магазина.");
-        Store.PrintProductsInfo();
         uint productInStoreNumber;
         while (true)
         {
@@ -162,8 +178,10 @@ public class OrderHandlers
     /// <summary>
     /// Сортировка списка товаров в алфавитном порядке.
     /// </summary>
-    public Order SortProductsByAlphabet(Order order)
+    public Order SortProductsByAlphabet(Order order, string title = "")
     {
+        Console.Write(title);
+
         int n = order.Products.Count;
         bool swapped;
         do

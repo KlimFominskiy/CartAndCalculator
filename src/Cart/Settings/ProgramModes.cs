@@ -38,11 +38,11 @@ public enum ProgramModes
     /// </summary>
     ChangeProductInOrder,
     /// <summary>
-    /// Вывести в консоль существующие товары магазина.
+    /// Вывести в консоль предсгенерированных товаров магазина.
     /// </summary>
     PrintProducts,
     /// <summary>
-    /// Вывести в консоль существующие заказы.
+    /// Вывести в консоль предсгенерированных заказов.
     /// </summary>
     PrintOrders,
     /// <summary>
@@ -72,11 +72,11 @@ public enum ProgramModes
     /// <summary>
     /// Уменьшить в корзине каждое количество товара в указанное число раз.
     /// </summary>
-    ReduceTheQuantityOfEachProductInOrderByNumberTimes,
+    DivideTheQuantityOfEachProductInOrder,
     /// <summary>
     /// Увеличить в корзине каждое количество товара в указанное число раз.
     /// </summary>
-    IncreaseTheQuantityOfEachProductInOrderByNumberTimes,
+    MultiplyTheQuantityOfEachProductInOrder,
     /// <summary>
     /// Получить заказы дешевле заданной суммы.
     /// </summary>
@@ -105,4 +105,12 @@ public enum ProgramModes
     /// Обновить данные о товаре в заказе.
     /// </summary>
     UpdateProductInOrder,
+    /// <summary>
+    /// Отсортировать заказ по алфавиту.
+    /// </summary>
+    SortOrderByNames,
+    /// <summary>
+    /// Записать заказ в файл.
+    /// </summary>
+    WriteOrderToFile
 }

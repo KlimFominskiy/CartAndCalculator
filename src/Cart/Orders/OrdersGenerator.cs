@@ -54,8 +54,10 @@ public static class OrdersGenerator
     /// Сформировать (выбрать) случайный заказ.
     /// </summary>
     /// <returns>Заказ.</returns>
-    public static Order GenerateRandomOrder()
+    public static Order GenerateRandomOrder(string title = "")
     {
+        Console.Write(title);
+
         return Orders[random.Next(0, Orders.Count - 1)];
     }
 
@@ -91,8 +93,10 @@ public static class OrdersGenerator
     /// </summary>
     /// <param name="maxQuantityOfProducts">Максимальное общее количество товаров в заказе.</param>
     /// <returns>Заказ, удовлетворяющий параметрам.</returns>
-    public static Order GenerateOrderByMaxQuantity(uint maxQuantityOfProducts)
+    public static Order GenerateOrderByMaxQuantity(uint maxQuantityOfProducts, string title = "")
     {
+        Console.Write(title);
+
         List<Order> validOrdersList = Orders.Where(order => order.Products.Sum(orderItem => orderItem.Value) <= maxQuantityOfProducts).ToList();
 
         return validOrdersList[random.Next(0, validOrdersList.Count - 1)];

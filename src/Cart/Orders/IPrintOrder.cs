@@ -2,5 +2,5 @@
 
 internal interface IPrintOrder
 {
-    public void Print(Order order);
+    public void Print(Order order, string title = "");
 }

@@ -67,17 +67,6 @@ public class OrderCalculator : Calculator.Calculator
     }
 
     /// <summary>
-    /// Добавить товар в корзину.
-    /// </summary>
-    /// <param name="order">Корзина.</param>
-    /// <param name="product">Добавляемый товар.</param>
-    /// <returns>Карточка с добавленным товаром.</returns>
-    public Order Add(Product product, Order order)
-    {
-        return Add(order, product);
-    }
-
-    /// <summary>
     /// Объединить корзины. 
     /// </summary>
     /// <param name="orderA">Первая корзина.</param>
@@ -177,7 +166,7 @@ public class OrderCalculator : Calculator.Calculator
         Order newOrder = new();
         foreach (KeyValuePair<Product, uint> orderItem in order.Products)
         {
-            KeyValuePair<Product, uint> newOrderItem = newOrderItem = new(orderItem.Key, orderItem.Value / number);
+            KeyValuePair<Product, uint> newOrderItem = new(orderItem.Key, orderItem.Value / number);
             newOrder.Products.Add(newOrderItem);
         }
 

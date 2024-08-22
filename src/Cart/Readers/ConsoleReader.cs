@@ -12,8 +12,10 @@ public static class ConsoleReader
     /// Считать decimal из консоли.
     /// </summary>
     /// <returns>Считанное значение.</returns>
-    public static decimal ReadDecimalFromConsole()
+    public static decimal ReadDecimalFromConsole(string title = "")
     {
+        Console.Write(title);
+
         while (true)
         {
             string userInput = Console.ReadLine();
@@ -34,8 +36,10 @@ public static class ConsoleReader
     /// Считать uint из консоли.
     /// </summary>
     /// <returns>Считанное значение.</returns>
-    public static uint ReadUintFromConsole()
+    public static uint ReadUintFromConsole(string title = "")
     {
+        Console.Write(title);
+
         while (true)
         {
             string userInput = Console.ReadLine();
@@ -56,8 +60,10 @@ public static class ConsoleReader
     /// Считать int из консоли.
     /// </summary>
     /// <returns>Считанное значение.</returns>
-    public static int ReadIntFromConsole()
+    public static int ReadIntFromConsole(string title = "")
     {
+        Console.Write(title);
+
         while (true)
         {
             string userInput = Console.ReadLine();
@@ -78,8 +84,10 @@ public static class ConsoleReader
     /// Считать ProgramModes из консоли.
     /// </summary>
     /// <returns>Считанное значение.</returns>
-    public static ProgramModes ReadProgramModeFromConsole()
+    public static ProgramModes ReadProgramModeFromConsole(string title = "")
     {
+        Console.Write(title);
+
         while (true)
         {
             string userInput = Console.ReadLine();
@@ -105,8 +113,10 @@ public static class ConsoleReader
     /// Считать DateTime из консоли.
     /// </summary>
     /// <returns>Считанное значение.</returns>
-    public static DateTime ReadDateFromConsole()
+    public static DateTime ReadDateFromConsole(string title = "")
     {
+        Console.Write(title);
+
         while (true)
         {
             string userInput = Console.ReadLine();
@@ -127,8 +137,10 @@ public static class ConsoleReader
     /// Считать PriceRequirementSettings из консоли.
     /// </summary>
     /// <returns>Считанное значение.</returns>
-    public static PriceRequirementSettings ReadPriceRequirementFromConsole()
+    public static PriceRequirementSettings ReadPriceRequirementFromConsole(string title = "")
     {
+        Console.Write(title);
+
         while (true)
         {
             string orderItemSetting = Console.ReadLine();
@@ -182,8 +194,10 @@ public static class ConsoleReader
     /// Считать номер типа продукта из консоли.
     /// </summary>
     /// <returns>Считанное значение.</returns>
-    public static uint ReadProductTypeNumberFromConsole()
+    public static uint ReadProductTypeNumberFromConsole(string title = "")
     {
+        Console.Write(title);
+
         while (true)
         {
             string orderItemSetting = Console.ReadLine();
@@ -208,8 +222,10 @@ public static class ConsoleReader
     /// Считать номер продукта из консоли.
     /// </summary>
     /// <returns>Считанное значение.</returns>
-    public static uint ReadProductNumberFromConsole()
+    public static uint ReadProductNumberFromConsole(string title = "")
     {
+        Console.Write(title);
+
         while (true)
         {
             string orderItemSetting = Console.ReadLine();
@@ -232,7 +248,7 @@ public static class ConsoleReader
 
     public static string ReadFullFileNameFromConsole(string fileNameDefault)
     {
-        Console.WriteLine("Введите полное имя файла (путь к файлу + имя файла). Нажмите enter для использования файла по умолчанию");
+        Console.WriteLine("Введите полное имя файла (путь к файлу + имя файла). Нажмите enter для использования файла по умолчанию.");
         if (string.IsNullOrEmpty(fileNameDefault))
         {
             throw new ArgumentNullException("Файл по умолчанию не задан");

@@ -5,10 +5,11 @@ internal class PrintOrderToConsole : IPrintOrder
     /// <summary>
     /// Вывести в консоль информацию заказе.
     /// </summary>
-    public virtual void Print(Order order)
+    public virtual void Print(Order order, string title = "")
     {
+        Console.Write(title);
+        
         uint index = 0;
-
         foreach (KeyValuePair<Product, uint> orderItem in order.Products)
         {
             Console.WriteLine($"{index += 1})\n" +

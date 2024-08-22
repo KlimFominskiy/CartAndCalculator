@@ -2,9 +2,9 @@
 {
     internal class PrintOrderToAPI : IPrintOrder
     {
-        public virtual void Print(Order order)
+        public virtual void Print(Order order, string title = "")
         {
-            //APIOrder.post();
+            //APIOrder.post(string response);
         }
     }
 }

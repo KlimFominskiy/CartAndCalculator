@@ -77,7 +77,7 @@ public static class Store
             switch (Console.ReadLine())
             {
                 case "y":
-                    PrintProductsInfo();
+                    PrintProductsInfo("Список товаров магазина.");
                     break;
                 case "n":
                     break;
@@ -128,8 +128,10 @@ public static class Store
     /// <summary>
     /// Вывод товаров магазина.
     /// </summary>
-    public static void PrintProductsInfo()
+    public static void PrintProductsInfo(string title)
     {
+        Console.Write(title);
+
         uint index = 0;
         foreach (Product product in Products)
         {
@@ -142,8 +144,9 @@ public static class Store
     /// <summary>
     /// Вывод типов товаров магазина.
     /// </summary>
-    public static void PrintProductsTypes()
+    public static void PrintProductsTypes(string title = "")
     {
+        Console.Write(title);
         uint index = 0;
         foreach (Type productType in ProductsTypes)
         {

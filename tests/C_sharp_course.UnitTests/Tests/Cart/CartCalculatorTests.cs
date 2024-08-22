@@ -21,22 +21,45 @@ public class Tests
         orderWithThreeProducts = buildOrders.GetOrder(3);
     }
 
-    [Test(Description = "Проверка успешного объединения заказов.")]
+    [Test(Description = "Проверка успешного объединения товаров из двух корзин.")]
     public void Add_ValidOrders_NewMergedOrder()
     {
-        Order newOrder = cartCalculator.Add(orderWithOneProduct, orderWithThreeProducts);
-        List<Product> productsList = newOrder.Products.ToDictionary().Keys.ToList();
+        Order mergedOrder = cartCalculator.Add(orderWithOneProduct, orderWithThreeProducts);
+        List<Product> mergedProductsList = mergedOrder.Products.ToDictionary().Keys.ToList();
         foreach (Product product in orderWithThreeProducts.Products.ToDictionary().Keys)
         {
-            Assert.That(productsList, Does.Contain(product));
+            Assert.That(mergedProductsList, Does.Contain(product));
         }
         foreach (Product product in orderWithOneProduct.Products.ToDictionary().Keys)
         {
-            Assert.That(productsList, Does.Contain(product));
+            Assert.That(mergedProductsList, Does.Contain(product));
+        }
+        foreach(KeyValuePair<Product, uint> orderItem in mergedOrder.Products)
+        {
+            if (orderWithThreeProducts.Products.ToDictionary().ContainsKey(orderItem.Key) && orderWithOneProduct.Products.ToDictionary().ContainsKey(orderItem.Key))
+            {
+                Assert.That(orderItem.Value.Equals(
+                    orderWithThreeProducts.Products.FirstOrDefault(oI => oI.Key.Equals(orderItem.Key)).Value +
+                    orderWithOneProduct.Products.FirstOrDefault(oI => oI.Key.Equals(orderItem.Key)).Value)
+                    );
+                continue;
+            }
+            else if (orderWithThreeProducts.Products.ToDictionary().ContainsKey(orderItem.Key))
+            {
+                Assert.That(orderItem.Value.Equals(
+                    orderWithThreeProducts.Products.FirstOrDefault(oI => oI.Key.Equals(orderItem.Key)).Value));
+                continue;
+            }
+            else
+            {
+                Assert.That(orderItem.Value.Equals(
+                    orderWithOneProduct.Products.FirstOrDefault(oI => oI.Key.Equals(orderItem.Key)).Value));
+                continue;
+            }
         }
     }
 
-    [Test(Description = "Проверка успешного объединения двух продуктов в заказ.")]
+    [Test(Description = "Проверка успешного объединения двух товаров в заказ.")]
     public void Add_ValidProducts_NewOrder()
     {
         Product productA = orderWithThreeProducts.Products[0].Key;
@@ -71,7 +94,7 @@ public class Tests
         OrderHandlers orderHandlers = new();
         Order newOrder = orderHandlers.CopyFrom(orderWithThreeProducts);
         newOrder.Products.Remove(new KeyValuePair<Product, uint>(product, productQuantity));
-        Assert.Throws<Exception>(delegate { newOrder = cartCalculator.Subtract(newOrder, product); }, message: $"Продукт {product.Name} с Id = {product.Id} не найден в корзине.");
+        Assert.Throws<Exception>(delegate { newOrder = cartCalculator.Subtract(newOrder, product); }, message: $"Продукт {product.Name} с Id = {product.Id} найден в корзине.");
     }
 
     [Test(Description = "Проверка успешного удаления из первой корзины товаров, которые есть во второй корзине.")]
