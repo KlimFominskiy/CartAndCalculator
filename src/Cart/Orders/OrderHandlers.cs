@@ -8,9 +8,9 @@ namespace Cart.Orders;
 
 public class OrderHandlers
 {
-    private IPrintOrder printOrderToAPI = new PrintOrderToAPI();
+    private readonly IPrintOrder printOrderToAPI = new PrintOrderToAPI();
 
-    private IPrintOrder printOrderToConsole = new PrintOrderToConsole();
+    private readonly IPrintOrder printOrderToConsole = new PrintOrderToConsole();
 
     /// <summary>
     /// Считать заказ из консоли.
@@ -24,15 +24,12 @@ public class OrderHandlers
         {
             OrderItemSettings orderItemSettings = new();
 
-            Store.PrintProductsTypes("Типы товаров в магазине.");
-            Console.WriteLine("Введите тип товара.");
-            orderItemSettings.ProductTypeNumber = ConsoleReader.ReadProductTypeNumberFromConsole();
+            Store.PrintProductsTypes("Типы товаров в магазине.\n");
+            orderItemSettings.ProductTypeNumber = ConsoleReader.ReadProductTypeNumberFromConsole("Введите тип товара.\n");
 
-            Console.WriteLine("Введите количество товара.");
-            orderItemSettings.QuantityOfProduct = ConsoleReader.ReadUintFromConsole();
+            orderItemSettings.QuantityOfProduct = ConsoleReader.ReadUintFromConsole("Введите количество товара.\n");
             
-            Console.WriteLine("Введите требование к цене.");
-            Menu.PrintOrderItemPriceSettings();
+            Menu.PrintOrderItemPriceSettings("Введите требование к цене.\n");
             orderItemSettings.PriceRequirement = ConsoleReader.ReadPriceRequirementFromConsole();
 
             Type productType = Store.ProductsTypes[Convert.ToInt32(orderItemSettings.ProductTypeNumber - 1)];
@@ -53,7 +50,7 @@ public class OrderHandlers
                     validProduct = validProducts.MaxBy(product => product.Price);
                     break;
                 case PriceRequirementSettings.RandomValue:
-                    Random random = new Random();
+                    Random random = new();
                     validProduct = validProducts[random.Next(0, validProducts.Count - 1)];
                     break;
             }
@@ -97,12 +94,10 @@ public class OrderHandlers
     {
         Console.Write(title);
 
-        string fullPathToFile = ConsoleReader.ReadFullFileNameFromConsole(ProgramSettings.OrderFileNameDefault);
-        string orderJson = FileReader.ReadDataFromFile(fullPathToFile);
-
+        string orderJson = FileReader.ReadDataFromFile(ConsoleReader.ReadFullFileNameFromConsole(ProgramSettings.OrderFileNameDefault));
         Console.WriteLine("Считывание заказа из файла завершено.");
 
-        return JsonSerializer.Deserialize<Order>(orderJson, ProgramSettings.JsonSerializerOptions);
+        return JsonSerializer.Deserialize<Order>(orderJson, ProgramSettings.JsonSerializerOptions) ?? throw new ArgumentNullException();
     }
 
     /// <summary>
@@ -168,7 +163,7 @@ public class OrderHandlers
     /// <param name="other">Заказ, в который производится копирование.</param>
     public Order CopyFrom(Order other)
     {
-        Order order = new Order();
+        Order order = new();
         order.Products.AddRange(other.Products);
         order.TimeOfDeparture = other.TimeOfDeparture;
 
@@ -191,9 +186,7 @@ public class OrderHandlers
             {
                 if (string.Compare(order.Products[i].Key.Name, order.Products[i + 1].Key.Name) > 0)
                 {
-                    var temp = order.Products[i];
-                    order.Products[i] = order.Products[i + 1];
-                    order.Products[i + 1] = temp;
+                    (order.Products[i + 1], order.Products[i]) = (order.Products[i], order.Products[i + 1]);
                     swapped = true;
                 }
             }

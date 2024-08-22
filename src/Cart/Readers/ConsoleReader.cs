@@ -18,7 +18,7 @@ public static class ConsoleReader
 
         while (true)
         {
-            string userInput = Console.ReadLine();
+            string userInput = Console.ReadLine() ?? throw new ArgumentNullException();
             if (decimal.TryParse(userInput, out decimal value))
             {
                 return value;
@@ -42,7 +42,7 @@ public static class ConsoleReader
 
         while (true)
         {
-            string userInput = Console.ReadLine();
+            string userInput = Console.ReadLine() ?? throw new ArgumentNullException();
             if (uint.TryParse(userInput, out uint value))
             {
                 return value;
@@ -66,7 +66,7 @@ public static class ConsoleReader
 
         while (true)
         {
-            string userInput = Console.ReadLine();
+            string userInput = Console.ReadLine() ?? throw new ArgumentNullException();
             if (int.TryParse(userInput, out int value))
             {
                 return value;
@@ -90,7 +90,7 @@ public static class ConsoleReader
 
         while (true)
         {
-            string userInput = Console.ReadLine();
+            string userInput = Console.ReadLine() ?? throw new ArgumentNullException();
             if (Enum.TryParse(userInput, out ProgramModes value))
             {
                 if (!IsModeDefined(value))
@@ -119,7 +119,7 @@ public static class ConsoleReader
 
         while (true)
         {
-            string userInput = Console.ReadLine();
+            string userInput = Console.ReadLine() ?? throw new ArgumentNullException();
             if (DateTime.TryParse(userInput, out DateTime value))
             {
                 return value;
@@ -143,7 +143,7 @@ public static class ConsoleReader
 
         while (true)
         {
-            string orderItemSetting = Console.ReadLine();
+            string orderItemSetting = Console.ReadLine() ?? throw new ArgumentNullException();
             if (Enum.TryParse(orderItemSetting, out PriceRequirementSettings setting))
             {
                 if (Enum.IsDefined(typeof(PriceRequirementSettings), setting))
@@ -200,7 +200,7 @@ public static class ConsoleReader
 
         while (true)
         {
-            string orderItemSetting = Console.ReadLine();
+            string orderItemSetting = Console.ReadLine() ?? throw new ArgumentNullException();
             if (uint.TryParse(orderItemSetting, out uint productTypeNumber))
             {
                 if (productTypeNumber > Store.ProductsTypes.Count)
@@ -228,7 +228,7 @@ public static class ConsoleReader
 
         while (true)
         {
-            string orderItemSetting = Console.ReadLine();
+            string orderItemSetting = Console.ReadLine() ?? throw new ArgumentNullException();
             if (uint.TryParse(orderItemSetting, out uint productNumber))
             {
                 if (productNumber > Store.Products.Count)
@@ -251,13 +251,13 @@ public static class ConsoleReader
         Console.WriteLine("Введите полное имя файла (путь к файлу + имя файла). Нажмите enter для использования файла по умолчанию.");
         if (string.IsNullOrEmpty(fileNameDefault))
         {
-            throw new ArgumentNullException("Файл по умолчанию не задан");
+            throw new ArgumentNullException(paramName: fileNameDefault ,message: "Файл по умолчанию не задан");
         }
 
         while (true)
         {
             string fullPathToFile;
-            string fileName = Console.ReadLine();
+            string fileName = Console.ReadLine() ?? throw new ArgumentNullException();
             if (string.IsNullOrEmpty(fileName))
             {
                 fullPathToFile = ProgramSettings.ProjectPath + Path.DirectorySeparatorChar + fileNameDefault;

@@ -42,17 +42,17 @@ internal static class Menu
     /// <summary>
     /// Обработчики заказа.
     /// </summary>
-    private static OrderHandlers orderHandlers = new();
+    private static readonly OrderHandlers orderHandlers = new();
 
     /// <summary>
     /// Обработчик печати заказа в консоль.
     /// </summary>
-    private static IPrintOrder printOrderToConsole = new PrintOrderToConsole();
+    private static readonly IPrintOrder printOrderToConsole = new PrintOrderToConsole();
 
     /// <summary>
     /// Обработчик печати заказа в API.
     /// </summary>
-    private static IPrintOrder printOrderToAPI = new PrintOrderToAPI();
+    private static readonly IPrintOrder printOrderToAPI = new PrintOrderToAPI();
 
     /// <summary>
     /// Настройка программы перед выбором режима работы.
@@ -63,33 +63,25 @@ internal static class Menu
         Console.WriteLine("Сгенерировать новый набор товаров в магазине?\nВведите y, чтобы сгенерировать новый набор.\nВведите любой другой символ, чтобы считать старый набор.");
         if (Console.ReadLine() == "y")
         {
-            Console.WriteLine("Генерация товаров в магазине.");
-            Store.GenerateProducts();
-            Console.WriteLine("Товары в магазине сгенерированы.");
+            Store.GenerateProducts("Генерация товаров в магазине.\n");
         }
         else
         {
-            Console.WriteLine("Считывание продуктов из файла.");
-            Store.ReadProductsFromFile();
-            Console.WriteLine("Продукты считаны.");
+            Store.ReadProductsFromFile("Считывание товаров из файла.\n");
         }
 
         // Задание 4. Генератор тестовых заказов.
         Console.WriteLine("Сгенерировать новый набор заказов?\nВведите y, чтобы сгенерировать новый набор.\nВведите любой другой символ, чтобы считать старый набор.");
         if (Console.ReadLine() == "y")
         {
-            Console.WriteLine("Генерация заказов");
-            OrdersGenerator.GenerateRandomOrders();
-            Console.WriteLine("Заказы сгенерированы.");
+            OrdersGenerator.GenerateRandomOrders("Генерация заказов\n");
         }
         else
         {
-            Console.WriteLine("Считывание заказов из файла.");
-            OrdersGenerator.ReadOrdersFromFile();
-            Console.WriteLine("Заказы считаны.");
+            OrdersGenerator.ReadOrdersFromFile("Считывание заказов из файла.\n");
         }
 
-        CalculateParams();
+        CalculateParams("Расчёт параметров предсгенерированных заказов.\n");
     }
 
     /// <summary>
@@ -137,21 +129,24 @@ internal static class Menu
             $"{(int)ProgramModes.GetOrdersByMaxDepartureDate} - вывести заказы, отправленные до указанной даты.\n\n" +
 
             $"{(int)ProgramModes.SortOrderByNames} - отсортировать заказ в алфавиту.\n" +
-            $"{(int)ProgramModes.WriteOrderToFile} - записать заказ в файл.\n" +
+            $"{(int)ProgramModes.WriteOrderToFile} - записать заказ в файл.\n\n" +
 
-            $"{(int)ProgramModes.Exit} - закончить работу программы."
+            $"{(int)ProgramModes.Exit} - закончить работу программы.\n"
         );
     }
 
     /// <summary>
-    /// Расчитать параметры предсгенерированны заказов.
+    /// Расчитать параметры предсгенерированных заказов.
     /// </summary>
     /// <exception cref="ArgumentNullException">Сумма предсгенерированного заказа равна null.</exception>
-    private static void CalculateParams()
+    private static void CalculateParams(string title)
     {
+        Console.Write(title);
+
         foreach (Order order in OrdersGenerator.Orders)
         {
-            decimal tempSum = order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) ?? throw new ArgumentNullException(paramName: nameof(tempSum), message: "Сумма предсгенерированного заказа равна null.");
+            decimal tempSum = order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) ??
+                throw new ArgumentNullException(paramName: nameof(tempSum), message: "Сумма предсгенерированного заказа равна null.");
             if (ParamsOfRandomOrders.orderMinSum > tempSum)
             {
                 ParamsOfRandomOrders.orderMinSum = tempSum;
@@ -170,6 +165,8 @@ internal static class Menu
                 ParamsOfRandomOrders.maxQuantityOfProductsInOrder = quantity;
             }
         }
+
+        Console.WriteLine("Параметры рассчитаны.");
     }
 
     /// <summary>
@@ -179,7 +176,7 @@ internal static class Menu
     {
         while (true)
         {
-            ProgramModes programMode = ConsoleReader.ReadProgramModeFromConsole();
+            ProgramModes programMode = ConsoleReader.ReadProgramModeFromConsole("Введите режим работы программы.\n");
 
             OrderCalculator orderCalculator = new(new Calculator.Logger());
             switch (programMode)
@@ -191,9 +188,6 @@ internal static class Menu
                 //Задание 1. Ввод заказа с помощью консоли.
                 case ProgramModes.ReadOrderFromConsole:
                     {
-                        Console.WriteLine("Ввод заказа с помощью консоли.");
-
-                        Store.PrintProductsTypes("Типы товаров в магазине.\n");
                         userOrder = orderHandlers.ReadOrderFromConsole("Считывание заказа из консоли.\n");
                         printOrderToConsole.Print(userOrder, "Введённый из консоли заказ.\n");
                         break;
@@ -212,12 +206,14 @@ internal static class Menu
                     }
                 case ProgramModes.GenerateOrderByMaxSum:
                     {
+                        Console.WriteLine("Генерация заказа по макимальной сумме заказа.");
                         userOrder = OrdersGenerator.GenerateOrderBySum(ConsoleReader.ReadDecimalFromConsole("Введите максимальную сумму заказа.\n"));
                         printOrderToConsole.Print(userOrder, "Сгенерированный заказ.\n");
                         break;
                     }
                 case ProgramModes.GenerateOrderByMinMaxSumRange:
                     {
+                        Console.WriteLine("Генерация заказа по диапазону суммы заказа.");
                         userOrder = OrdersGenerator.GenerateOrderBySum(
                             ConsoleReader.ReadDecimalFromConsole("Введите минимальную сумму заказа.\n"),
                             ConsoleReader.ReadDecimalFromConsole("Введите максимальную сумму заказа.\n")
@@ -227,10 +223,9 @@ internal static class Menu
                     }
                 case ProgramModes.GenerateOrderByMaxTotalQuantity:
                     {
-                        Console.WriteLine();
+                        Console.WriteLine("Генерация заказа по максимальному общему количеству товаров в заказе.");
                         userOrder = OrdersGenerator.GenerateOrderByMaxQuantity(
-                            ConsoleReader.ReadUintFromConsole("Введите максимальное общее количество товаров в заказе.\n"),
-                            "Генерация заказа по максимальному общему количеству товаров в заказе.\n"
+                            ConsoleReader.ReadUintFromConsole("Введите максимальное общее количество товаров в заказе.\n")
                             );
                         printOrderToConsole.Print(userOrder, "Сгенерированный заказ.\n");
                         break;
@@ -285,10 +280,9 @@ internal static class Menu
                         Console.WriteLine("Объединить корзины.");
                         printOrderToConsole.Print(userOrder, "Текущая корзина.\n");
                         
-                        Console.WriteLine("Ввод второй корзины." +
+                        programMode = ConsoleReader.ReadProgramModeFromConsole("Ввод второй корзины.\n" +
                             $"{(int)ProgramModes.ReadOrderFromConsole} - считать заказ из консоли.\n" +
                             $"{(int)ProgramModes.ReadOrderFromFile} - считать заказ из файла.");
-                        programMode = ConsoleReader.ReadProgramModeFromConsole();
 
                         Order secondOrder = new();
                         while (true)
@@ -400,7 +394,6 @@ internal static class Menu
                         decimal orderMinSum = ConsoleReader.ReadDecimalFromConsole("Введите минимальную сумму заказа.");
                         List<Order> validOrders = OrdersGenerator.Orders.Where(order => order.Products.Sum(orderItem => orderItem.Key.Price * orderItem.Value) > orderMinSum).ToList();
                         PrintOrdersList(validOrders, $"Заказы, дороже {orderMinSum}\n");
-
                         break;
                     }
                 case ProgramModes.GetOrdersByProductType:
@@ -416,14 +409,12 @@ internal static class Menu
                     {
                         List<Order> validOrders = OrdersGenerator.Orders.OrderBy(order => order.Products.Sum(orderItem => orderItem.Key.Weight)).ToList();
                         PrintOrdersList(validOrders, "Заказы, отсортированные по весу в порядке возрастания.");
-
                         break;
                     }
                 case ProgramModes.GetOrdersWithUniqueProductsInList:
                     {
                         List<Order> validOrders = OrdersGenerator.Orders.Where(order => order.Products.All(orderItem => orderItem.Value == 1)).ToList();
                         PrintOrdersList(validOrders, "Заказы с уникальными названиями (заказы, в которых количество каждого товара не превышает единицы).");
-
                         break;
                     }
                 case ProgramModes.GetOrdersByMaxDepartureDate:
@@ -433,7 +424,6 @@ internal static class Menu
                         DateTime? userDateTime = ConsoleReader.ReadDateFromConsole("Введите дату в формате ДД/ММ/ГГГГ.\n");
                         List<Order> validOrders = OrdersGenerator.Orders.Where(order => order.TimeOfDeparture <= userDateTime).ToList();
                         PrintOrdersList(validOrders, $"Заказы, отправленные до даты {userDateTime}");
-
                         break;
                     }
                 //Задание 1. Отсортировать по алфавиту без LINQ.
@@ -472,8 +462,10 @@ internal static class Menu
     /// <summary>
     /// Вывести в консоль варианты требования к цене.
     /// </summary>
-    public static void PrintOrderItemPriceSettings()
+    public static void PrintOrderItemPriceSettings(string title = "")
     {
+        Console.Write(title);
+
         Console.WriteLine(
             "Возможные значения требования:\n" +
             $"{(int)PriceRequirementSettings.RandomValue} - любое значение.\n" +

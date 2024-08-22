@@ -6,8 +6,7 @@ namespace Cart.UnitTests;
 
 public class Tests
 {
-    private OrderCalculator cartCalculator = new(null);
-    private Order emptyOrder;
+    private readonly OrderCalculator cartCalculator = new(null);
     private Order orderWithOneProduct;
     private Order orderWithThreeProducts;
 
@@ -16,7 +15,6 @@ public class Tests
     {
         BuildProducts buildProducts = new();
         BuildOrders buildOrders = new();
-        emptyOrder = buildOrders.GetOrder(0);
         orderWithOneProduct = buildOrders.GetOrder(1);
         orderWithThreeProducts = buildOrders.GetOrder(3);
     }
@@ -38,22 +36,18 @@ public class Tests
         {
             if (orderWithThreeProducts.Products.ToDictionary().ContainsKey(orderItem.Key) && orderWithOneProduct.Products.ToDictionary().ContainsKey(orderItem.Key))
             {
-                Assert.That(orderItem.Value.Equals(
-                    orderWithThreeProducts.Products.FirstOrDefault(oI => oI.Key.Equals(orderItem.Key)).Value +
-                    orderWithOneProduct.Products.FirstOrDefault(oI => oI.Key.Equals(orderItem.Key)).Value)
-                    );
+                Assert.That(orderItem.Value, Is.EqualTo(orderWithThreeProducts.Products.FirstOrDefault(oI => oI.Key.Equals(orderItem.Key)).Value +
+                    orderWithOneProduct.Products.FirstOrDefault(oI => oI.Key.Equals(orderItem.Key)).Value));
                 continue;
             }
             else if (orderWithThreeProducts.Products.ToDictionary().ContainsKey(orderItem.Key))
             {
-                Assert.That(orderItem.Value.Equals(
-                    orderWithThreeProducts.Products.FirstOrDefault(oI => oI.Key.Equals(orderItem.Key)).Value));
+                Assert.That(orderItem.Value, Is.EqualTo(orderWithThreeProducts.Products.FirstOrDefault(oI => oI.Key.Equals(orderItem.Key)).Value));
                 continue;
             }
             else
             {
-                Assert.That(orderItem.Value.Equals(
-                    orderWithOneProduct.Products.FirstOrDefault(oI => oI.Key.Equals(orderItem.Key)).Value));
+                Assert.That(orderItem.Value, Is.EqualTo(orderWithOneProduct.Products.FirstOrDefault(oI => oI.Key.Equals(orderItem.Key)).Value));
                 continue;
             }
         }
@@ -106,7 +100,7 @@ public class Tests
         Order newOrder = cartCalculator.Subtract(orderWithThreeProducts, orderB);
         foreach (KeyValuePair<Product, uint> orderItem in orderB.Products)
         {
-            Assert.That(newOrder.Products.Contains(orderItem), Is.False);
+            Assert.That(newOrder.Products, Does.Not.Contain(orderItem));
         }
     }
 
@@ -117,7 +111,7 @@ public class Tests
         Order newOrder = cartCalculator.Divide(orderWithThreeProducts, productType);
         foreach(Product product in newOrder.Products.ToDictionary().Keys)
         {
-            Assert.That(product.GetType() == productType, Is.False);
+            Assert.That(product.GetType(), Is.Not.EqualTo(productType));
         }
     }
 

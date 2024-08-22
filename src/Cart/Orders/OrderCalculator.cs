@@ -8,7 +8,7 @@ namespace Cart.Orders;
 
 public class OrderCalculator : Calculator.Calculator
 {
-    private OrderHandlers orderHandlers = new();
+    private readonly OrderHandlers orderHandlers = new();
 
     public OrderCalculator(Logger? logger) : base(logger)
     {
@@ -25,18 +25,18 @@ public class OrderCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order order = new();
+        Order orderWithProducts = new();
         if (productA == productB)
         {
-            order.Products.Add(new KeyValuePair<Product, uint>(productA, 2));
+            orderWithProducts.Products.Add(new KeyValuePair<Product, uint>(productA, 2));
         }
         else
         {
-            order.Products.Add(new KeyValuePair<Product, uint>(productA, 1));
-            order.Products.Add(new KeyValuePair<Product, uint>(productB, 1));
+            orderWithProducts.Products.Add(new KeyValuePair<Product, uint>(productA, 1));
+            orderWithProducts.Products.Add(new KeyValuePair<Product, uint>(productB, 1));
         }
 
-        return order;
+        return orderWithProducts;
     }
 
     /// <summary>
@@ -49,21 +49,20 @@ public class OrderCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order newOrder = orderHandlers.CopyFrom(order);
+        Order orderWithNewProduct = orderHandlers.CopyFrom(order);
 
-        KeyValuePair<Product, uint> orderItem = newOrder.Products.FirstOrDefault(orderItem => orderItem.Key == product);
-        Dictionary<Product, uint> products = newOrder.Products.ToDictionary();
+        Dictionary<Product, uint> products = orderWithNewProduct.Products.ToDictionary();
         if (products.ContainsKey(product))
         {
             products[product] += 1;
-            newOrder.Products = products.ToList();
+            orderWithNewProduct.Products = products.ToList();
         }
         else
         {
-            newOrder.Products.Add(new KeyValuePair<Product, uint>(product, 1));
+            orderWithNewProduct.Products.Add(new KeyValuePair<Product, uint>(product, 1));
         }
 
-        return newOrder;
+        return orderWithNewProduct;
     }
 
     /// <summary>
@@ -76,17 +75,17 @@ public class OrderCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order orderC = orderHandlers.CopyFrom(orderA);
+        Order mergedOrder = orderHandlers.CopyFrom(orderA);
 
-        foreach (KeyValuePair<Product, uint> productB in orderB.Products)
+        foreach (KeyValuePair<Product, uint> productFromOrderB in orderB.Products)
         {
-            for (uint i = 0; i < productB.Value; i++)
+            for (uint i = 0; i < productFromOrderB.Value; i++)
             {
-                orderC = Add(orderC, productB.Key);
+                mergedOrder = Add(mergedOrder, productFromOrderB.Key);
             }
         }
 
-        return orderC;
+        return mergedOrder;
     }
 
     /// <summary>
@@ -99,9 +98,9 @@ public class OrderCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order newOrder = orderHandlers.CopyFrom(order);
+        Order orderWithoutUnitOfProduct = orderHandlers.CopyFrom(order);
 
-        Dictionary<Product, uint> products = newOrder.Products.ToDictionary();
+        Dictionary<Product, uint> products = orderWithoutUnitOfProduct.Products.ToDictionary();
         if (products.ContainsKey(product))
         {
             if ((products[product] -= 1) == 0)
@@ -113,9 +112,9 @@ public class OrderCalculator : Calculator.Calculator
         {
             throw new Exception($"Продукт {product.Name} с Id = {product.Id} не найден в корзине.");
         }
-        newOrder.Products = products.ToList();
+        orderWithoutUnitOfProduct.Products = products.ToList();
 
-        return newOrder;
+        return orderWithoutUnitOfProduct;
     }
 
     /// <summary>
@@ -129,11 +128,11 @@ public class OrderCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order orderC = orderHandlers.CopyFrom(orderA);
+        Order orderWithoutMatches = orderHandlers.CopyFrom(orderA);
 
-        orderC.Products = orderC.Products.Where(orderItem => orderC.Products.Contains(orderItem) is false).ToList();
+        orderWithoutMatches.Products = orderWithoutMatches.Products.Where(orderItem => orderB.Products.ToDictionary().ContainsKey(orderItem.Key) is false).ToList();
 
-        return orderC;
+        return orderWithoutMatches;
     }
 
     /// <summary>
@@ -146,11 +145,11 @@ public class OrderCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order newOrder = orderHandlers.CopyFrom(order);
+        Order orderWithoutProductsOfType = orderHandlers.CopyFrom(order);
 
-        newOrder.Products = newOrder.Products.Where(orderItem => orderItem.Key.GetType() != productType).ToList();
+        orderWithoutProductsOfType.Products = orderWithoutProductsOfType.Products.Where(orderItem => orderItem.Key.GetType() != productType).ToList();
 
-        return newOrder;
+        return orderWithoutProductsOfType;
     }
 
     /// <summary>
@@ -163,33 +162,33 @@ public class OrderCalculator : Calculator.Calculator
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order newOrder = new();
+        Order orderWithReducedTotalQuantityOfProducts = new();
         foreach (KeyValuePair<Product, uint> orderItem in order.Products)
         {
             KeyValuePair<Product, uint> newOrderItem = new(orderItem.Key, orderItem.Value / number);
-            newOrder.Products.Add(newOrderItem);
+            orderWithReducedTotalQuantityOfProducts.Products.Add(newOrderItem);
         }
 
-        return newOrder;
+        return orderWithReducedTotalQuantityOfProducts;
     }
 
     /// <summary>
     /// Увеличить в карточке каждое количество товара в указанное число раз.
     /// </summary>
     /// <param name="order">Исходная карточка.</param>
-    /// <param name="number">Число, указывающее во сколько раз мы увеличиваем количество товара.</param>
+    /// <param name="multiplier">Число, указывающее во сколько раз мы увеличиваем количество товара.</param>
     /// <returns>Карточка с увеличенным количеством каждого товара.</returns>
-    public Order Multiply(Order order, uint number)
+    public Order Multiply(Order order, uint multiplier)
     {
         Log(System.Reflection.MethodBase.GetCurrentMethod()?.Name, GetType().Name);
 
-        Order newOrder = new();
+        Order orderWithIncreasedTotalQuantityOfProducts = new();
         foreach (KeyValuePair<Product, uint> orderItem in order.Products)
         {
-            KeyValuePair<Product, uint> newOrderItem = new KeyValuePair<Product, uint>(orderItem.Key, orderItem.Value * number);
-            newOrder.Products.Add(newOrderItem);
+            KeyValuePair<Product, uint> newOrderItem = new(orderItem.Key, orderItem.Value * multiplier);
+            orderWithIncreasedTotalQuantityOfProducts.Products.Add(newOrderItem);
         }
 
-        return newOrder;
+        return orderWithIncreasedTotalQuantityOfProducts;
     }
 }

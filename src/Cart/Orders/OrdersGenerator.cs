@@ -18,18 +18,15 @@ public static class OrdersGenerator
     /// <summary>
     /// Генератор случайного числа.
     /// </summary>
-    private static Random random = new Random();
-
-    /// <summary>
-    /// Сгенерированный (выбранный) заказ.
-    /// </summary>
-    private static Order cart = new();
+    private static Random random = new();
 
     /// <summary>
     /// Создать и записать в файл 5 случайных заказов (наборов товаров) из списка товаров магазина.
     /// </summary>
-    public static List<Order> GenerateRandomOrders()
+    public static List<Order> GenerateRandomOrders(string title = "")
     {
+        Console.Write(title);
+
         List<Order> orders = new();
         for (int i = 0; i < 5; i++)
         {
@@ -46,7 +43,8 @@ public static class OrdersGenerator
         }
 
         File.WriteAllText(ProgramSettings.ProjectPath + Path.DirectorySeparatorChar + ProgramSettings.OrdersFileNameDefault, JsonSerializer.Serialize(orders, ProgramSettings.JsonSerializerOptions));
-
+        
+        Console.WriteLine("Заказы сгенерированы.");
         return orders;
     }
 
@@ -105,10 +103,13 @@ public static class OrdersGenerator
     /// <summary>
     /// Прочитать заказы из файла.
     /// </summary>
-    public static void ReadOrdersFromFile()
+    public static void ReadOrdersFromFile(string title = "")
     {
+        Console.Write(title);
+
         string fullPathToFile = ConsoleReader.ReadFullFileNameFromConsole(ProgramSettings.OrdersFileNameDefault);
         string ordersJson = FileReader.ReadDataFromFile(fullPathToFile);
-        Orders = JsonSerializer.Deserialize<List<Order>>(ordersJson, ProgramSettings.JsonSerializerOptions);
+        Orders = JsonSerializer.Deserialize<List<Order>>(ordersJson, ProgramSettings.JsonSerializerOptions) ?? throw new ArgumentNullException();
+        Console.WriteLine("Заказы считаны.");
     }
 }

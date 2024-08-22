@@ -24,8 +24,10 @@ public static class Store
     /// <summary>
     /// Сгенерировать продукты.
     /// </summary>
-    public static List<Product> GenerateProducts()
+    public static List<Product> GenerateProducts(string title = "")
     {
+        Console.Write(title);
+
         uint productId = 0;
         Random random = new();
 
@@ -42,7 +44,7 @@ public static class Store
                 name: "Стиральная машина-" + productId.ToString(),
                 weight: GetWeight(productId),
                 price: GetPrice(productId),
-                isDryerIncluded: random.Next(0, 2) == 0 ? false : true
+                isDryerIncluded: random.Next(0, 2) != 0
                 );
             Chips chips = new(
                 id: productId += 1,
@@ -73,32 +75,24 @@ public static class Store
                     continue;
             }
 
-            Console.WriteLine("Вывести список товаров на экран? Введите y или n.");
-            switch (Console.ReadLine())
-            {
-                case "y":
-                    PrintProductsInfo("Список товаров магазина.");
-                    break;
-                case "n":
-                    break;
-                default:
-                    Console.WriteLine("Такой команды нет.");
-                    continue;
-            }
-            break;
+            Console.WriteLine("Товары в магазине сгенерированы.");
+            return Products;
         }
 
-        return Products;
     }
 
     /// <summary>
     /// Считать из файла список товаров магазина.
     /// </summary>
-    public static void ReadProductsFromFile()
+    public static void ReadProductsFromFile(string title = "")
     {
-        string fullPathToFile = ConsoleReader.ReadFullFileNameFromConsole(ProgramSettings.ProductsFileNameDefault);
-        string productsJson = FileReader.ReadDataFromFile(fullPathToFile);
-        Products = JsonSerializer.Deserialize<List<Product>>(productsJson, ProgramSettings.JsonSerializerOptions);
+        Console.Write(title);
+        
+        Products = JsonSerializer.Deserialize<List<Product>>(
+            FileReader.ReadDataFromFile(ConsoleReader.ReadFullFileNameFromConsole(ProgramSettings.ProductsFileNameDefault)), 
+            ProgramSettings.JsonSerializerOptions
+            ) ?? throw new ArgumentNullException();
+        Console.WriteLine("Товары считаны.");
     }
 
     /// <summary>
@@ -128,7 +122,7 @@ public static class Store
     /// <summary>
     /// Вывод товаров магазина.
     /// </summary>
-    public static void PrintProductsInfo(string title)
+    public static void PrintProductsInfo(string title = "")
     {
         Console.Write(title);
 
@@ -150,7 +144,7 @@ public static class Store
         uint index = 0;
         foreach (Type productType in ProductsTypes)
         {
-            Console.WriteLine($"{index += 1}) {productType.Name.ToString()}");
+            Console.WriteLine($"{index += 1}) {productType.Name}");
         }
     }
 }
