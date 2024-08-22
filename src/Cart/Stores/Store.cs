@@ -58,27 +58,12 @@ public static class Store
             Products.Add(chips);
         }
 
-        while (true)
-        {
-            Console.WriteLine("Сохранить список в файл? Введите y или n.");
-            switch (Console.ReadLine())
-            {
-                case "y":
-                    string fullPathToFile = ConsoleReader.ReadFullFileNameFromConsole(ProgramSettings.ProductsFileNameDefault);
-                    string jsonString = JsonSerializer.Serialize(Products, ProgramSettings.JsonSerializerOptions);
-                    File.WriteAllText(fullPathToFile, jsonString);
-                    break;
-                case "n":
-                    break;
-                default:
-                    Console.WriteLine("Такой команды нет.");
-                    continue;
-            }
-
-            Console.WriteLine("Товары в магазине сгенерированы.");
-            return Products;
-        }
-
+        File.WriteAllText(ConsoleReader.ReadFullFileNameFromConsole(ProgramSettings.ProductsFileNameDefault),
+            JsonSerializer.Serialize(Products, ProgramSettings.JsonSerializerOptions));
+        
+        Console.WriteLine("Товары в магазине сгенерированы.");
+        
+        return Products;
     }
 
     /// <summary>

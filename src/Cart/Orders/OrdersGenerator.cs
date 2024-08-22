@@ -16,6 +16,7 @@ public static class OrdersGenerator
     public static List<Order> Orders = new();
 
     /// <summary>
+    /// 
     /// Генератор случайного числа.
     /// </summary>
     private static Random random = new();
@@ -45,6 +46,7 @@ public static class OrdersGenerator
         File.WriteAllText(ProgramSettings.ProjectPath + Path.DirectorySeparatorChar + ProgramSettings.OrdersFileNameDefault, JsonSerializer.Serialize(orders, ProgramSettings.JsonSerializerOptions));
         
         Console.WriteLine("Заказы сгенерированы.");
+
         return orders;
     }
 

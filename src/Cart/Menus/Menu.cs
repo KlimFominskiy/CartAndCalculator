@@ -1,5 +1,4 @@
 ﻿using Cart.Orders;
-using Cart.Products;
 using Cart.Readers;
 using Cart.Settings;
 using Cart.Stores;
@@ -100,7 +99,8 @@ internal static class Menu
             $"{(int)ProgramModes.GenerateOrderByMaxSum} - сгенерировать заказ по максимальной сумме.\n" +
             $"{(int)ProgramModes.GenerateOrderByMinMaxSumRange} - cгенерировать заказ по диапазону суммы.\n" +
             $"Минимальная общая сумма заказа - {ParamsOfRandomOrders.orderMinSum}.\n" +
-            $"Максимальная общая сумма заказа - {ParamsOfRandomOrders.orderMaxSum}.\n" +
+            $"Максимальная общая сумма заказа - {ParamsOfRandomOrders.orderMaxSum}.\n\n" +
+
             $"{(int)ProgramModes.GenerateOrderByMaxTotalQuantity} - cгенерировать заказ по максимальному общему количеству товаров в заказе.\n" +
             $"Минимальное общее количество товаров в заказе - {ParamsOfRandomOrders.minQuantityOfProductsInOrder}.\n" +
             $"Максимальное общее количество товаров в заказе - {ParamsOfRandomOrders.maxQuantityOfProductsInOrder}.\n\n" +
